@@ -20,7 +20,7 @@
 
 ### 0.2 Core Data Models
 
-- [ ] Create `Difficulty` enum with cases (easy, medium, hard, expert, calculator) and associated properties
+- [x] Create `Difficulty` enum with cases (easy, medium, hard, expert, calculator) and associated properties
 - [ ] Create `CellPosition` struct with row and column properties
 - [ ] Create `TennerGridPuzzle` model struct with id, dimensions, difficulty, targetSums, initialGrid, solution
 - [ ] Create `Cell` model struct with position, value, isInitial, pencilMarks, and state flags
