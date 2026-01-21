@@ -8,7 +8,6 @@
 import XCTest
 
 final class TennerGridUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

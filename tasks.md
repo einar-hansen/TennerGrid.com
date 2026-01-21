@@ -16,7 +16,7 @@
 - [x] Set up Git repository with `.gitignore` for Xcode/Swift projects
 - [x] Create basic folder structure: Models/, ViewModels/, Views/, Services/, Utilities/, Resources/
 - [x] Configure Xcode scheme and ensure project builds successfully
-- [ ] Add SwiftLint configuration file (.swiftlint.yml) with iOS/Swift best practices
+- [x] Add SwiftLint configuration file (.swiftlint.yml) with iOS/Swift best practices
 
 ### 0.2 Core Data Models
 

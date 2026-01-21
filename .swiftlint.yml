@@ -1,15 +1,189 @@
-disabled_rules:
-  - trailing_whitespace
-opt_in_rules:
-  - empty_count
-  - empty_string
+# SwiftLint Configuration for TennerGrid iOS App
+# Based on iOS/Swift best practices for SwiftUI projects
+
+# Paths to include during linting
 included:
   - TennerGrid
+  - TennerGridTests
+
+# Paths to exclude from linting
 excluded:
   - Carthage
   - Pods
   - build
   - DerivedData
-line_length: 120
-type_body_length: 300
-file_length: 500
+  - .build
+  - TennerGridUITests
+
+# Rules that are disabled
+disabled_rules:
+  - trailing_whitespace # Handled by SwiftFormat
+  - todo # Allow TODO comments during development
+  - orphaned_doc_comment # Can be overly strict with SwiftUI
+
+# Opt-in rules that are explicitly enabled
+opt_in_rules:
+  # Performance
+  - empty_count
+  - empty_string
+  - first_where
+  - contains_over_first_not_nil
+  - last_where
+  - reduce_into
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - empty_collection_literal
+  - flatmap_over_map_reduce
+
+  # Style
+  - explicit_init
+  - implicit_return
+  - multiline_arguments
+  - multiline_parameters
+  - operator_usage_whitespace
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+  - yoda_condition
+  - sorted_imports
+  - sorted_first_last
+
+  # Idiomatic
+  - toggle_bool
+  - fatal_error_message
+  - fallthrough
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - weak_delegate
+  - unneeded_parentheses_in_closure_argument
+  - unavailable_function
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+
+  # Metrics
+  - closure_body_length
+
+  # Naming
+  - pattern_matching_keywords
+  - lower_acl_than_parent
+
+  # Documentation
+  - missing_docs # Consider enabling later for public APIs
+
+# Rule configurations
+
+# Line length: Allow up to 120 characters per line
+line_length:
+  warning: 120
+  error: 150
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_urls: true
+
+# Type body length: Limit type bodies to reasonable sizes
+type_body_length:
+  warning: 300
+  error: 400
+
+# File length: Keep files manageable
+file_length:
+  warning: 500
+  error: 800
+  ignore_comment_only_lines: true
+
+# Function body length: Keep functions focused and readable
+function_body_length:
+  warning: 50
+  error: 100
+
+# Function parameter count: Limit number of parameters
+function_parameter_count:
+  warning: 5
+  error: 8
+
+# Cyclomatic complexity: Limit complexity of functions
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+
+# Nesting: Limit nesting depth
+nesting:
+  type_level:
+    warning: 2
+  statement_level:
+    warning: 5
+
+# Type name: Enforce proper type naming conventions
+type_name:
+  min_length: 3
+  max_length: 40
+  excluded:
+    - ID
+    - URL
+    - App
+
+# Identifier name: Enforce proper identifier naming
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 40
+    error: 60
+  excluded:
+    - id
+    - x
+    - y
+    - i
+    - j
+    - row
+    - col
+    - url
+    - vm
+
+# Large tuple: Limit tuple size (prefer structs)
+large_tuple:
+  warning: 3
+  error: 4
+
+# Closure body length: Keep closures concise
+closure_body_length:
+  warning: 20
+  error: 40
+
+# Collection alignment: Enforce consistent alignment
+collection_alignment:
+  align_colons: true
+
+# Multiline arguments: Enforce style for multiline function calls
+multiline_arguments:
+  first_argument_location: next_line
+  only_enforce_after_first_closure_on_first_line: true
+
+# Multiline parameters: Enforce style for multiline function declarations
+multiline_parameters:
+  allows_single_line: true
+
+# Vertical whitespace: Limit consecutive empty lines
+vertical_whitespace:
+  max_empty_lines: 2
+
+# Custom rules for project-specific conventions
+custom_rules:
+  # Ensure SwiftUI views have proper body type
+  swiftui_view_body:
+    name: "SwiftUI View Body"
+    regex: 'struct\s+\w+:\s+View\s*\{[^}]*var\s+body:\s+some\s+View'
+    message: "SwiftUI views should have 'var body: some View'"
+    severity: warning
+
+  # Discourage print statements (use proper logging)
+  no_print:
+    name: "No Print Statements"
+    regex: '\bprint\s*\('
+    match_kinds:
+      - identifier
+    message: "Use a proper logging system instead of print()"
+    severity: warning
+
+# Reporter type (options: xcode, json, csv, checkstyle, junit, html, emoji)
+reporter: "xcode"
