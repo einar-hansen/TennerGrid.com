@@ -1454,13 +1454,15 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.formattedTime, "00:00")
 
         // Manually set time for testing
-        viewModel.gameState.addTime(65.0) // 1 minute 5 seconds
-        let formatted1 = GameViewModel(gameState: viewModel.gameState).formattedTime
+        var testState1 = viewModel.gameState
+        testState1.addTime(65.0) // 1 minute 5 seconds
+        let formatted1 = GameViewModel(gameState: testState1).formattedTime
         XCTAssertEqual(formatted1, "01:05")
 
         // Test larger time
-        viewModel.gameState.addTime(595.0) // Add 9 minutes 55 seconds (total 11:00)
-        let formatted2 = GameViewModel(gameState: viewModel.gameState).formattedTime
+        var testState2 = testState1
+        testState2.addTime(595.0) // Add 9 minutes 55 seconds (total 11:00)
+        let formatted2 = GameViewModel(gameState: testState2).formattedTime
         XCTAssertEqual(formatted2, "11:00")
     }
 
