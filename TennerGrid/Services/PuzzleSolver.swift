@@ -36,61 +36,158 @@ struct PuzzleSolver {
         }
     }
 
-    /// Recursive backtracking algorithm to solve the puzzle
+    /// Recursive backtracking algorithm to solve the puzzle with constraint propagation
     /// - Parameters:
     ///   - grid: The current grid state (will be modified in place)
     ///   - puzzle: The puzzle definition
     /// - Returns: True if solution is found, false otherwise
     private func solveBacktrack(grid: inout [[Int?]], puzzle: TennerGridPuzzle) -> Bool {
-        // Find next empty cell
+        // Find next empty cell using MRV heuristic
         guard let position = findNextEmptyCell(in: grid, puzzle: puzzle) else {
             // No empty cells left - check if solution is valid
             return validationService.isPuzzleComplete(grid: grid, puzzle: puzzle)
         }
 
-        // Try values 0-9
-        for value in 0 ... 9 {
-            // Check if this value is valid at this position
-            if validationService.isValidPlacement(
-                value: value,
-                at: position,
-                in: grid,
-                puzzle: puzzle
-            ) {
-                // Place the value
-                grid[position.row][position.column] = value
+        // Get possible values using constraint propagation
+        let possibleValues = getPossibleValues(for: position, in: grid, puzzle: puzzle)
 
-                // Apply constraint propagation (early pruning)
-                if canColumnSumBeReached(column: position.column, in: grid, puzzle: puzzle) {
-                    // Recursively try to solve the rest
-                    if solveBacktrack(grid: &grid, puzzle: puzzle) {
-                        return true
-                    }
+        // Early termination if no valid values (constraint propagation detected impossibility)
+        guard !possibleValues.isEmpty else {
+            return false
+        }
+
+        // Try each possible value (already filtered by constraints)
+        for value in possibleValues.sorted() {
+            // Place the value
+            grid[position.row][position.column] = value
+
+            // Forward checking: verify all adjacent cells still have at least one possible value
+            if forwardCheck(grid: grid, changedPosition: position, puzzle: puzzle) {
+                // Recursively try to solve the rest
+                if solveBacktrack(grid: &grid, puzzle: puzzle) {
+                    return true
                 }
-
-                // Backtrack - remove the value
-                grid[position.row][position.column] = nil
             }
+
+            // Backtrack - remove the value
+            grid[position.row][position.column] = nil
         }
 
         // No valid value found for this cell
         return false
     }
 
-    /// Finds the next empty cell in the grid
+    /// Forward checking: verifies that placing a value doesn't eliminate all possibilities for adjacent cells
+    /// This is an advanced constraint propagation technique
+    /// - Parameters:
+    ///   - grid: The current grid state
+    ///   - changedPosition: The position that was just filled
+    ///   - puzzle: The puzzle definition
+    /// - Returns: True if forward check passes (all empty neighbors still have valid values), false otherwise
+    private func forwardCheck(grid: [[Int?]], changedPosition: CellPosition, puzzle: TennerGridPuzzle) -> Bool {
+        // Check all cells in the same row
+        for col in 0 ..< puzzle.columns {
+            let pos = CellPosition(row: changedPosition.row, column: col)
+            if grid[pos.row][pos.column] == nil {
+                let possibleValues = getPossibleValues(for: pos, in: grid, puzzle: puzzle)
+                if possibleValues.isEmpty {
+                    return false
+                }
+            }
+        }
+
+        // Check all adjacent cells (8 neighbors)
+        let adjacentOffsets = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1), (0, 1),
+            (1, -1), (1, 0), (1, 1),
+        ]
+
+        for (rowOffset, colOffset) in adjacentOffsets {
+            let neighborRow = changedPosition.row + rowOffset
+            let neighborCol = changedPosition.column + colOffset
+
+            // Check bounds
+            guard neighborRow >= 0, neighborRow < puzzle.rows,
+                  neighborCol >= 0, neighborCol < puzzle.columns
+            else {
+                continue
+            }
+
+            let neighborPos = CellPosition(row: neighborRow, column: neighborCol)
+
+            // If neighbor is empty, check if it still has possible values
+            if grid[neighborRow][neighborCol] == nil {
+                let possibleValues = getPossibleValues(for: neighborPos, in: grid, puzzle: puzzle)
+                if possibleValues.isEmpty {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+    /// Finds the next empty cell in the grid using MRV (Minimum Remaining Values) heuristic
+    /// This constraint propagation optimization selects the cell with the fewest possible valid values
     /// - Parameters:
     ///   - grid: The current grid state
     ///   - puzzle: The puzzle definition
     /// - Returns: Position of the next empty cell, or nil if grid is full
     private func findNextEmptyCell(in grid: [[Int?]], puzzle: TennerGridPuzzle) -> CellPosition? {
+        var bestCell: CellPosition?
+        var minPossibleValues = Int.max
+
         for row in 0 ..< puzzle.rows {
             for column in 0 ..< puzzle.columns {
                 if grid[row][column] == nil {
-                    return CellPosition(row: row, column: column)
+                    let position = CellPosition(row: row, column: column)
+                    let possibleValues = getPossibleValues(for: position, in: grid, puzzle: puzzle)
+
+                    // If no possible values, this path is invalid - return immediately
+                    if possibleValues.isEmpty {
+                        return position
+                    }
+
+                    // Select cell with minimum remaining values (MRV heuristic)
+                    if possibleValues.count < minPossibleValues {
+                        minPossibleValues = possibleValues.count
+                        bestCell = position
+                    }
                 }
             }
         }
-        return nil
+
+        return bestCell
+    }
+
+    /// Gets all possible valid values for a cell position
+    /// This is a key part of constraint propagation - we precompute which values are valid
+    /// - Parameters:
+    ///   - position: The cell position to check
+    ///   - grid: The current grid state
+    ///   - puzzle: The puzzle definition
+    /// - Returns: Set of valid values (0-9) that can be placed at this position
+    func getPossibleValues(for position: CellPosition, in grid: [[Int?]], puzzle: TennerGridPuzzle) -> Set<Int> {
+        var possibleValues: Set<Int> = []
+
+        for value in 0 ... 9 {
+            if validationService.isValidPlacement(
+                value: value,
+                at: position,
+                in: grid,
+                puzzle: puzzle
+            ) {
+                // Additional check: would placing this value make the column sum impossible?
+                var testGrid = grid
+                testGrid[position.row][position.column] = value
+                if canColumnSumBeReached(column: position.column, in: testGrid, puzzle: puzzle) {
+                    possibleValues.insert(value)
+                }
+            }
+        }
+
+        return possibleValues
     }
 
     /// Constraint propagation: checks if a column sum can still reach the target
