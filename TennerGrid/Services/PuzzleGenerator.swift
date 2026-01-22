@@ -422,6 +422,63 @@ struct PuzzleGenerator {
 
         return puzzleGrid
     }
+
+    /// Generates a complete puzzle with specified columns, rows, and difficulty
+    /// - Parameters:
+    ///   - columns: Number of columns in the puzzle (5-10)
+    ///   - rows: Number of rows in the puzzle (5-10)
+    ///   - difficulty: The desired difficulty level
+    ///   - seed: Optional seed for deterministic generation (useful for daily puzzles)
+    /// - Returns: A complete TennerGridPuzzle ready to play, or nil if generation fails
+    func generatePuzzle(
+        columns: Int,
+        rows: Int,
+        difficulty: Difficulty,
+        seed: UInt64? = nil
+    ) -> TennerGridPuzzle? {
+        // Validate dimensions
+        guard columns >= 5, columns <= 10 else { return nil }
+        guard rows >= 5, rows <= 10 else { return nil }
+
+        // Step 1: Generate a completed grid with target sums
+        guard let completedGrid = generateCompletedGrid(rows: rows, columns: columns, seed: seed) else {
+            return nil
+        }
+
+        // Step 2: Calculate column sums from the completed grid
+        guard let targetSums = calculateColumnSums(from: completedGrid) else {
+            return nil
+        }
+
+        // Step 3: Remove cells based on difficulty while maintaining unique solution
+        guard let puzzleGrid = removeCells(
+            from: completedGrid,
+            targetSums: targetSums,
+            difficulty: difficulty,
+            seed: seed
+        ) else {
+            return nil
+        }
+
+        // Step 4: Create and return the complete puzzle
+        let puzzle = TennerGridPuzzle(
+            id: UUID(),
+            columns: columns,
+            rows: rows,
+            difficulty: difficulty,
+            targetSums: targetSums,
+            initialGrid: puzzleGrid,
+            solution: completedGrid,
+            createdAt: Date()
+        )
+
+        // Validate the puzzle before returning
+        guard puzzle.isValid() else {
+            return nil
+        }
+
+        return puzzle
+    }
 }
 
 // MARK: - Seeded Random Number Generator
