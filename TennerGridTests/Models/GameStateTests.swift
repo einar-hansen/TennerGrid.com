@@ -36,8 +36,8 @@ struct GameStateTests {
 
         return TennerGridPuzzle(
             id: UUID(),
-            rows: rows,
             columns: columns,
+            rows: rows,
             difficulty: difficulty,
             targetSums: targetSums,
             initialGrid: initialGrid,

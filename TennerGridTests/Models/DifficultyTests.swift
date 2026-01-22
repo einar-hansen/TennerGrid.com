@@ -7,6 +7,7 @@
 
 import SwiftUI
 @testable import TennerGrid
+import Foundation
 import Testing
 
 struct DifficultyTests {

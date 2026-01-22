@@ -155,7 +155,6 @@ extension Achievement {
     mutating func updateProgress(currentValue: Int) -> Bool {
         guard !isUnlocked else { return false }
 
-        let previousProgress = progress
         progress = min(Double(currentValue) / Double(targetValue), 1.0)
 
         if progress >= 1.0, !isUnlocked {

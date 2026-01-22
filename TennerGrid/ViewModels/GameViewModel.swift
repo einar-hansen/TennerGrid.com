@@ -481,6 +481,99 @@ final class GameViewModel: ObservableObject {
         return conflicts.count
     }
 
+    // MARK: - Hint System
+
+    /// Requests a hint for the current puzzle state
+    /// Uses the hint service to find the next logical move or reveal possible values
+    func requestHint() {
+        // Don't provide hints if game is completed
+        guard !gameState.isCompleted else {
+            errorMessage = "Game is already completed"
+            return
+        }
+
+        // Get a hint from the hint service
+        guard let hint = hintService.provideHint(for: gameState) else {
+            errorMessage = "No hint available"
+            return
+        }
+
+        // Record hint usage
+        gameState.useHint()
+
+        // Apply the hint based on type
+        switch hint {
+        case let .logicalMove(position, value):
+            // Select the cell and enter the value
+            selectCell(at: position)
+
+            // Record old state for undo
+            let oldValue = gameState.value(at: position)
+            let oldMarks = gameState.marks(at: position)
+
+            // Set the value
+            gameState.setValue(value, at: position)
+
+            // Record action for undo
+            let action = GameAction.setValue(
+                at: position,
+                from: oldValue,
+                to: value,
+                clearingMarks: oldMarks
+            )
+            recordAction(action)
+
+            // Update conflicts and check completion
+            updateConflicts()
+            checkCompletion()
+
+        case let .revealValue(position, value):
+            // Select the cell and enter the revealed value
+            selectCell(at: position)
+
+            // Record old state for undo
+            let oldValue = gameState.value(at: position)
+            let oldMarks = gameState.marks(at: position)
+
+            // Set the value
+            gameState.setValue(value, at: position)
+
+            // Record action for undo
+            let action = GameAction.setValue(
+                at: position,
+                from: oldValue,
+                to: value,
+                clearingMarks: oldMarks
+            )
+            recordAction(action)
+
+            // Update conflicts and check completion
+            updateConflicts()
+            checkCompletion()
+
+        case let .possibleValues(position, values):
+            // Select the cell and set pencil marks to show possible values
+            selectCell(at: position)
+
+            // Record old state for undo
+            let oldMarks = gameState.marks(at: position)
+
+            // Set pencil marks with possible values
+            gameState.setPencilMarks(values, at: position)
+
+            // Record action for undo
+            let action = GameAction.setPencilMarks(
+                at: position,
+                from: oldMarks,
+                to: values
+            )
+            recordAction(action)
+        }
+
+        // Clear any error messages
+        errorMessage = nil
+    }
+
     // MARK: - Timer Management
 
     /// Starts the game timer

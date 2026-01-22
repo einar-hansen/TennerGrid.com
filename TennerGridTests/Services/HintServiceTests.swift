@@ -39,8 +39,8 @@ final class HintServiceTests: XCTestCase {
         let targetSums = [12, 16, 20, 24, 18]
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: targetSums,
             initialGrid: initialGrid,
@@ -78,8 +78,8 @@ final class HintServiceTests: XCTestCase {
         let targetSums = [15, 15, 15, 15, 15]
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .hard,
             targetSums: targetSums,
             initialGrid: initialGrid,
@@ -118,8 +118,8 @@ final class HintServiceTests: XCTestCase {
 
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: targetSums,
             initialGrid: initialGrid,
@@ -168,8 +168,8 @@ final class HintServiceTests: XCTestCase {
 
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: [15, 15, 15, 15, 15],
             initialGrid: initialGrid,
@@ -202,8 +202,8 @@ final class HintServiceTests: XCTestCase {
 
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: [15, 15, 15, 15, 15],
             initialGrid: initialGrid,
@@ -235,8 +235,8 @@ final class HintServiceTests: XCTestCase {
 
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: [15, 15, 15, 15, 15],
             initialGrid: initialGrid,
@@ -295,8 +295,8 @@ final class HintServiceTests: XCTestCase {
 
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: [15, 15, 15, 15, 15],
             initialGrid: initialGrid,
@@ -360,8 +360,8 @@ final class HintServiceTests: XCTestCase {
         let targetSums = [12, 16, 20, 24, 18]
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: targetSums,
             initialGrid: initialGrid,
@@ -497,8 +497,8 @@ final class HintServiceTests: XCTestCase {
         let targetSums = [12, 16, 20, 24, 18]
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: targetSums,
             initialGrid: initialGrid,
@@ -543,11 +543,14 @@ final class HintServiceTests: XCTestCase {
 
     func testHintService_WithGeneratedPuzzle_ProvidesValidHints() {
         // Generate a real puzzle and test hint service
-        let puzzle = puzzleGenerator.generatePuzzle(
+        guard let puzzle = puzzleGenerator.generatePuzzle(
             columns: 5,
             rows: 4,
             difficulty: .easy
-        )
+        ) else {
+            XCTFail("Failed to generate puzzle")
+            return
+        }
 
         let gameState = GameState(puzzle: puzzle)
 
@@ -570,8 +573,8 @@ final class HintServiceTests: XCTestCase {
         let targetSums = [12, 16, 20, 24, 18]
         let puzzle = TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: targetSums,
             initialGrid: initialGrid,
@@ -609,8 +612,8 @@ final class HintServiceTests: XCTestCase {
 
         return TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: [15, 15, 15, 15, 15],
             initialGrid: initialGrid,
@@ -633,8 +636,8 @@ final class HintServiceTests: XCTestCase {
 
         return TennerGridPuzzle(
             id: UUID(),
-            rows: 4,
             columns: 5,
+            rows: 4,
             difficulty: .easy,
             targetSums: [15, 15, 15, 15, 25],
             initialGrid: completedGrid,

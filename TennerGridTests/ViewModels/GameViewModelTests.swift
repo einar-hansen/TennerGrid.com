@@ -17,8 +17,8 @@ final class GameViewModelTests: XCTestCase {
 
     // MARK: - Setup & Teardown
 
-    override func setUp() async throws {
-        try await super.setUp()
+    override func setUp() {
+        super.setUp()
 
         // Create a simple 3x3 test puzzle
         // Solution:
@@ -53,10 +53,10 @@ final class GameViewModelTests: XCTestCase {
         viewModel = GameViewModel(puzzle: puzzle)
     }
 
-    override func tearDown() async throws {
+    override func tearDown() {
         viewModel = nil
         puzzle = nil
-        try await super.tearDown()
+        super.tearDown()
     }
 
     // MARK: - Initialization Tests
@@ -1587,15 +1587,12 @@ final class GameViewModelTests: XCTestCase {
         // Create a view model in a scope that will deallocate it
         weak var weakViewModel: GameViewModel?
 
-        autoreleasepool {
+        do {
             let tempViewModel = GameViewModel(puzzle: puzzle)
             weakViewModel = tempViewModel
 
             // Verify timer is running
             XCTAssertTrue(tempViewModel.isTimerRunning)
-
-            // Let it run briefly
-            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
 
             // tempViewModel goes out of scope and should deallocate
         }

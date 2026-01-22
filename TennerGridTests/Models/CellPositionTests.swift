@@ -6,6 +6,7 @@
 //
 
 @testable import TennerGrid
+import Foundation
 import Testing
 
 struct CellPositionTests {

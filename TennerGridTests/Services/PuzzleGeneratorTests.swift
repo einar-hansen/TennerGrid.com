@@ -1504,14 +1504,11 @@ final class PuzzleGeneratorTests: XCTestCase {
         XCTAssertNotNil(puzzle, "Should generate a puzzle")
 
         if let generatedPuzzle = puzzle {
-            XCTAssertNotNil(generatedPuzzle.createdAt, "Puzzle should have a createdAt date")
-
-            if let createdAt = generatedPuzzle.createdAt {
-                XCTAssertTrue(
-                    createdAt >= beforeGeneration && createdAt <= afterGeneration,
-                    "createdAt should be within generation timeframe"
-                )
-            }
+            let createdAt = generatedPuzzle.createdAt
+            XCTAssertTrue(
+                createdAt >= beforeGeneration && createdAt <= afterGeneration,
+                "createdAt should be within generation timeframe"
+            )
         }
     }
 

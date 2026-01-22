@@ -260,7 +260,7 @@ struct NumberPadView: View {
     let viewModel = GameViewModel(puzzle: puzzle)
 
     // Select a cell
-    _ = viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
 
     return NumberPadView(viewModel: viewModel)
         .padding()
@@ -272,8 +272,8 @@ struct NumberPadView: View {
     let viewModel = GameViewModel(puzzle: puzzle)
 
     // Select a cell and enter a value
-    _ = viewModel.selectCell(at: CellPosition(row: 0, column: 0))
-    _ = viewModel.enterNumber(5)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    viewModel.enterNumber(5)
 
     return NumberPadView(viewModel: viewModel)
         .padding()
@@ -285,8 +285,8 @@ struct NumberPadView: View {
     let viewModel = GameViewModel(puzzle: puzzle)
 
     // Select a cell and enter a value to show the highlight
-    _ = viewModel.selectCell(at: CellPosition(row: 0, column: 0))
-    _ = viewModel.enterNumber(5)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    viewModel.enterNumber(5)
 
     return VStack(spacing: 20) {
         Text("Button '5' should be highlighted blue")
@@ -303,8 +303,8 @@ struct NumberPadView: View {
     let viewModel = GameViewModel(puzzle: puzzle)
 
     // Select a cell and enter a value
-    _ = viewModel.selectCell(at: CellPosition(row: 0, column: 0))
-    _ = viewModel.enterNumber(7)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    viewModel.enterNumber(7)
 
     return NumberPadView(viewModel: viewModel)
         .padding()
@@ -316,8 +316,8 @@ struct NumberPadView: View {
     let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
     let viewModel = GameViewModel(puzzle: puzzle)
 
-    _ = viewModel.selectCell(at: CellPosition(row: 0, column: 0))
-    _ = viewModel.enterNumber(3)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    viewModel.enterNumber(3)
 
     return NumberPadView(viewModel: viewModel)
         .padding()
@@ -329,8 +329,8 @@ struct NumberPadView: View {
     let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
     let viewModel = GameViewModel(puzzle: puzzle)
 
-    _ = viewModel.selectCell(at: CellPosition(row: 0, column: 0))
-    _ = viewModel.enterNumber(8)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    viewModel.enterNumber(8)
 
     return NumberPadView(viewModel: viewModel)
         .padding()
