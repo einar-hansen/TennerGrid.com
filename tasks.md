@@ -58,7 +58,7 @@
 
 - [x] Implement `PuzzleGenerator` to create random valid completed grids
 - [x] Add method to remove cells based on difficulty while maintaining unique solution
-- [ ] Add method to calculate column sums from completed grid
+- [x] Add method to calculate column sums from completed grid
 - [ ] Add method to generate full puzzle with specified columns, rows, and difficulty
 - [ ] Write unit tests ensuring generated puzzles are valid and solvable
 

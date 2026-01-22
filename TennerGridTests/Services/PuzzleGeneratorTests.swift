@@ -379,6 +379,286 @@ final class PuzzleGeneratorTests: XCTestCase {
         }
     }
 
+    // MARK: - calculateColumnSums Tests
+
+    func testCalculateColumnSums_ValidGrid() {
+        // Given: A simple 3x3 grid with known values
+        let grid = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+        ]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: Should return correct sums [12, 15, 18]
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 3, "Should have 3 column sums")
+        XCTAssertEqual(sums?[0], 12, "Column 0 sum should be 1+4+7=12")
+        XCTAssertEqual(sums?[1], 15, "Column 1 sum should be 2+5+8=15")
+        XCTAssertEqual(sums?[2], 18, "Column 2 sum should be 3+6+9=18")
+    }
+
+    func testCalculateColumnSums_SingleRow() {
+        // Given: A grid with a single row
+        let grid = [[5, 3, 7, 2]]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: Column sums should equal the row values
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 4, "Should have 4 column sums")
+        XCTAssertEqual(sums?[0], 5, "Column 0 sum should be 5")
+        XCTAssertEqual(sums?[1], 3, "Column 1 sum should be 3")
+        XCTAssertEqual(sums?[2], 7, "Column 2 sum should be 7")
+        XCTAssertEqual(sums?[3], 2, "Column 3 sum should be 2")
+    }
+
+    func testCalculateColumnSums_SingleColumn() {
+        // Given: A grid with a single column
+        let grid = [
+            [3],
+            [7],
+            [2],
+            [9],
+        ]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: Should return sum of all values
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 1, "Should have 1 column sum")
+        XCTAssertEqual(sums?[0], 21, "Column 0 sum should be 3+7+2+9=21")
+    }
+
+    func testCalculateColumnSums_AllZeros() {
+        // Given: A grid with all zeros
+        let grid = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: All sums should be zero
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 3, "Should have 3 column sums")
+        XCTAssertEqual(sums?[0], 0, "Column 0 sum should be 0")
+        XCTAssertEqual(sums?[1], 0, "Column 1 sum should be 0")
+        XCTAssertEqual(sums?[2], 0, "Column 2 sum should be 0")
+    }
+
+    func testCalculateColumnSums_AllNines() {
+        // Given: A grid with all nines
+        let grid = [
+            [9, 9, 9, 9],
+            [9, 9, 9, 9],
+        ]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: All column sums should be 18 (2 rows * 9)
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 4, "Should have 4 column sums")
+        for (index, sum) in sums!.enumerated() {
+            XCTAssertEqual(sum, 18, "Column \(index) sum should be 18")
+        }
+    }
+
+    func testCalculateColumnSums_MinimumTennerGridSize() {
+        // Given: Minimum valid Tenner Grid size (5x5)
+        let grid = [
+            [1, 2, 3, 4, 5],
+            [6, 7, 8, 9, 0],
+            [0, 1, 2, 3, 4],
+            [5, 6, 7, 8, 9],
+            [9, 8, 7, 6, 5],
+        ]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: Should return correct sums
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 5, "Should have 5 column sums")
+        XCTAssertEqual(sums?[0], 21, "Column 0 sum should be 1+6+0+5+9=21")
+        XCTAssertEqual(sums?[1], 24, "Column 1 sum should be 2+7+1+6+8=24")
+        XCTAssertEqual(sums?[2], 27, "Column 2 sum should be 3+8+2+7+7=27")
+        XCTAssertEqual(sums?[3], 30, "Column 3 sum should be 4+9+3+8+6=30")
+        XCTAssertEqual(sums?[4], 23, "Column 4 sum should be 5+0+4+9+5=23")
+    }
+
+    func testCalculateColumnSums_MaximumTennerGridSize() {
+        // Given: Maximum valid Tenner Grid size (10x10)
+        guard let grid = generator.generateCompletedGrid(rows: 10, columns: 10) else {
+            XCTFail("Failed to generate completed grid")
+            return
+        }
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: Should return 10 column sums with valid ranges
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, 10, "Should have 10 column sums")
+
+        for (index, sum) in sums!.enumerated() {
+            // Each column sum should be between 0 (10 zeros) and 90 (10 nines)
+            XCTAssertTrue(
+                sum >= 0 && sum <= 90,
+                "Column \(index) sum (\(sum)) should be between 0 and 90"
+            )
+        }
+    }
+
+    func testCalculateColumnSums_EmptyGrid() {
+        // Given: An empty grid
+        let emptyGrid: [[Int]] = []
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: emptyGrid)
+
+        // Then: Should return nil
+        XCTAssertNil(sums, "Should return nil for empty grid")
+    }
+
+    func testCalculateColumnSums_EmptyRow() {
+        // Given: A grid with an empty row
+        let gridWithEmptyRow: [[Int]] = [[]]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: gridWithEmptyRow)
+
+        // Then: Should return nil
+        XCTAssertNil(sums, "Should return nil for grid with empty row")
+    }
+
+    func testCalculateColumnSums_InconsistentRowLengths() {
+        // Given: A grid with inconsistent row lengths (invalid)
+        let invalidGrid = [
+            [1, 2, 3],
+            [4, 5],
+            [6, 7, 8],
+        ]
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: invalidGrid)
+
+        // Then: Should return nil
+        XCTAssertNil(sums, "Should return nil for grid with inconsistent row lengths")
+    }
+
+    func testCalculateColumnSums_WithGeneratedGrid() {
+        // Given: A generated completed grid
+        let rows = 7
+        let columns = 8
+        guard let grid = generator.generateCompletedGrid(rows: rows, columns: columns) else {
+            XCTFail("Failed to generate completed grid")
+            return
+        }
+
+        // When: Calculating column sums
+        let sums = generator.calculateColumnSums(from: grid)
+
+        // Then: Should return valid column sums
+        XCTAssertNotNil(sums, "Should return column sums")
+        XCTAssertEqual(sums?.count, columns, "Should have correct number of column sums")
+
+        // Verify sums by manually calculating them
+        for col in 0 ..< columns {
+            var expectedSum = 0
+            for row in 0 ..< rows {
+                expectedSum += grid[row][col]
+            }
+            XCTAssertEqual(
+                sums?[col],
+                expectedSum,
+                "Column \(col) sum should match manually calculated sum"
+            )
+        }
+    }
+
+    func testCalculateColumnSums_MultipleGrids() {
+        // Given: Multiple generated grids
+        let attempts = 10
+        var successCount = 0
+
+        for _ in 0 ..< attempts {
+            guard let grid = generator.generateCompletedGrid(rows: 6, columns: 6) else {
+                continue
+            }
+
+            // When: Calculating column sums
+            if let sums = generator.calculateColumnSums(from: grid) {
+                successCount += 1
+
+                // Then: Should have correct number of sums
+                XCTAssertEqual(sums.count, 6, "Should have 6 column sums")
+
+                // Verify each sum is within valid range
+                for sum in sums {
+                    XCTAssertTrue(
+                        sum >= 0 && sum <= 54,
+                        "Column sum (\(sum)) should be between 0 and 54"
+                    )
+                }
+            }
+        }
+
+        XCTAssertEqual(successCount, attempts, "All column sum calculations should succeed")
+    }
+
+    func testCalculateColumnSums_ConsistencyWithHelperMethod() {
+        // Given: A generated grid
+        let rows = 5
+        let columns = 5
+        guard let grid = generator.generateCompletedGrid(rows: rows, columns: columns) else {
+            XCTFail("Failed to generate completed grid")
+            return
+        }
+
+        // When: Calculating sums with both methods
+        let sumsFromGenerator = generator.calculateColumnSums(from: grid)
+        let sumsFromHelper = calculateColumnSums(grid: grid)
+
+        // Then: Both should produce identical results
+        XCTAssertNotNil(sumsFromGenerator, "Generator method should return sums")
+        XCTAssertEqual(
+            sumsFromGenerator?.count,
+            sumsFromHelper.count,
+            "Both methods should return same number of sums"
+        )
+
+        for col in 0 ..< columns {
+            XCTAssertEqual(
+                sumsFromGenerator?[col],
+                sumsFromHelper[col],
+                "Column \(col) sum should match between methods"
+            )
+        }
+    }
+
+    func testCalculateColumnSums_Performance() {
+        // Given: A large grid
+        guard let grid = generator.generateCompletedGrid(rows: 10, columns: 10) else {
+            XCTFail("Failed to generate completed grid")
+            return
+        }
+
+        // When: Measuring calculation time
+        measure {
+            _ = generator.calculateColumnSums(from: grid)
+        }
+
+        // Then: Performance is measured
+    }
+
     // MARK: - removeCells Tests
 
     func testRemoveCells_EasyDifficulty() {

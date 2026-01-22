@@ -286,6 +286,37 @@ struct PuzzleGenerator {
         return true
     }
 
+    /// Calculates the sum of each column in a completed grid
+    /// - Parameter completedGrid: A fully solved grid as a 2D array of integers
+    /// - Returns: An array of integers representing the sum of each column, or nil if grid is invalid
+    func calculateColumnSums(from completedGrid: [[Int]]) -> [Int]? {
+        // Validate grid is not empty
+        guard !completedGrid.isEmpty, !completedGrid[0].isEmpty else {
+            return nil
+        }
+
+        let rows = completedGrid.count
+        let columns = completedGrid[0].count
+
+        // Validate all rows have the same number of columns
+        guard completedGrid.allSatisfy({ $0.count == columns }) else {
+            return nil
+        }
+
+        // Calculate sum for each column
+        var columnSums: [Int] = Array(repeating: 0, count: columns)
+
+        for column in 0 ..< columns {
+            var sum = 0
+            for row in 0 ..< rows {
+                sum += completedGrid[row][column]
+            }
+            columnSums[column] = sum
+        }
+
+        return columnSums
+    }
+
     /// Removes cells from a completed grid based on difficulty while maintaining a unique solution
     /// - Parameters:
     ///   - completedGrid: A fully solved grid
