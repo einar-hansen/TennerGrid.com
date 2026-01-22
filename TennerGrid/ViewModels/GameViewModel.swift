@@ -489,6 +489,70 @@ final class GameViewModel: ObservableObject {
         redoStack.count
     }
 
+    /// Undoes the last action and restores the previous game state
+    func undo() {
+        // Check if there's anything to undo
+        guard !undoStack.isEmpty else {
+            errorMessage = "Nothing to undo"
+            return
+        }
+
+        // Pop the last action
+        let action = undoStack.removeLast()
+
+        // Apply the inverse action to restore previous state
+        applyAction(action, isUndo: true)
+
+        // Add to redo stack
+        redoStack.append(action)
+
+        // Clear any error messages
+        errorMessage = nil
+
+        // Update conflicts
+        updateConflicts()
+    }
+
+    /// Applies an action to the game state
+    /// - Parameters:
+    ///   - action: The action to apply
+    ///   - isUndo: True if this is being applied as an undo (use old values), false for redo (use new values)
+    private func applyAction(_ action: GameAction, isUndo: Bool) {
+        let targetValue = isUndo ? action.oldValue : action.newValue
+        let targetMarks = isUndo ? action.oldPencilMarks : action.newPencilMarks
+
+        // Apply based on action type
+        switch action.type {
+        case .setValue:
+            // Restore value (may be nil)
+            gameState.setValue(targetValue, at: action.position)
+            // Restore pencil marks if we're undoing
+            if isUndo, !action.oldPencilMarks.isEmpty {
+                gameState.setPencilMarks(action.oldPencilMarks, at: action.position)
+            }
+
+        case .clearValue:
+            // Restore value
+            gameState.setValue(targetValue, at: action.position)
+
+        case .setPencilMarks, .togglePencilMark:
+            // Restore pencil marks
+            gameState.setPencilMarks(targetMarks, at: action.position)
+
+        case .clearPencilMarks:
+            // Restore pencil marks
+            gameState.setPencilMarks(targetMarks, at: action.position)
+
+        case .clearCell:
+            // Restore both value and marks
+            if let value = targetValue {
+                gameState.setValue(value, at: action.position)
+            } else if !targetMarks.isEmpty {
+                gameState.setPencilMarks(targetMarks, at: action.position)
+            }
+        }
+    }
+
     // MARK: - Error Management
 
     /// Clears the current error message
