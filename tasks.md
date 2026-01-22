@@ -112,7 +112,7 @@
 
 ### 3.1 Cell View
 
-- [ ] Create `CellView` with number display, pre-filled vs user-entered styling
+- [x] Create `CellView` with number display, pre-filled vs user-entered styling
 - [ ] Add visual states: empty, selected, error, highlighted, same-number
 - [ ] Add pencil marks display in 3x3 grid within cell
 - [ ] Add tap gesture handling
