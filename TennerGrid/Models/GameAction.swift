@@ -225,18 +225,16 @@ extension GameAction {
 
 extension GameAction: CustomStringConvertible {
     var description: String {
-        let valueChange: String
-        if oldValue != newValue {
-            valueChange = "value: \(oldValue?.description ?? "nil") → \(newValue?.description ?? "nil")"
+        let valueChange = if oldValue != newValue {
+            "value: \(oldValue?.description ?? "nil") → \(newValue?.description ?? "nil")"
         } else {
-            valueChange = ""
+            ""
         }
 
-        let marksChange: String
-        if oldPencilMarks != newPencilMarks {
-            marksChange = "marks: \(oldPencilMarks) → \(newPencilMarks)"
+        let marksChange = if oldPencilMarks != newPencilMarks {
+            "marks: \(oldPencilMarks) → \(newPencilMarks)"
         } else {
-            marksChange = ""
+            ""
         }
 
         let changes = [valueChange, marksChange]

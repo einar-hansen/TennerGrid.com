@@ -65,7 +65,7 @@ final class GameViewModel: ObservableObject {
         elapsedTime = gameState.elapsedTime
 
         // Start timer if game is not paused or completed
-        if !gameState.isPaused && !gameState.isCompleted {
+        if !gameState.isPaused, !gameState.isCompleted {
             startTimer()
         }
     }
@@ -78,7 +78,7 @@ final class GameViewModel: ObservableObject {
     }
 
     deinit {
-        stopTimer()
+        timer?.invalidate()
     }
 
     // MARK: - Cell Selection
@@ -502,7 +502,7 @@ final class GameViewModel: ObservableObject {
     }
 
     /// Stops the timer (internal use)
-    nonisolated private func stopTimer() {
+    private func stopTimer() {
         timer?.invalidate()
         timer = nil
         lastTimerUpdate = nil
