@@ -87,8 +87,8 @@
 - [x] Add undo/redo action history stack to GameViewModel
 - [x] Implement undo method that restores previous game state
 - [x] Implement redo method that replays undone actions
-- [ ] Limit history to last 50 actions to manage memory
-- [ ] Write unit tests for undo/redo with multiple action sequences
+- [x] Limit history to last 50 actions to manage memory
+- [x] Write unit tests for undo/redo with multiple action sequences
 
 ### 2.3 Timer & Game Flow
 

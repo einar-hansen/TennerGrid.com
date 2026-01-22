@@ -1057,4 +1057,279 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.canUndo)
         XCTAssertFalse(viewModel.canRedo)
     }
+
+    // MARK: - History Limit Tests
+
+    func testHistoryLimitTo50Actions() {
+        // Perform 60 actions to exceed the 50 action limit
+        let position = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: position)
+
+        // Perform 60 actions (alternating between values to create distinct actions)
+        for i in 0 ..< 60 {
+            let value = i % 10
+            viewModel.enterNumber(value)
+            viewModel.clearSelectedCell()
+        }
+
+        // Verify history is limited to 50
+        XCTAssertEqual(viewModel.undoCount, 50, "History should be limited to 50 actions")
+
+        // Verify we can undo exactly 50 times
+        for _ in 0 ..< 50 {
+            XCTAssertTrue(viewModel.canUndo)
+            viewModel.undo()
+        }
+
+        // After 50 undos, there should be nothing left to undo
+        XCTAssertFalse(viewModel.canUndo)
+        XCTAssertEqual(viewModel.undoCount, 0)
+
+        // But we should have 50 actions in redo stack
+        XCTAssertEqual(viewModel.redoCount, 50)
+    }
+
+    func testHistoryLimitPreservesNewestActions() {
+        // Perform 55 actions
+        let position = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: position)
+
+        // First 5 actions should be discarded (oldest)
+        for i in 0 ..< 5 {
+            viewModel.enterNumber(i)
+            viewModel.clearSelectedCell()
+        }
+
+        // Next 50 actions should be preserved
+        for i in 0 ..< 50 {
+            viewModel.enterNumber(i % 10)
+            viewModel.clearSelectedCell()
+        }
+
+        // Verify only 50 actions are stored
+        XCTAssertEqual(viewModel.undoCount, 50)
+
+        // Undo all 50 actions
+        for _ in 0 ..< 50 {
+            viewModel.undo()
+        }
+
+        // Verify we can't undo anymore (the first 5 actions were discarded)
+        XCTAssertFalse(viewModel.canUndo)
+        XCTAssertEqual(viewModel.undoCount, 0)
+    }
+
+    func testHistoryLimitWithMixedActions() {
+        // Test with different action types
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 1, column: 0)
+
+        viewModel.selectCell(at: position1)
+
+        // Perform 60 mixed actions
+        for i in 0 ..< 60 {
+            switch i % 4 {
+            case 0:
+                // Set value
+                viewModel.enterNumber(i % 10)
+            case 1:
+                // Clear cell
+                if !viewModel.isEmpty(at: position1) {
+                    viewModel.clearSelectedCell()
+                }
+            case 2:
+                // Add pencil mark
+                if viewModel.isEmpty(at: position1) {
+                    viewModel.addPencilMark(i % 10)
+                }
+            case 3:
+                // Toggle pencil mark
+                if viewModel.isEmpty(at: position1) {
+                    viewModel.togglePencilMark(i % 10)
+                }
+            default:
+                break
+            }
+        }
+
+        // History should be limited to 50
+        XCTAssertLessThanOrEqual(viewModel.undoCount, 50)
+    }
+
+    func testHistoryLimitDoesNotAffectRedoStack() {
+        let position = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: position)
+
+        // Perform 60 actions
+        for i in 0 ..< 60 {
+            viewModel.enterNumber(i % 10)
+            viewModel.clearSelectedCell()
+        }
+
+        // Undo 30 actions
+        for _ in 0 ..< 30 {
+            viewModel.undo()
+        }
+
+        // Should have 20 in undo stack and 30 in redo stack
+        XCTAssertEqual(viewModel.undoCount, 20)
+        XCTAssertEqual(viewModel.redoCount, 30)
+
+        // Perform a new action - this should clear redo stack but not affect undo limit
+        viewModel.enterNumber(5)
+
+        XCTAssertEqual(viewModel.undoCount, 21)
+        XCTAssertEqual(viewModel.redoCount, 0)
+    }
+
+    func testMultipleActionSequencesWithUndoRedo() {
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 1, column: 0)
+
+        // Sequence 1: Fill position1
+        viewModel.selectCell(at: position1)
+        viewModel.addPencilMark(2)
+        viewModel.addPencilMark(5)
+        viewModel.enterNumber(2)
+
+        XCTAssertEqual(viewModel.undoCount, 3)
+
+        // Sequence 2: Fill position2
+        viewModel.selectCell(at: position2)
+        viewModel.addPencilMark(3)
+        viewModel.enterNumber(3)
+
+        XCTAssertEqual(viewModel.undoCount, 5)
+
+        // Sequence 3: Clear position1
+        viewModel.selectCell(at: position1)
+        viewModel.clearSelectedCell()
+
+        XCTAssertEqual(viewModel.undoCount, 6)
+
+        // Undo entire sequence 3
+        viewModel.undo()
+        XCTAssertEqual(viewModel.value(at: position1), 2)
+        XCTAssertEqual(viewModel.undoCount, 5)
+
+        // Undo entire sequence 2
+        viewModel.undo() // Undo enterNumber(3)
+        viewModel.undo() // Undo addPencilMark(3)
+        XCTAssertNil(viewModel.value(at: position2))
+        XCTAssertTrue(viewModel.marks(at: position2).isEmpty)
+        XCTAssertEqual(viewModel.undoCount, 3)
+
+        // Undo entire sequence 1
+        viewModel.undo() // Undo enterNumber(2)
+        viewModel.undo() // Undo addPencilMark(5)
+        viewModel.undo() // Undo addPencilMark(2)
+        XCTAssertNil(viewModel.value(at: position1))
+        XCTAssertTrue(viewModel.marks(at: position1).isEmpty)
+        XCTAssertEqual(viewModel.undoCount, 0)
+
+        // Verify we can redo all sequences
+        XCTAssertEqual(viewModel.redoCount, 6)
+
+        // Redo sequence 1
+        viewModel.redo() // Redo addPencilMark(2)
+        viewModel.redo() // Redo addPencilMark(5)
+        viewModel.redo() // Redo enterNumber(2)
+        XCTAssertEqual(viewModel.value(at: position1), 2)
+        XCTAssertEqual(viewModel.undoCount, 3)
+
+        // Redo sequence 2
+        viewModel.redo() // Redo addPencilMark(3)
+        viewModel.redo() // Redo enterNumber(3)
+        XCTAssertEqual(viewModel.value(at: position2), 3)
+        XCTAssertEqual(viewModel.undoCount, 5)
+
+        // Redo sequence 3
+        viewModel.redo() // Redo clearSelectedCell
+        XCTAssertNil(viewModel.value(at: position1))
+        XCTAssertEqual(viewModel.undoCount, 6)
+        XCTAssertEqual(viewModel.redoCount, 0)
+    }
+
+    func testComplexActionSequenceWithPartialUndoRedo() {
+        let position = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: position)
+
+        // Build up a complex state
+        viewModel.addPencilMark(1)
+        viewModel.addPencilMark(2)
+        viewModel.addPencilMark(3)
+        viewModel.togglePencilMark(2) // Remove 2
+        viewModel.enterNumber(3) // Clear marks and set value
+        viewModel.clearSelectedCell() // Clear value
+
+        XCTAssertEqual(viewModel.undoCount, 6)
+        XCTAssertTrue(viewModel.isEmpty(at: position))
+        XCTAssertTrue(viewModel.marks(at: position).isEmpty)
+
+        // Undo half the sequence
+        viewModel.undo() // Undo clear
+        XCTAssertEqual(viewModel.value(at: position), 3)
+
+        viewModel.undo() // Undo setValue(3)
+        XCTAssertNil(viewModel.value(at: position))
+        XCTAssertTrue(viewModel.marks(at: position).contains(1))
+        XCTAssertFalse(viewModel.marks(at: position).contains(2))
+        XCTAssertTrue(viewModel.marks(at: position).contains(3))
+
+        viewModel.undo() // Undo toggle (restore 2)
+        XCTAssertTrue(viewModel.marks(at: position).contains(2))
+
+        XCTAssertEqual(viewModel.undoCount, 3)
+        XCTAssertEqual(viewModel.redoCount, 3)
+
+        // Perform new action in middle of sequence
+        viewModel.addPencilMark(5)
+        XCTAssertTrue(viewModel.marks(at: position).contains(5))
+
+        // Redo stack should be cleared
+        XCTAssertEqual(viewModel.redoCount, 0)
+        XCTAssertEqual(viewModel.undoCount, 4)
+
+        // Verify we can still undo to beginning
+        for _ in 0 ..< 4 {
+            viewModel.undo()
+        }
+        XCTAssertTrue(viewModel.marks(at: position).isEmpty)
+        XCTAssertEqual(viewModel.undoCount, 0)
+    }
+
+    func testActionSequencePreservesGameState() {
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 0, column: 2)
+
+        // Create a specific game state
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: position2)
+        viewModel.enterNumber(0)
+
+        XCTAssertEqual(viewModel.value(at: position1), 2)
+        XCTAssertEqual(viewModel.value(at: position2), 0)
+
+        // Store state
+        let savedValue1 = viewModel.value(at: position1)
+        let savedValue2 = viewModel.value(at: position2)
+
+        // Perform many operations and undo all
+        for i in 0 ..< 10 {
+            viewModel.selectCell(at: position1)
+            viewModel.enterNumber((i + 3) % 10)
+            viewModel.clearSelectedCell()
+        }
+
+        // Undo all 20 actions (10 enter + 10 clear)
+        for _ in 0 ..< 20 {
+            viewModel.undo()
+        }
+
+        // Verify state is restored
+        XCTAssertEqual(viewModel.value(at: position1), savedValue1)
+        XCTAssertEqual(viewModel.value(at: position2), savedValue2)
+    }
 }
