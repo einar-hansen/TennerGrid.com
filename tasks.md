@@ -136,19 +136,19 @@
 
 ### 3.4 Game Toolbar
 
-- [ ] Create `GameToolbarView` with Undo, Erase, Notes, and Hint buttons
-- [ ] Use SF Symbols for all icons
-- [ ] Add ON/OFF indicator for notes mode
-- [ ] Add badge showing remaining hints
-- [ ] Wire up all toolbar actions to GameViewModel
+- [x] Create `GameToolbarView` with Undo, Erase, Notes, and Hint buttons
+- [x] Use SF Symbols for all icons
+- [x] Add ON/OFF indicator for notes mode
+- [x] Add badge showing remaining hints
+- [x] Wire up all toolbar actions to GameViewModel
 
 ### 3.5 Game Header
 
-- [ ] Create `GameHeaderView` with timer display (MM:SS format)
-- [ ] Add difficulty label with color indicator
-- [ ] Add pause button
-- [ ] Add settings/menu button
-- [ ] Test header layout on different screen sizes
+- [x] Create `GameHeaderView` with timer display (MM:SS format)
+- [x] Add difficulty label with color indicator
+- [x] Add pause button
+- [x] Add settings/menu button
+- [x] Test header layout on different screen sizes
 
 ---
 
@@ -156,10 +156,10 @@
 
 ### 4.1 Main Game View
 
-- [ ] Create `GameView` composing GridView, NumberPad, Toolbar, and Header
+- [x] Create `GameView` composing GridView, NumberPad, Toolbar, and Header
 - [ ] Add keyboard support for number entry (0-9 keys, backspace)
-- [ ] Implement pause overlay that blurs the grid
-- [ ] Add basic win screen navigation
+- [x] Implement pause overlay that blurs the grid
+- [x] Add basic win screen navigation
 - [ ] Test complete game flow: start, play, complete
 
 ### 4.2 Pause Menu
