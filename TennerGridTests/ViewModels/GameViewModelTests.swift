@@ -1627,4 +1627,233 @@ final class GameViewModelTests: XCTestCase {
         // Verify the view model was deallocated
         XCTAssertNil(weakViewModel, "GameViewModel should deallocate cleanly when paused")
     }
+
+    // MARK: - Visual Feedback Tests
+
+    func testCellHighlightingForSelectedCell() {
+        // Select a cell
+        let selectedPos = CellPosition(row: 1, column: 1)
+        viewModel.selectCell(at: selectedPos)
+
+        // Get the selected cell
+        let selectedCell = viewModel.cell(at: selectedPos)
+
+        // Selected cell should be marked as selected but not highlighted
+        XCTAssertTrue(selectedCell.isSelected)
+        XCTAssertFalse(selectedCell.isHighlighted)
+    }
+
+    func testCellHighlightingForSameRow() {
+        // Select a cell
+        let selectedPos = CellPosition(row: 1, column: 1)
+        viewModel.selectCell(at: selectedPos)
+
+        // Check cells in the same row
+        let sameRowPos1 = CellPosition(row: 1, column: 0)
+        let sameRowPos2 = CellPosition(row: 1, column: 2)
+
+        let cell1 = viewModel.cell(at: sameRowPos1)
+        let cell2 = viewModel.cell(at: sameRowPos2)
+
+        // Cells in the same row should be highlighted
+        XCTAssertTrue(cell1.isHighlighted)
+        XCTAssertTrue(cell2.isHighlighted)
+        XCTAssertFalse(cell1.isSelected)
+        XCTAssertFalse(cell2.isSelected)
+    }
+
+    func testCellHighlightingForSameColumn() {
+        // Select a cell
+        let selectedPos = CellPosition(row: 1, column: 1)
+        viewModel.selectCell(at: selectedPos)
+
+        // Check cells in the same column
+        let sameColPos1 = CellPosition(row: 0, column: 1)
+        let sameColPos2 = CellPosition(row: 2, column: 1)
+
+        let cell1 = viewModel.cell(at: sameColPos1)
+        let cell2 = viewModel.cell(at: sameColPos2)
+
+        // Cells in the same column should be highlighted
+        XCTAssertTrue(cell1.isHighlighted)
+        XCTAssertTrue(cell2.isHighlighted)
+        XCTAssertFalse(cell1.isSelected)
+        XCTAssertFalse(cell2.isSelected)
+    }
+
+    func testCellHighlightingForAdjacentCells() {
+        // Select a cell
+        let selectedPos = CellPosition(row: 1, column: 1)
+        viewModel.selectCell(at: selectedPos)
+
+        // Check all 8 adjacent cells (diagonals and orthogonal)
+        let adjacentPositions = [
+            CellPosition(row: 0, column: 0), // Top-left diagonal
+            CellPosition(row: 0, column: 1), // Top (also same column)
+            CellPosition(row: 0, column: 2), // Top-right diagonal
+            CellPosition(row: 1, column: 0), // Left (also same row)
+            CellPosition(row: 1, column: 2), // Right (also same row)
+            CellPosition(row: 2, column: 0), // Bottom-left diagonal
+            CellPosition(row: 2, column: 1), // Bottom (also same column)
+            CellPosition(row: 2, column: 2), // Bottom-right diagonal
+        ]
+
+        for position in adjacentPositions {
+            let cell = viewModel.cell(at: position)
+            XCTAssertTrue(cell.isHighlighted, "Cell at \(position) should be highlighted")
+            XCTAssertFalse(cell.isSelected, "Cell at \(position) should not be selected")
+        }
+    }
+
+    func testNoHighlightingWhenNoSelection() {
+        // No cell selected
+        XCTAssertNil(viewModel.selectedPosition)
+
+        // Check that no cells are highlighted
+        for row in 0 ..< 3 {
+            for col in 0 ..< 3 {
+                let position = CellPosition(row: row, column: col)
+                let cell = viewModel.cell(at: position)
+                XCTAssertFalse(cell.isHighlighted, "Cell at \(position) should not be highlighted")
+                XCTAssertFalse(cell.isSelected, "Cell at \(position) should not be selected")
+            }
+        }
+    }
+
+    func testSameNumberHighlighting() {
+        // Place a number in two different cells
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 2, column: 0)
+
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: position2)
+        viewModel.enterNumber(2)
+
+        // Now select the first cell
+        viewModel.selectCell(at: position1)
+
+        // The second cell should be marked as having the same number
+        let cell2 = viewModel.cell(at: position2)
+        XCTAssertTrue(cell2.isSameNumber, "Cell at \(position2) should be marked as same number")
+        XCTAssertFalse(cell2.isSelected, "Cell at \(position2) should not be selected")
+
+        // The selected cell itself should not be marked as same number
+        let cell1 = viewModel.cell(at: position1)
+        XCTAssertFalse(cell1.isSameNumber, "Selected cell should not be marked as same number")
+        XCTAssertTrue(cell1.isSelected)
+    }
+
+    func testSameNumberNotHighlightedForDifferentValues() {
+        // Place different numbers in cells
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 2, column: 0)
+
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: position2)
+        viewModel.enterNumber(3)
+
+        // Select the first cell
+        viewModel.selectCell(at: position1)
+
+        // The second cell should not be marked as same number
+        let cell2 = viewModel.cell(at: position2)
+        XCTAssertFalse(cell2.isSameNumber)
+    }
+
+    func testSameNumberNotHighlightedForEmptyCells() {
+        // Place a number in one cell
+        let position1 = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+
+        // Select the cell
+        viewModel.selectCell(at: position1)
+
+        // Empty cells should not be marked as same number
+        let emptyPosition = CellPosition(row: 2, column: 0)
+        let emptyCell = viewModel.cell(at: emptyPosition)
+        XCTAssertFalse(emptyCell.isSameNumber)
+    }
+
+    func testSameNumberNotHighlightedWhenSelectedCellIsEmpty() {
+        // Place a number in one cell
+        let position1 = CellPosition(row: 2, column: 0)
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+
+        // Select an empty cell
+        let emptyPosition = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: emptyPosition)
+
+        // The filled cell should not be marked as same number
+        let cell1 = viewModel.cell(at: position1)
+        XCTAssertFalse(cell1.isSameNumber)
+    }
+
+    func testMultipleCellsWithSameNumberHighlighted() {
+        // Place the same number in multiple cells
+        let positions = [
+            CellPosition(row: 0, column: 1),
+            CellPosition(row: 1, column: 0),
+            CellPosition(row: 2, column: 0),
+        ]
+
+        for position in positions {
+            viewModel.selectCell(at: position)
+            viewModel.enterNumber(2)
+        }
+
+        // Select one of them
+        viewModel.selectCell(at: positions[0])
+
+        // All other cells with the same number should be marked
+        for i in 1 ..< positions.count {
+            let cell = viewModel.cell(at: positions[i])
+            XCTAssertTrue(cell.isSameNumber, "Cell at \(positions[i]) should be marked as same number")
+        }
+
+        // The selected cell should not be marked as same number
+        let selectedCell = viewModel.cell(at: positions[0])
+        XCTAssertFalse(selectedCell.isSameNumber)
+    }
+
+    func testErrorHighlighting() {
+        // Place a number that creates a conflict
+        let position1 = CellPosition(row: 0, column: 1)
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(1) // This should conflict with the initial cell at [0,0]
+
+        // The cell should be marked as having an error
+        let cell = viewModel.cell(at: position1)
+        XCTAssertTrue(cell.hasError, "Cell should be marked as having an error")
+        XCTAssertTrue(viewModel.conflictingPositions.contains(position1))
+    }
+
+    func testHighlightingUpdatesWhenSelectionChanges() {
+        // Select first cell
+        let position1 = CellPosition(row: 0, column: 0)
+        viewModel.selectCell(at: position1)
+
+        // Check that adjacent cell is highlighted
+        let adjacentPosition = CellPosition(row: 0, column: 1)
+        var cell = viewModel.cell(at: adjacentPosition)
+        XCTAssertTrue(cell.isHighlighted)
+
+        // Select a different cell
+        let position2 = CellPosition(row: 2, column: 2)
+        viewModel.selectCell(at: position2)
+
+        // The previously highlighted cell should no longer be highlighted
+        cell = viewModel.cell(at: adjacentPosition)
+        XCTAssertFalse(cell.isHighlighted)
+
+        // New adjacent cells should be highlighted
+        let newAdjacentPosition = CellPosition(row: 2, column: 1)
+        cell = viewModel.cell(at: newAdjacentPosition)
+        XCTAssertTrue(cell.isHighlighted)
+    }
 }

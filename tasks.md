@@ -121,9 +121,9 @@
 ### 3.2 Grid View
 
 - [x] Create `GridView` with dynamic LazyVGrid layout for 5-10 columns
-- [ ] Add column sum display below each column
-- [ ] Implement cell selection coordination with GameViewModel
-- [ ] Add visual feedback for adjacent cells and same numbers
+- [x] Add column sum display below each column
+- [x] Implement cell selection coordination with GameViewModel
+- [x] Add visual feedback for adjacent cells and same numbers
 - [ ] Test grid rendering with different puzzle sizes
 
 ### 3.3 Number Pad

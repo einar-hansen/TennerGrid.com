@@ -739,12 +739,14 @@ final class GameViewModel: ObservableObject {
         let pencilMarks = gameState.marks(at: position)
         let isSelected = gameState.selectedCell == position
 
-        // Check if this cell has an error (validation logic would go here)
-        let hasError = false
+        // Check if this cell has validation errors
+        let hasError = conflictingPositions.contains(position)
 
         // Check if this cell should be highlighted
-        // (e.g., same value as selected cell or adjacent to selected cell)
-        let isHighlighted = false
+        let isHighlighted = shouldHighlight(position: position)
+
+        // Check if this cell has the same number as the selected cell
+        let isSameNumber = shouldMarkAsSameNumber(position: position, value: value)
 
         return Cell(
             position: position,
@@ -753,8 +755,59 @@ final class GameViewModel: ObservableObject {
             pencilMarks: pencilMarks,
             isSelected: isSelected,
             hasError: hasError,
-            isHighlighted: isHighlighted
+            isHighlighted: isHighlighted,
+            isSameNumber: isSameNumber
         )
+    }
+
+    // MARK: - Cell Highlighting Logic
+
+    /// Determines if a cell should be highlighted (adjacent to selected cell or in same row/column)
+    /// - Parameter position: The position to check
+    /// - Returns: True if the cell should be highlighted
+    private func shouldHighlight(position: CellPosition) -> Bool {
+        guard let selected = selectedPosition else {
+            return false
+        }
+
+        // Don't highlight the selected cell itself
+        if position == selected {
+            return false
+        }
+
+        // Highlight cells in the same row
+        if position.row == selected.row {
+            return true
+        }
+
+        // Highlight cells in the same column
+        if position.column == selected.column {
+            return true
+        }
+
+        // Highlight adjacent cells (diagonal and orthogonal)
+        let rowDiff = abs(position.row - selected.row)
+        let colDiff = abs(position.column - selected.column)
+
+        // Adjacent means within 1 row and 1 column
+        return rowDiff <= 1 && colDiff <= 1
+    }
+
+    /// Determines if a cell should be marked as "same number" (matching the selected cell's value)
+    /// - Parameters:
+    ///   - position: The position to check
+    ///   - value: The value at this position
+    /// - Returns: True if the cell has the same value as the selected cell
+    private func shouldMarkAsSameNumber(position: CellPosition, value: Int?) -> Bool {
+        guard let selected = selectedPosition,
+              let selectedValue = gameState.currentGrid[selected.row][selected.column],
+              let currentValue = value,
+              position != selected
+        else {
+            return false
+        }
+
+        return currentValue == selectedValue
     }
 
     /// Calculate the current sum for a column
