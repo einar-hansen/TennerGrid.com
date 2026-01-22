@@ -5,6 +5,33 @@ set -euo pipefail
 # Unset API key to force Claude Code to use subscription
 unset ANTHROPIC_API_KEY
 
+# Add signal handling for clean exit
+INTERRUPT_FLAG="/tmp/ralph_interrupt_$$"
+trap 'handle_interrupt' INT TERM
+
+handle_interrupt() {
+  echo -e "\n${YELLOW}[WARN]${NC} Interrupt signal received. Cleaning up..."
+  touch "$INTERRUPT_FLAG"
+
+  # Kill any running xcodebuild processes spawned by this script
+  pkill -P $$ xcodebuild 2>/dev/null || true
+
+  # Clean up interrupt flag on exit
+  rm -f "$INTERRUPT_FLAG" 2>/dev/null || true
+
+  echo -e "${GREEN}[INFO]${NC} Exiting gracefully..."
+  exit 130
+}
+
+# Check for interrupt flag at start of each iteration
+check_interrupt() {
+  if [[ -f "$INTERRUPT_FLAG" ]]; then
+    log_info "Interrupt flag detected. Exiting."
+    rm -f "$INTERRUPT_FLAG"
+    exit 130
+  fi
+}
+
 # Usage: ./ralph_ios.sh [max_iterations] [tasks_file] [scheme_name]
 MAX_ITERATIONS=${1:-50}
 TASKS_FILE=${2:-tasks.md}
@@ -63,6 +90,8 @@ else
 fi
 
 for i in $(seq 1 "$MAX_ITERATIONS"); do
+  check_interrupt  # Check if we should exit before starting iteration
+
   log_info "Starting iteration $i of $MAX_ITERATIONS"
 
   # Exit if we've created the completion flag
@@ -172,13 +201,17 @@ PROMPT
 )
   fi
 
+  check_interrupt  # Check before calling agent
+
   # Call the agent
-  log_info "Calling Claude Code agent… Model $MODEL…"
+  log_info "Calling Claude Code agent... Model $MODEL..."
   claude --print \
     --no-session-persistence \
-    --model "$MODEL"
     --permission-mode acceptEdits \
+    --model "$MODEL" \
     "$AGENT_PROMPT"
+
+  check_interrupt  # Check after agent completes
 
   echo ""
   log_info "Agent completed. Running quality checks..."
@@ -223,6 +256,8 @@ PROMPT
     continue
   fi
 
+  check_interrupt  # Check before tests
+
   # Step 2: Run tests (only if build succeeded)
   log_info "Running tests..."
   if xcodebuild test \
@@ -235,6 +270,8 @@ PROMPT
     log_warn "✗ Some tests failed. Review test output above."
     # Don't exit - let the developer decide whether to continue
   fi
+
+  check_interrupt  # Check before linting
 
   # Step 3: Run SwiftLint (if installed)
   if command -v swiftlint &> /dev/null; then
@@ -257,6 +294,8 @@ PROMPT
   else
     log_warn "SwiftFormat not installed. Skipping. Install with: brew install swiftformat"
   fi
+
+  check_interrupt  # Check before commit
 
   # Step 5: Commit changes (if agent didn't already)
   if [[ -n "$(git status --porcelain)" ]]; then
