@@ -92,11 +92,11 @@
 
 ### 2.3 Timer & Game Flow
 
-- [ ] Add timer tracking to GameViewModel with start, pause, resume functionality
-- [ ] Implement pause/resume game state management
-- [ ] Implement completion check after each number entry
-- [ ] Trigger win state when puzzle is correctly completed
-- [ ] Write unit tests for timer and game flow state transitions
+- [x] Add timer tracking to GameViewModel with start, pause, resume functionality
+- [x] Implement pause/resume game state management
+- [x] Implement completion check after each number entry
+- [x] Trigger win state when puzzle is correctly completed
+- [x] Write unit tests for timer and game flow state transitions
 
 ### 2.4 Puzzle Manager
 

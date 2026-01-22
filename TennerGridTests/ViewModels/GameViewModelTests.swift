@@ -1332,4 +1332,252 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.value(at: position1), savedValue1)
         XCTAssertEqual(viewModel.value(at: position2), savedValue2)
     }
+
+    // MARK: - Timer & Game Flow Tests
+
+    func testTimerStartsAutomatically() {
+        // Timer should start automatically when creating a new game
+        XCTAssertTrue(viewModel.isTimerRunning)
+        XCTAssertEqual(viewModel.elapsedTime, 0, accuracy: 0.1)
+    }
+
+    func testTimerDoesNotStartWhenGameIsPaused() async {
+        // Create a paused game state
+        var pausedState = GameState(puzzle: puzzle)
+        pausedState.pause()
+
+        let pausedViewModel = GameViewModel(gameState: pausedState)
+
+        // Timer should not be running
+        XCTAssertFalse(pausedViewModel.isTimerRunning)
+        XCTAssertTrue(pausedViewModel.gameState.isPaused)
+    }
+
+    func testTimerDoesNotStartWhenGameIsCompleted() async {
+        // Create a completed game state
+        var completedState = GameState(puzzle: puzzle)
+        completedState.complete()
+
+        let completedViewModel = GameViewModel(gameState: completedState)
+
+        // Timer should not be running
+        XCTAssertFalse(completedViewModel.isTimerRunning)
+        XCTAssertTrue(completedViewModel.gameState.isCompleted)
+    }
+
+    func testTimerUpdatesElapsedTime() async {
+        // Start fresh
+        let newViewModel = GameViewModel(puzzle: puzzle)
+        XCTAssertEqual(newViewModel.elapsedTime, 0, accuracy: 0.1)
+
+        // Wait for a bit
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+
+        // Elapsed time should have increased
+        XCTAssertGreaterThan(newViewModel.elapsedTime, 0.3)
+        XCTAssertLessThan(newViewModel.elapsedTime, 0.8)
+    }
+
+    func testPauseTimer() async {
+        // Start fresh
+        let newViewModel = GameViewModel(puzzle: puzzle)
+
+        // Wait for a bit
+        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+
+        // Pause the timer
+        newViewModel.pauseTimer()
+
+        XCTAssertFalse(newViewModel.isTimerRunning)
+        XCTAssertTrue(newViewModel.gameState.isPaused)
+
+        let timeAfterPause = newViewModel.elapsedTime
+
+        // Wait a bit more
+        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+
+        // Time should not have changed significantly
+        XCTAssertEqual(newViewModel.elapsedTime, timeAfterPause, accuracy: 0.05)
+    }
+
+    func testResumeTimer() async {
+        // Start fresh
+        let newViewModel = GameViewModel(puzzle: puzzle)
+
+        // Pause the timer
+        newViewModel.pauseTimer()
+        XCTAssertFalse(newViewModel.isTimerRunning)
+
+        let timeAfterPause = newViewModel.elapsedTime
+
+        // Resume the timer
+        newViewModel.resumeTimer()
+
+        XCTAssertTrue(newViewModel.isTimerRunning)
+        XCTAssertFalse(newViewModel.gameState.isPaused)
+
+        // Wait for a bit
+        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+
+        // Time should have increased
+        XCTAssertGreaterThan(newViewModel.elapsedTime, timeAfterPause + 0.2)
+    }
+
+    func testPauseResumeCycle() async {
+        // Start fresh
+        let newViewModel = GameViewModel(puzzle: puzzle)
+
+        // Let it run for a bit
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        let time1 = newViewModel.elapsedTime
+
+        // Pause
+        newViewModel.pauseTimer()
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        let time2 = newViewModel.elapsedTime
+
+        // Should not have increased much during pause
+        XCTAssertEqual(time2, time1, accuracy: 0.05)
+
+        // Resume
+        newViewModel.resumeTimer()
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        let time3 = newViewModel.elapsedTime
+
+        // Should have increased after resume
+        XCTAssertGreaterThan(time3, time2 + 0.15)
+    }
+
+    func testFormattedTime() {
+        // Test zero time
+        viewModel.pauseTimer() // Pause to prevent updates
+        XCTAssertEqual(viewModel.formattedTime, "00:00")
+
+        // Manually set time for testing
+        viewModel.gameState.addTime(65.0) // 1 minute 5 seconds
+        let formatted1 = GameViewModel(gameState: viewModel.gameState).formattedTime
+        XCTAssertEqual(formatted1, "01:05")
+
+        // Test larger time
+        viewModel.gameState.addTime(595.0) // Add 9 minutes 55 seconds (total 11:00)
+        let formatted2 = GameViewModel(gameState: viewModel.gameState).formattedTime
+        XCTAssertEqual(formatted2, "11:00")
+    }
+
+    func testTimerStopsOnCompletion() async {
+        // Create a nearly complete puzzle
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 0, column: 2)
+        let position3 = CellPosition(row: 1, column: 0)
+        let position4 = CellPosition(row: 1, column: 1)
+        let position5 = CellPosition(row: 2, column: 0)
+        let position6 = CellPosition(row: 2, column: 2)
+
+        // Fill all cells except the last one
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: position2)
+        viewModel.enterNumber(0)
+
+        viewModel.selectCell(at: position3)
+        viewModel.enterNumber(3)
+
+        viewModel.selectCell(at: position4)
+        viewModel.enterNumber(0)
+
+        viewModel.selectCell(at: position5)
+        viewModel.enterNumber(2)
+
+        // Timer should still be running
+        XCTAssertTrue(viewModel.isTimerRunning)
+        XCTAssertFalse(viewModel.gameState.isCompleted)
+
+        // Complete the puzzle
+        viewModel.selectCell(at: position6)
+        viewModel.enterNumber(3)
+
+        // Timer should have stopped
+        XCTAssertFalse(viewModel.isTimerRunning)
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+
+        let timeAfterCompletion = viewModel.elapsedTime
+
+        // Wait a bit
+        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+
+        // Time should not increase after completion
+        XCTAssertEqual(viewModel.elapsedTime, timeAfterCompletion, accuracy: 0.05)
+    }
+
+    func testStartTimerWhenAlreadyRunning() {
+        // Timer starts automatically
+        XCTAssertTrue(viewModel.isTimerRunning)
+
+        // Try to start again
+        viewModel.startTimer()
+
+        // Should still be running (no crash or error)
+        XCTAssertTrue(viewModel.isTimerRunning)
+    }
+
+    func testStartTimerAfterCompletion() async {
+        // Complete the game first
+        let position1 = CellPosition(row: 0, column: 1)
+        let position2 = CellPosition(row: 0, column: 2)
+        let position3 = CellPosition(row: 1, column: 0)
+        let position4 = CellPosition(row: 1, column: 1)
+        let position5 = CellPosition(row: 2, column: 0)
+        let position6 = CellPosition(row: 2, column: 2)
+
+        viewModel.selectCell(at: position1)
+        viewModel.enterNumber(2)
+        viewModel.selectCell(at: position2)
+        viewModel.enterNumber(0)
+        viewModel.selectCell(at: position3)
+        viewModel.enterNumber(3)
+        viewModel.selectCell(at: position4)
+        viewModel.enterNumber(0)
+        viewModel.selectCell(at: position5)
+        viewModel.enterNumber(2)
+        viewModel.selectCell(at: position6)
+        viewModel.enterNumber(3)
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+        XCTAssertFalse(viewModel.isTimerRunning)
+
+        // Try to start timer after completion
+        viewModel.startTimer()
+
+        // Should still not be running
+        XCTAssertFalse(viewModel.isTimerRunning)
+    }
+
+    func testElapsedTimeMatchesGameState() async {
+        // Let timer run for a bit
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+
+        // Pause to get consistent values
+        viewModel.pauseTimer()
+
+        // ViewModel elapsed time and game state elapsed time should match
+        XCTAssertEqual(viewModel.elapsedTime, viewModel.gameState.elapsedTime, accuracy: 0.1)
+    }
+
+    func testTimerPreservesTimeAcrossViewModelCreation() async {
+        // Let timer run
+        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+
+        // Pause and capture state
+        viewModel.pauseTimer()
+        let savedTime = viewModel.elapsedTime
+        let savedState = viewModel.gameState
+
+        // Create new view model with saved state
+        let newViewModel = GameViewModel(gameState: savedState)
+
+        // Elapsed time should be preserved
+        XCTAssertEqual(newViewModel.elapsedTime, savedTime, accuracy: 0.1)
+        XCTAssertEqual(newViewModel.gameState.elapsedTime, savedTime, accuracy: 0.1)
+    }
 }

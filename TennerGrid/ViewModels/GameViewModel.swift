@@ -28,6 +28,12 @@ final class GameViewModel: ObservableObject {
     /// Positions with conflicts/errors
     @Published private(set) var conflictingPositions: Set<CellPosition> = []
 
+    /// Current elapsed time (published for UI updates)
+    @Published private(set) var elapsedTime: TimeInterval = 0
+
+    /// Whether the timer is currently running
+    @Published private(set) var isTimerRunning: Bool = false
+
     // MARK: - Private Properties
 
     private let validationService = ValidationService()
@@ -42,6 +48,12 @@ final class GameViewModel: ObservableObject {
     /// Stack of actions that can be redone (most recent at end)
     private var redoStack: [GameAction] = []
 
+    /// Timer for tracking elapsed time
+    private var timer: Timer?
+
+    /// Last time the timer was updated (for calculating elapsed intervals)
+    private var lastTimerUpdate: Date?
+
     // MARK: - Initialization
 
     /// Creates a new GameViewModel with the given game state
@@ -50,6 +62,12 @@ final class GameViewModel: ObservableObject {
         self.gameState = gameState
         selectedPosition = gameState.selectedCell
         notesMode = gameState.notesMode
+        elapsedTime = gameState.elapsedTime
+
+        // Start timer if game is not paused or completed
+        if !gameState.isPaused && !gameState.isCompleted {
+            startTimer()
+        }
     }
 
     /// Creates a new GameViewModel from a puzzle
@@ -57,6 +75,10 @@ final class GameViewModel: ObservableObject {
     convenience init(puzzle: TennerGridPuzzle) {
         let gameState = GameState(puzzle: puzzle)
         self.init(gameState: gameState)
+    }
+
+    deinit {
+        stopTimer()
     }
 
     // MARK: - Cell Selection
@@ -436,6 +458,79 @@ final class GameViewModel: ObservableObject {
         return hintService.getPossibleValues(for: position, in: gameState)
     }
 
+    // MARK: - Timer Management
+
+    /// Starts the game timer
+    func startTimer() {
+        // Don't start if already running or game is completed
+        guard !isTimerRunning, !gameState.isCompleted else { return }
+
+        // Record the current time
+        lastTimerUpdate = Date()
+
+        // Resume game state if paused
+        if gameState.isPaused {
+            gameState.resume()
+        }
+
+        // Create and schedule timer
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.updateTimer()
+            }
+        }
+
+        isTimerRunning = true
+    }
+
+    /// Pauses the game timer
+    func pauseTimer() {
+        // Update one last time before pausing
+        updateTimer()
+
+        // Stop the timer
+        stopTimer()
+
+        // Pause game state
+        gameState.pause()
+    }
+
+    /// Resumes the game timer
+    func resumeTimer() {
+        // Resume is the same as start - it handles the state correctly
+        startTimer()
+    }
+
+    /// Stops the timer (internal use)
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+        lastTimerUpdate = nil
+        isTimerRunning = false
+    }
+
+    /// Updates the elapsed time based on the timer
+    private func updateTimer() {
+        guard let lastUpdate = lastTimerUpdate else { return }
+
+        let now = Date()
+        let interval = now.timeIntervalSince(lastUpdate)
+
+        // Update elapsed time
+        elapsedTime += interval
+        gameState.addTime(interval)
+
+        // Record new update time
+        lastTimerUpdate = now
+    }
+
+    /// Formatted elapsed time string (MM:SS)
+    var formattedTime: String {
+        let minutes = Int(elapsedTime) / 60
+        let seconds = Int(elapsedTime) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+
     // MARK: - Game Completion
 
     /// Checks if the puzzle is completed and updates state accordingly
@@ -445,6 +540,10 @@ final class GameViewModel: ObservableObject {
 
         // Check if solution is correct
         if gameState.isCorrectlyCompleted() {
+            // Stop the timer before completing
+            stopTimer()
+
+            // Mark game as complete
             gameState.complete()
         }
     }

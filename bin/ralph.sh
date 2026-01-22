@@ -90,9 +90,10 @@ Build error log is available at: $BUILD_ERROR_LOG
 
 Your task for this iteration:
 1. Review the compilation errors in $BUILD_ERROR_LOG
-2. Fix ALL compilation errors to get the build passing
-3. Test that the build succeeds
-4. Commit your fixes with message: "Fix compilation errors"
+2. Check the recent git history to see what has changed or introduced the errors
+3. Fix ALL compilation errors to get the build passing
+4. Test that the build succeeds
+5. Commit your fixes with message: "Fix compilation errors"
 
 DO NOT work on any tasks from $TASKS_FILE until the build is fixed.
 
