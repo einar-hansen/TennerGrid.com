@@ -458,6 +458,29 @@ final class GameViewModel: ObservableObject {
         return hintService.getPossibleValues(for: position, in: gameState)
     }
 
+    /// Gets the count of conflicts that would occur if a value were placed at a position
+    /// - Parameters:
+    ///   - value: The value to check
+    ///   - position: The position to check
+    /// - Returns: The number of conflicts (0 if placement is valid)
+    func conflictCount(for value: Int, at position: CellPosition) -> Int {
+        guard gameState.puzzle.isValidPosition(position) else { return 0 }
+        guard gameState.isEditable(at: position) else { return 0 }
+
+        // Create a temporary grid with the value placed
+        var tempGrid = gameState.currentGrid
+        tempGrid[position.row][position.column] = value
+
+        // Detect conflicts at the position
+        let conflicts = validationService.detectConflicts(
+            at: position,
+            in: tempGrid,
+            puzzle: gameState.puzzle
+        )
+
+        return conflicts.count
+    }
+
     // MARK: - Timer Management
 
     /// Starts the game timer

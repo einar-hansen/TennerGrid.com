@@ -64,10 +64,59 @@ struct NumberPadView: View {
                 Text(String(number))
                     .font(.system(size: 24, weight: .medium, design: .rounded))
                     .foregroundColor(buttonTextColor(for: number))
+
+                // Conflict count badge
+                conflictBadge(for: number)
             }
             .frame(width: buttonSize, height: buttonSize)
+            .opacity(isNumberDisabled(for: number) ? 0.5 : 1.0)
         }
         .buttonStyle(.plain)
+        .disabled(isNumberDisabled(for: number))
+    }
+
+    /// Creates a badge showing conflict count for a number
+    /// - Parameter number: The number to check
+    /// - Returns: A badge view showing conflict count, or empty view if no conflicts
+    @ViewBuilder
+    private func conflictBadge(for number: Int) -> some View {
+        let conflicts = conflictCount(for: number)
+        if conflicts > 0 {
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("\(conflicts)")
+                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .frame(width: 16, height: 16)
+                        .background(Circle().fill(Color.red))
+                }
+                Spacer()
+            }
+            .padding(4)
+        }
+    }
+
+    /// Gets the conflict count for a number at the selected position
+    /// - Parameter number: The number to check
+    /// - Returns: The number of conflicts (0 if valid or no selection)
+    private func conflictCount(for number: Int) -> Int {
+        // Don't show conflicts in notes mode
+        guard !viewModel.notesMode else { return 0 }
+
+        guard let selected = viewModel.selectedPosition else { return 0 }
+
+        // Don't show conflicts if cell is not editable
+        guard viewModel.isEditable(at: selected) else { return 0 }
+
+        // Don't show conflicts if cell already has this value
+        if let currentValue = viewModel.value(at: selected),
+           currentValue == number
+        {
+            return 0
+        }
+
+        return viewModel.conflictCount(for: number, at: selected)
     }
 
     // MARK: - Styling Helpers
@@ -84,7 +133,14 @@ struct NumberPadView: View {
         if let selectedValue = viewModel.value(at: selected),
            selectedValue == number
         {
-            return Color.blue.opacity(0.2)
+            return Color.blue.opacity(0.3)
+        }
+
+        // Check if this number would be invalid
+        if !viewModel.notesMode,
+           !viewModel.canPlaceValue(number, at: selected)
+        {
+            return Color.red.opacity(0.1)
         }
 
         return Color.gray.opacity(0.1)
@@ -105,6 +161,13 @@ struct NumberPadView: View {
             return Color.blue
         }
 
+        // Check if this number would be invalid
+        if !viewModel.notesMode,
+           !viewModel.canPlaceValue(number, at: selected)
+        {
+            return Color.red.opacity(0.5)
+        }
+
         return Color.gray.opacity(0.3)
     }
 
@@ -123,7 +186,43 @@ struct NumberPadView: View {
             return .blue
         }
 
+        // Check if this number would be invalid (dim the text)
+        if !viewModel.notesMode,
+           !viewModel.canPlaceValue(number, at: selected)
+        {
+            return .red.opacity(0.6)
+        }
+
         return .primary
+    }
+
+    /// Checks if a number button should be disabled
+    /// - Parameter number: The number
+    /// - Returns: True if the button should be disabled
+    private func isNumberDisabled(for number: Int) -> Bool {
+        guard let selected = viewModel.selectedPosition else {
+            return false
+        }
+
+        // Don't disable in notes mode
+        if viewModel.notesMode {
+            return false
+        }
+
+        // Check if cell is editable
+        guard viewModel.isEditable(at: selected) else {
+            return true
+        }
+
+        // Don't disable if cell already has this value
+        if let currentValue = viewModel.value(at: selected),
+           currentValue == number
+        {
+            return false
+        }
+
+        // Check if this placement would be invalid
+        return !viewModel.canPlaceValue(number, at: selected)
     }
 }
 
