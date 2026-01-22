@@ -268,3 +268,72 @@ struct CellView_Previews: PreviewProvider {
         .previewLayout(.sizeThatFits)
     }
 }
+
+// MARK: - Device Size Testing Previews
+
+#Preview("iPhone SE") {
+    VStack(spacing: 20) {
+        Text("iPhone SE (4.7\" / 375pt wide)")
+            .font(.caption)
+        sampleGridRow
+    }
+    .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
+}
+
+#Preview("iPhone 15") {
+    VStack(spacing: 20) {
+        Text("iPhone 15 (6.1\" / 393pt wide)")
+            .font(.caption)
+        sampleGridRow
+    }
+    .previewDevice(PreviewDevice(rawValue: "iPhone 15"))
+}
+
+#Preview("iPhone 15 Pro Max") {
+    VStack(spacing: 20) {
+        Text("iPhone 15 Pro Max (6.7\" / 430pt wide)")
+            .font(.caption)
+        sampleGridRow
+    }
+    .previewDevice(PreviewDevice(rawValue: "iPhone 15 Pro Max"))
+}
+
+private var sampleGridRow: some View {
+    VStack(spacing: 16) {
+        // 5 cells in a row (typical small puzzle)
+        HStack(spacing: 2) {
+            ForEach(0 ..< 5) { index in
+                CellView(
+                    cell: Cell(
+                        position: CellPosition(row: 0, column: index),
+                        value: index == 2 ? nil : index + 1,
+                        isInitial: index % 2 == 0,
+                        pencilMarks: index == 2 ? [1, 4, 7] : [],
+                        isSelected: index == 1
+                    ),
+                    onTap: {}
+                )
+            }
+        }
+
+        // 10 cells in a row (maximum puzzle width)
+        HStack(spacing: 2) {
+            ForEach(0 ..< 10) { index in
+                CellView(
+                    cell: Cell(
+                        position: CellPosition(row: 1, column: index),
+                        value: index == 5 ? nil : (index % 10),
+                        isInitial: index % 3 == 0,
+                        pencilMarks: index == 5 ? [2, 5, 8] : []
+                    ),
+                    onTap: {}
+                )
+            }
+        }
+
+        Text("Cell size: 50pt × 50pt (fixed)")
+            .font(.caption2)
+            .foregroundColor(.secondary)
+    }
+    .padding()
+}

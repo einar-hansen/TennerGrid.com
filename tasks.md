@@ -114,9 +114,9 @@
 
 - [x] Create `CellView` with number display, pre-filled vs user-entered styling
 - [x] Add visual states: empty, selected, error, highlighted, same-number
-- [ ] Add pencil marks display in 3x3 grid within cell
-- [ ] Add tap gesture handling
-- [ ] Test on various screen sizes (SE, standard, Max)
+- [x] Add pencil marks display in 3x3 grid within cell
+- [x] Add tap gesture handling
+- [x] Test on various screen sizes (SE, standard, Max)
 
 ### 3.2 Grid View
 
