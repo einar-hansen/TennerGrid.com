@@ -48,7 +48,7 @@
 
 ### 1.2 Puzzle Solver
 
-- [ ] Implement `PuzzleSolver` with backtracking algorithm to solve Tenner Grid puzzles
+- [x] Implement `PuzzleSolver` with backtracking algorithm to solve Tenner Grid puzzles
 - [ ] Add constraint propagation optimization to improve solve speed
 - [ ] Add method to verify a puzzle has a unique solution
 - [ ] Add method to find the next logical move (for hints)
