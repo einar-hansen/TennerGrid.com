@@ -84,7 +84,7 @@
 
 ### 2.2 Undo/Redo System
 
-- [ ] Add undo/redo action history stack to GameViewModel
+- [x] Add undo/redo action history stack to GameViewModel
 - [ ] Implement undo method that restores previous game state
 - [ ] Implement redo method that replays undone actions
 - [ ] Limit history to last 50 actions to manage memory

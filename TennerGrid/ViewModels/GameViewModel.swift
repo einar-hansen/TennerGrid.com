@@ -33,6 +33,15 @@ final class GameViewModel: ObservableObject {
     private let validationService = ValidationService()
     private let hintService = HintService()
 
+    /// Maximum number of actions to keep in history (to manage memory)
+    private let maxHistorySize = 50
+
+    /// Stack of actions that can be undone (most recent at end)
+    private var undoStack: [GameAction] = []
+
+    /// Stack of actions that can be redone (most recent at end)
+    private var redoStack: [GameAction] = []
+
     // MARK: - Initialization
 
     /// Creates a new GameViewModel with the given game state
@@ -106,8 +115,22 @@ final class GameViewModel: ObservableObject {
 
         // Check if we're in notes mode
         if notesMode {
+            // Record old marks
+            let oldMarks = gameState.marks(at: position)
+
             // Toggle pencil mark
             gameState.togglePencilMark(value, at: position)
+
+            // Record action
+            let newMarks = gameState.marks(at: position)
+            let action = GameAction.togglePencilMark(
+                value,
+                at: position,
+                from: oldMarks,
+                to: newMarks
+            )
+            recordAction(action)
+
             errorMessage = nil
         } else {
             // Validate placement
@@ -119,8 +142,22 @@ final class GameViewModel: ObservableObject {
             )
 
             if isValid {
+                // Record old state
+                let oldValue = gameState.value(at: position)
+                let oldMarks = gameState.marks(at: position)
+
                 // Place the number
                 gameState.setValue(value, at: position)
+
+                // Record action
+                let action = GameAction.setValue(
+                    at: position,
+                    from: oldValue,
+                    to: value,
+                    clearingMarks: oldMarks
+                )
+                recordAction(action)
+
                 errorMessage = nil
 
                 // Update conflicts
@@ -160,8 +197,21 @@ final class GameViewModel: ObservableObject {
             return
         }
 
+        // Record old state
+        let oldValue = gameState.value(at: position)
+        let oldMarks = gameState.marks(at: position)
+
         // Clear the cell
         gameState.clearCell(at: position)
+
+        // Record action
+        let action = GameAction.clearCell(
+            at: position,
+            from: oldValue,
+            clearingMarks: oldMarks
+        )
+        recordAction(action)
+
         errorMessage = nil
 
         // Update conflicts
@@ -208,9 +258,22 @@ final class GameViewModel: ObservableObject {
             return
         }
 
-        var marks = gameState.marks(at: position)
+        // Record old marks
+        let oldMarks = gameState.marks(at: position)
+        var marks = oldMarks
         marks.insert(mark)
+
+        // Update marks
         gameState.setPencilMarks(marks, at: position)
+
+        // Record action
+        let action = GameAction.setPencilMarks(
+            at: position,
+            from: oldMarks,
+            to: marks
+        )
+        recordAction(action)
+
         errorMessage = nil
     }
 
@@ -224,9 +287,22 @@ final class GameViewModel: ObservableObject {
 
         guard mark >= 0, mark <= 9 else { return }
 
-        var marks = gameState.marks(at: position)
+        // Record old marks
+        let oldMarks = gameState.marks(at: position)
+        var marks = oldMarks
         marks.remove(mark)
+
+        // Update marks
         gameState.setPencilMarks(marks, at: position)
+
+        // Record action
+        let action = GameAction.setPencilMarks(
+            at: position,
+            from: oldMarks,
+            to: marks
+        )
+        recordAction(action)
+
         errorMessage = nil
     }
 
@@ -253,7 +329,22 @@ final class GameViewModel: ObservableObject {
             return
         }
 
+        // Record old marks
+        let oldMarks = gameState.marks(at: position)
+
+        // Toggle mark
         gameState.togglePencilMark(mark, at: position)
+
+        // Record action
+        let newMarks = gameState.marks(at: position)
+        let action = GameAction.togglePencilMark(
+            mark,
+            at: position,
+            from: oldMarks,
+            to: newMarks
+        )
+        recordAction(action)
+
         errorMessage = nil
     }
 
@@ -269,7 +360,20 @@ final class GameViewModel: ObservableObject {
             return
         }
 
+        // Record old marks
+        let oldMarks = gameState.marks(at: position)
+
+        // Clear marks
         gameState.setPencilMarks([], at: position)
+
+        // Record action
+        let action = GameAction.setPencilMarks(
+            at: position,
+            from: oldMarks,
+            to: []
+        )
+        recordAction(action)
+
         errorMessage = nil
     }
 
@@ -343,6 +447,46 @@ final class GameViewModel: ObservableObject {
         if gameState.isCorrectlyCompleted() {
             gameState.complete()
         }
+    }
+
+    // MARK: - Undo/Redo Management
+
+    /// Records an action in the undo history
+    /// - Parameter action: The action to record
+    private func recordAction(_ action: GameAction) {
+        // Only record actions that made actual changes
+        guard action.madeChanges else { return }
+
+        // Add to undo stack
+        undoStack.append(action)
+
+        // Limit history size
+        if undoStack.count > maxHistorySize {
+            undoStack.removeFirst()
+        }
+
+        // Clear redo stack when a new action is performed
+        redoStack.removeAll()
+    }
+
+    /// Whether there are actions available to undo
+    var canUndo: Bool {
+        !undoStack.isEmpty
+    }
+
+    /// Whether there are actions available to redo
+    var canRedo: Bool {
+        !redoStack.isEmpty
+    }
+
+    /// Returns the number of actions in the undo history
+    var undoCount: Int {
+        undoStack.count
+    }
+
+    /// Returns the number of actions in the redo history
+    var redoCount: Int {
+        redoStack.count
     }
 
     // MARK: - Error Management
