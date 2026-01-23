@@ -1,10 +1,3 @@
-//
-//  PuzzleManager.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Combine
 import Foundation
 
@@ -30,30 +23,34 @@ final class PuzzleManager: ObservableObject {
 
     /// Returns a random puzzle with specified parameters
     /// - Parameters:
-    ///   - rows: Number of rows (3-7, defaults to 5)
+    ///   - rows: Number of rows (3-10, defaults to 5)
     ///   - difficulty: Desired difficulty level
     /// - Returns: A random TennerGridPuzzle, or nil if none available
+    /// - Note: All Tenner Grid puzzles have exactly 10 columns
     func randomPuzzle(
         rows: Int = 5,
         difficulty: Difficulty
     ) -> TennerGridPuzzle? {
-        // Validate dimensions - rows must be 3-7
-        guard rows >= 3, rows <= 7 else { return nil }
+        // Validate dimensions - rows must be 3-10
+        // All puzzles have exactly 10 columns (required for game rules)
+        guard rows >= 3, rows <= 10 else { return nil }
 
         return BundledPuzzleService.shared.randomPuzzle(difficulty: difficulty, rows: rows)
     }
 
     /// Returns the first puzzle matching the criteria (deterministic)
     /// - Parameters:
-    ///   - rows: Number of rows (3-7, defaults to 5)
+    ///   - rows: Number of rows (3-10, defaults to 5)
     ///   - difficulty: Desired difficulty level
     /// - Returns: The first matching TennerGridPuzzle, or nil if none available
+    /// - Note: All Tenner Grid puzzles have exactly 10 columns
     func firstPuzzle(
         rows: Int = 5,
         difficulty: Difficulty
     ) -> TennerGridPuzzle? {
-        // Validate dimensions - rows must be 3-7
-        guard rows >= 3, rows <= 7 else { return nil }
+        // Validate dimensions - rows must be 3-10
+        // All puzzles have exactly 10 columns (required for game rules)
+        guard rows >= 3, rows <= 10 else { return nil }
 
         return BundledPuzzleService.shared.firstPuzzle(difficulty: difficulty, rows: rows)
     }

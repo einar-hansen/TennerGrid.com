@@ -1,20 +1,13 @@
-//
-//  GameStateTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
-@testable import TennerGrid
 import Testing
+@testable import TennerGrid
 
 struct GameStateTests {
     // MARK: - Test Helpers
 
     private func createTestPuzzle(
         rows: Int = 3,
-        columns: Int = 5,
+        columns: Int = 10,
         difficulty: Difficulty = .easy
     ) -> TennerGridPuzzle {
         // Create a simple test puzzle

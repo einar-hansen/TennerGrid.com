@@ -1,10 +1,3 @@
-//
-//  TennerGridPuzzle.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Represents a complete Tenner Grid puzzle with initial state and solution
@@ -12,10 +5,14 @@ struct TennerGridPuzzle: Codable, Identifiable {
     /// Unique identifier for the puzzle
     let id: UUID
 
-    /// Number of columns in the puzzle (typically 5-10)
+    /// Number of columns in the puzzle (always 10 for Tenner Grid)
+    /// The game rules require exactly 10 columns for the neighbor constraint to work properly
     let columns: Int
 
-    /// Number of rows in the puzzle (typically 5-10)
+    /// Number of rows in the puzzle (3-10, varies by difficulty)
+    /// - Easy: 3-5 rows
+    /// - Medium: 4-7 rows
+    /// - Hard: 5-10 rows
     let rows: Int
 
     /// Difficulty level of the puzzle
@@ -101,9 +98,9 @@ extension TennerGridPuzzle {
     /// - Returns: True if the puzzle is valid
     func isValid() -> Bool {
         // Check column and row counts are in valid range
-        // Tenner Grid uses exactly 10 columns, rows can be 3-7
+        // Tenner Grid uses exactly 10 columns, rows can be 3-10
         guard columns == 10 else { return false }
-        guard rows >= 3, rows <= 7 else { return false }
+        guard rows >= 3, rows <= 10 else { return false }
 
         // Check targetSums array has correct length
         guard targetSums.count == columns else { return false }

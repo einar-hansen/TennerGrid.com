@@ -1,10 +1,3 @@
-//
-//  Difficulty.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 import SwiftUI
 
@@ -87,4 +80,32 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             50
         }
     }
+
+    /// Minimum number of rows for this difficulty
+    var minRows: Int {
+        switch self {
+        case .easy:
+            3
+        case .medium:
+            4
+        case .hard:
+            5
+        }
+    }
+
+    /// Maximum number of rows for this difficulty
+    var maxRows: Int {
+        switch self {
+        case .easy:
+            5
+        case .medium:
+            7
+        case .hard:
+            10
+        }
+    }
+
+    /// Number of columns (always 10 for Tenner Grid)
+    /// This is a constant because the game rules require exactly 10 columns
+    static let columns: Int = 10
 }

@@ -1,14 +1,7 @@
-//
-//  TennerGridPuzzleTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import Foundation
 import Testing
 import XCTest
+@testable import TennerGrid
 
 struct TennerGridPuzzleTests {
     // MARK: - Test Helpers
@@ -64,12 +57,12 @@ struct TennerGridPuzzleTests {
         let customID = UUID()
         let puzzle = TennerGridPuzzle(
             id: customID,
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
-            targetSums: [10, 10, 10, 10, 10],
-            initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 5),
-            solution: Array(repeating: Array(repeating: 0, count: 5), count: 5)
+            targetSums: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 5),
+            solution: Array(repeating: Array(repeating: 0, count: 10), count: 5)
         )
 
         #expect(puzzle.id == customID)
@@ -78,12 +71,12 @@ struct TennerGridPuzzleTests {
     @Test func customCreatedAt() {
         let customDate = Date(timeIntervalSince1970: 1_000_000)
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
-            targetSums: [10, 10, 10, 10, 10],
-            initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 5),
-            solution: Array(repeating: Array(repeating: 0, count: 5), count: 5),
+            targetSums: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 5),
+            solution: Array(repeating: Array(repeating: 0, count: 10), count: 5),
             createdAt: customDate
         )
 
@@ -117,7 +110,7 @@ struct TennerGridPuzzleTests {
 
     @Test func prefilledCountEmpty() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .hard,
             targetSums: Array(repeating: 10, count: 5),
@@ -131,7 +124,7 @@ struct TennerGridPuzzleTests {
     @Test func prefilledCountFull() {
         let solution = Array(repeating: Array(repeating: 5, count: 5), count: 5)
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 25, count: 5),
@@ -157,7 +150,7 @@ struct TennerGridPuzzleTests {
 
     @Test func prefilledPercentageEmpty() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .hard,
             targetSums: Array(repeating: 10, count: 5),
@@ -169,12 +162,12 @@ struct TennerGridPuzzleTests {
     }
 
     @Test func prefilledPercentageFull() {
-        let solution = Array(repeating: Array(repeating: 5, count: 5), count: 5)
+        let solution = Array(repeating: Array(repeating: 5, count: 10), count: 5)
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
-            targetSums: Array(repeating: 25, count: 5),
+            targetSums: Array(repeating: 25, count: 10),
             initialGrid: solution.map { $0.map { Int?($0) } },
             solution: solution
         )
@@ -231,11 +224,11 @@ struct TennerGridPuzzleTests {
     @Test func invalidRowCountTooLarge() {
         let puzzle = TennerGridPuzzle(
             columns: 10,
-            rows: 8, // Too large (maximum is 7)
+            rows: 11, // Too large (maximum is 10)
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 10),
-            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 8),
-            solution: Array(repeating: Array(repeating: 0, count: 10), count: 8)
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 11),
+            solution: Array(repeating: Array(repeating: 0, count: 10), count: 11)
         )
 
         #expect(!puzzle.isValid())
@@ -243,7 +236,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidTargetSumsCount() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: [10, 10, 10], // Wrong count
@@ -256,7 +249,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidTargetSumsNegative() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: [10, -5, 10, 10, 10], // Negative value
@@ -269,7 +262,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidTargetSumsZero() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: [10, 0, 10, 10, 10], // Zero is invalid
@@ -282,7 +275,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidInitialGridRowCount() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -295,7 +288,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidInitialGridColumnCount() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -308,7 +301,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidSolutionRowCount() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -321,7 +314,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidSolutionColumnCount() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -334,7 +327,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidSolutionValueTooLarge() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -347,7 +340,7 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidSolutionValueNegative() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -363,7 +356,7 @@ struct TennerGridPuzzleTests {
         initialGrid[0][0] = 5 // Does not match solution which has 0 at [0][0]
 
         let puzzle = TennerGridPuzzle(
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -386,9 +379,9 @@ struct TennerGridPuzzleTests {
         for row in 0 ..< puzzle.rows {
             for col in 0 ..< puzzle.columns {
                 let pos = CellPosition(row: row, column: col)
-                if puzzle.initialGrid[row][col] != nil && prefilledPosition == nil {
+                if puzzle.initialGrid[row][col] != nil, prefilledPosition == nil {
                     prefilledPosition = pos
-                } else if puzzle.initialGrid[row][col] == nil && emptyPosition == nil {
+                } else if puzzle.initialGrid[row][col] == nil, emptyPosition == nil {
                     emptyPosition = pos
                 }
             }
@@ -475,7 +468,7 @@ struct TennerGridPuzzleTests {
         let id = UUID()
         let puzzle1 = TennerGridPuzzle(
             id: id,
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
@@ -484,7 +477,7 @@ struct TennerGridPuzzleTests {
         )
         let puzzle2 = TennerGridPuzzle(
             id: id,
-            columns: 5,
+            columns: 10,
             rows: 5,
             difficulty: .easy,
             targetSums: Array(repeating: 10, count: 5),
