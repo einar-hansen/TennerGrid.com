@@ -64,34 +64,36 @@ struct CellView: View {
 
     /// View displaying pencil marks in a 3x3 grid
     private var pencilMarksView: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 1) {
-                ForEach(0 ..< 3) { row in
-                    HStack(spacing: 1) {
-                        ForEach(0 ..< 3) { col in
-                            let number = row * 3 + col + 1
-                            if number <= 9 {
-                                pencilMarkCell(for: number, geometry: geometry)
-                            }
+        let padding: CGFloat = 6
+        let availableSize = cellSize - (padding * 2)
+        let gridCellSize = availableSize / 3
+
+        return VStack(spacing: 0) {
+            ForEach(0 ..< 3) { row in
+                HStack(spacing: 0) {
+                    ForEach(0 ..< 3) { col in
+                        let number = row * 3 + col + 1
+                        if number <= 9 {
+                            pencilMarkCell(for: number, size: gridCellSize)
                         }
                     }
                 }
             }
-            .padding(6)
         }
-        .frame(width: cellSize, height: cellSize)
+        .frame(width: availableSize, height: availableSize)
+        .padding(padding)
     }
 
     /// Individual pencil mark cell
     /// - Parameters:
     ///   - number: The number (1-9) to display
-    ///   - geometry: Geometry proxy for calculating cell size
+    ///   - size: The size of each grid cell
     /// - Returns: View for the pencil mark
-    private func pencilMarkCell(for number: Int, geometry: GeometryProxy) -> some View {
+    private func pencilMarkCell(for number: Int, size: CGFloat) -> some View {
         Text(cell.pencilMarks.contains(number) ? String(number) : "")
             .font(.system(size: pencilMarkFontSize, weight: .light, design: .rounded))
             .foregroundColor(.secondary)
-            .frame(width: geometry.size.width / 3, height: geometry.size.height / 3)
+            .frame(width: size, height: size)
             .minimumScaleFactor(0.5)
     }
 
