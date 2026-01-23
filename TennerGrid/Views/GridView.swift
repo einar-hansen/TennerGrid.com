@@ -9,14 +9,15 @@ struct GridView: View {
 
     // MARK: - Constants
 
-    private let spacing: CGFloat = 2
+    private let rowSpacing: CGFloat = 2
+    private let columnSpacing: CGFloat = 0
     private let columnSumHeight: CGFloat = 40
     private let gridPadding: CGFloat = 16
 
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: spacing) {
+        VStack(spacing: rowSpacing) {
             // Main grid
             gridContent
 
@@ -32,7 +33,7 @@ struct GridView: View {
     private var gridContent: some View {
         LazyVGrid(
             columns: gridColumns,
-            spacing: spacing
+            spacing: rowSpacing
         ) {
             ForEach(0 ..< totalCells, id: \.self) { index in
                 let position = cellPosition(for: index)
@@ -47,7 +48,7 @@ struct GridView: View {
 
     /// Column sums display below the grid
     private var columnSumsView: some View {
-        HStack(spacing: spacing) {
+        HStack(spacing: columnSpacing) {
             ForEach(0 ..< columnCount, id: \.self) { column in
                 columnSumCell(for: column)
             }
@@ -88,7 +89,7 @@ struct GridView: View {
 
     /// Calculate grid columns for LazyVGrid
     private var gridColumns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: spacing), count: columnCount)
+        Array(repeating: GridItem(.flexible(), spacing: columnSpacing), count: columnCount)
     }
 
     /// Total number of cells in the grid
