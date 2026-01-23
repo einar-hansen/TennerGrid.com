@@ -15,6 +15,9 @@ struct ContentView: View {
     /// Flag to show difficulty selection sheet
     @State private var showingDifficultySelection = false
 
+    /// Selected difficulty from sheet (used to start game after sheet dismissal)
+    @State private var selectedDifficulty: Difficulty?
+
     // MARK: - Body
 
     var body: some View {
@@ -34,6 +37,14 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingDifficultySelection) {
             DifficultySelectionView { difficulty in
+                selectedDifficulty = difficulty
+                showingDifficultySelection = false
+            }
+        }
+        .onChange(of: showingDifficultySelection) { isShowing in
+            // Start new game after sheet is fully dismissed
+            if !isShowing, let difficulty = selectedDifficulty {
+                selectedDifficulty = nil
                 startNewGame(with: difficulty)
             }
         }
@@ -55,6 +66,8 @@ struct ContentView: View {
 
     /// Handles the new game request - shows difficulty selection
     private func handleNewGameRequest() {
+        // Clear the current game first to avoid state conflicts
+        gameViewModel = nil
         showingDifficultySelection = true
     }
 
