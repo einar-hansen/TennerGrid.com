@@ -184,7 +184,7 @@
 - [x] Update `PuzzleGenerator` to enforce 10 columns constraint
 - [x] Update `Difficulty` settings to work with 10-column grids only
 - [x] Remove column spacing in GridView - make columns adjacent with no gaps
-- [ ] Add landscape/horizontal layout support for better iPad experience. Landscape is important for iPhone.
+- [x] Add landscape/horizontal layout support for better iPad experience. Landscape is important for iPhone.
 - [ ] Implement intelligent number pad disabling based on column remaining sum
     - Calculate remaining sum needed for each column (target - current sum)
     - Disable numbers in number pad that exceed column's remaining sum
