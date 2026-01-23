@@ -1,5 +1,5 @@
-import Testing
 @testable import TennerGrid
+import Testing
 
 struct TennerGridTests {
     @Test func example() async throws {

@@ -1,6 +1,6 @@
 import Foundation
-import Testing
 @testable import TennerGrid
+import Testing
 
 struct CellPositionTests {
     // MARK: - Initialization Tests

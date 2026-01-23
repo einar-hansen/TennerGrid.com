@@ -1,6 +1,6 @@
 import SwiftUI
-import XCTest
 @testable import TennerGrid
+import XCTest
 
 /// Tests for GridView component
 /// Uses pre-built fixtures instead of generating puzzles for fast execution

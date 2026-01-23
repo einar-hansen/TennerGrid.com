@@ -29,8 +29,7 @@ struct CellPosition: Equatable, Hashable, Codable {
 
             // Check if the new position is within bounds
             if newRow >= 0, newRow < maxRows,
-               newCol >= 0, newCol < maxColumns
-            {
+               newCol >= 0, newCol < maxColumns {
                 adjacent.append(CellPosition(row: newRow, column: newCol))
             }
         }

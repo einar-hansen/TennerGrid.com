@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
-import Testing
 @testable import TennerGrid
+import Testing
 
 struct DifficultyTests {
     // MARK: - Raw Value Tests

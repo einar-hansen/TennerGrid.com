@@ -1,5 +1,5 @@
-import XCTest
 @testable import TennerGrid
+import XCTest
 
 final class HintServiceTests: XCTestCase {
     var hintService: HintService!

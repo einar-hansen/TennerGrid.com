@@ -32,6 +32,14 @@ final class GameViewModel: ObservableObject {
     private let validationService = ValidationService()
     private let hintService = HintService()
 
+    /// Cached set of neighbor positions for performance optimization
+    /// Updated whenever selectedPosition changes to avoid redundant calculations
+    private var cachedNeighborPositions: Set<CellPosition> = []
+
+    /// Cached set of highlighted positions (same row/column as selected)
+    /// Updated whenever selectedPosition changes to avoid redundant calculations
+    private var cachedHighlightedPositions: Set<CellPosition> = []
+
     /// Maximum number of actions to keep in history (to manage memory)
     private let maxHistorySize = 50
 
@@ -91,8 +99,67 @@ final class GameViewModel: ObservableObject {
         selectedPosition = position
         gameState.selectCell(at: position)
 
+        // Update cached positions for performance
+        updateCachedPositions(for: position)
+
         // Clear error message when changing selection
         errorMessage = nil
+    }
+
+    /// Updates cached neighbor and highlighted positions for performance optimization
+    /// This method is called whenever the selected cell changes to pre-compute which cells
+    /// should be highlighted or marked as neighbors, avoiding redundant calculations during rendering
+    /// - Parameter position: The selected position (nil if no selection)
+    private func updateCachedPositions(for position: CellPosition?) {
+        // Clear caches if no selection
+        guard let position else {
+            cachedNeighborPositions.removeAll()
+            cachedHighlightedPositions.removeAll()
+            return
+        }
+
+        // Pre-compute neighbor positions (the 8 adjacent cells)
+        var neighbors = Set<CellPosition>()
+        for rowOffset in -1 ... 1 {
+            for colOffset in -1 ... 1 {
+                // Skip the selected cell itself
+                guard rowOffset != 0 || colOffset != 0 else { continue }
+
+                let neighborRow = position.row + rowOffset
+                let neighborCol = position.column + colOffset
+                let neighborPos = CellPosition(row: neighborRow, column: neighborCol)
+
+                // Only include valid positions
+                if gameState.puzzle.isValidPosition(neighborPos) {
+                    neighbors.insert(neighborPos)
+                }
+            }
+        }
+        cachedNeighborPositions = neighbors
+
+        // Pre-compute highlighted positions (same row, same column, or adjacent)
+        // Note: Neighbors are also included in highlighted set for consistency with game rules
+        // The visual styling gives neighbors higher priority (purple vs blue background)
+        var highlighted = Set<CellPosition>()
+
+        // Add all neighbors to highlighted set
+        highlighted = neighbors
+
+        // Add cells in the same row or column
+        for row in 0 ..< gameState.puzzle.rows {
+            for col in 0 ..< gameState.puzzle.columns {
+                let pos = CellPosition(row: row, column: col)
+
+                // Skip the selected cell itself
+                guard pos != position else { continue }
+
+                // Highlight cells in same row or column
+                if pos.row == position.row || pos.column == position.column {
+                    highlighted.insert(pos)
+                }
+            }
+        }
+        cachedHighlightedPositions = highlighted
     }
 
     /// Toggles selection for a cell (selects if unselected, deselects if selected)
@@ -881,57 +948,22 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Cell Highlighting Logic
 
-    /// Determines if a cell should be highlighted (adjacent to selected cell or in same row/column)
+    /// Determines if a cell should be highlighted (in same row/column as selected cell)
+    /// Uses cached positions for O(1) lookup performance
     /// - Parameter position: The position to check
     /// - Returns: True if the cell should be highlighted
     private func shouldHighlight(position: CellPosition) -> Bool {
-        guard let selected = selectedPosition else {
-            return false
-        }
-
-        // Don't highlight the selected cell itself
-        if position == selected {
-            return false
-        }
-
-        // Highlight cells in the same row
-        if position.row == selected.row {
-            return true
-        }
-
-        // Highlight cells in the same column
-        if position.column == selected.column {
-            return true
-        }
-
-        // Highlight adjacent cells (diagonal and orthogonal)
-        let rowDiff = abs(position.row - selected.row)
-        let colDiff = abs(position.column - selected.column)
-
-        // Adjacent means within 1 row and 1 column
-        return rowDiff <= 1 && colDiff <= 1
+        // Use cached set for O(1) lookup instead of computing each time
+        cachedHighlightedPositions.contains(position)
     }
 
     /// Determines if a cell is a neighbor (one of the 8 adjacent cells) to the selected cell
+    /// Uses cached positions for O(1) lookup performance
     /// - Parameter position: The position to check
     /// - Returns: True if the cell is one of the 8 adjacent neighbors
     private func shouldMarkAsNeighbor(position: CellPosition) -> Bool {
-        guard let selected = selectedPosition else {
-            return false
-        }
-
-        // Don't mark the selected cell itself as a neighbor
-        if position == selected {
-            return false
-        }
-
-        // Check if within 1 row and 1 column (the 8 adjacent cells)
-        let rowDiff = abs(position.row - selected.row)
-        let colDiff = abs(position.column - selected.column)
-
-        // A neighbor must be adjacent (within 1 in both directions)
-        // and at least one of the differences must be non-zero (not the same cell)
-        return rowDiff <= 1 && colDiff <= 1 && (rowDiff > 0 || colDiff > 0)
+        // Use cached set for O(1) lookup instead of computing each time
+        cachedNeighborPositions.contains(position)
     }
 
     /// Determines if a cell should be marked as "same number" (matching the selected cell's value)
@@ -1028,6 +1060,13 @@ final class GameViewModel: ObservableObject {
         notesMode = newState.notesMode
         elapsedTime = newState.elapsedTime
         conflictingPositions.removeAll()
+
+        // Clear cached positions
+        cachedNeighborPositions.removeAll()
+        cachedHighlightedPositions.removeAll()
+
+        // Update cached positions for the new selection
+        updateCachedPositions(for: newState.selectedCell)
 
         // Start timer if game is not paused or completed
         if !newState.isPaused, !newState.isCompleted {

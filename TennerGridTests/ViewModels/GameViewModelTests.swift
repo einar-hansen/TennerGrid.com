@@ -1,5 +1,5 @@
-import XCTest
 @testable import TennerGrid
+import XCTest
 
 @MainActor
 final class GameViewModelTests: XCTestCase {
