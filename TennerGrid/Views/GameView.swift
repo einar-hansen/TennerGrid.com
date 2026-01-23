@@ -1,10 +1,3 @@
-//
-//  GameView.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
 
 /// The main game view composing all game UI components
@@ -25,6 +18,12 @@ struct GameView: View {
 
     /// Focus state for keyboard input
     @FocusState private var isGameFocused: Bool
+
+    /// Callback when user quits the game (for navigation to home)
+    var onQuit: (() -> Void)?
+
+    /// Callback when user starts a new game (for navigation to difficulty selection)
+    var onNewGame: (() -> Void)?
 
     // MARK: - Initialization
 
@@ -101,40 +100,13 @@ struct GameView: View {
 
     /// Pause overlay shown when game is paused
     private var pauseOverlay: some View {
-        ZStack {
-            // Semi-transparent background
-            Color.black.opacity(0.4)
-                .ignoresSafeArea()
-
-            // Pause menu content
-            VStack(spacing: 24) {
-                // Pause icon
-                Image(systemName: "pause.circle.fill")
-                    .font(.system(size: 64))
-                    .foregroundColor(.white)
-
-                Text("Game Paused")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-
-                // Resume button
-                Button(action: handleResume) {
-                    HStack {
-                        Image(systemName: "play.fill")
-                        Text("Resume")
-                    }
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 16)
-                    .background(
-                        Capsule()
-                            .fill(Color.blue)
-                    )
-                }
-                .buttonStyle(.plain)
-            }
-        }
+        PauseMenuView(
+            onResume: handleResume,
+            onRestart: handleRestart,
+            onNewGame: handleNewGame,
+            onSettings: handleSettings,
+            onQuit: handleQuit
+        )
         .transition(.opacity)
     }
 
@@ -224,6 +196,29 @@ struct GameView: View {
     /// Handles the settings button tap
     private func handleSettings() {
         showingSettings = true
+    }
+
+    /// Handles the restart button tap
+    /// Resets the game to its initial state
+    private func handleRestart() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            // Create a new game state from the same puzzle
+            let newGameState = GameState(puzzle: viewModel.gameState.puzzle)
+            viewModel.resetToState(newGameState)
+            viewModel.resumeTimer()
+        }
+    }
+
+    /// Handles the new game button tap
+    /// Triggers navigation to difficulty selection
+    private func handleNewGame() {
+        onNewGame?()
+    }
+
+    /// Handles the quit button tap
+    /// Triggers navigation back to home
+    private func handleQuit() {
+        onQuit?()
     }
 }
 

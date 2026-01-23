@@ -164,11 +164,11 @@
 
 ### 4.2 Pause Menu
 
-- [ ] Create `PauseMenuView` with Resume, Restart, New Game, Settings, Quit options
-- [ ] Style as modal overlay with blur background
-- [ ] Wire up navigation to each option
-- [ ] Add "Are you sure?" confirmation for destructive actions
-- [ ] Test pause/resume flow
+- [x] Create `PauseMenuView` with Resume, Restart, New Game, Settings, Quit options
+- [x] Style as modal overlay with blur background
+- [x] Wire up navigation to each option
+- [x] Add "Are you sure?" confirmation for destructive actions
+- [x] Test pause/resume flow
 
 ### 4.3 Win Screen
 

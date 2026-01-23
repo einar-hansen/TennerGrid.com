@@ -1,10 +1,3 @@
-//
-//  GameViewModel.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Combine
 import Foundation
 
@@ -955,6 +948,34 @@ final class GameViewModel: ObservableObject {
             }
         }
         return true
+    }
+
+    // MARK: - Game Reset
+
+    /// Resets the game to a new state
+    /// This clears all progress and starts fresh with the new state
+    /// - Parameter newState: The new game state to use
+    func resetToState(_ newState: GameState) {
+        // Stop the current timer
+        timer?.invalidate()
+        timer = nil
+        lastTimerUpdate = nil
+
+        // Clear history
+        undoStack.removeAll()
+        redoStack.removeAll()
+
+        // Reset state
+        gameState = newState
+        selectedPosition = newState.selectedCell
+        notesMode = newState.notesMode
+        elapsedTime = newState.elapsedTime
+        conflictingPositions.removeAll()
+
+        // Start timer if game is not paused or completed
+        if !newState.isPaused, !newState.isCompleted {
+            startTimer()
+        }
     }
 }
 
