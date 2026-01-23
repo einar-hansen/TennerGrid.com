@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "DAA007E5-5C65-484E-888F-93841FA51BF7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:TennerGrid.xcodeproj",
+      "identifier" : "2047B1042F218F1C00F1010E",
+      "name" : "TennerGrid"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TennerGrid.xcodeproj",
+        "identifier" : "2047B1112F218F1D00F1010E",
+        "name" : "TennerGridTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TennerGrid.xcodeproj",
+        "identifier" : "2047B11B2F218F1E00F1010E",
+        "name" : "TennerGridUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

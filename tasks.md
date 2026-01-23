@@ -160,7 +160,7 @@
 - [x] Add keyboard support for number entry (0-9 keys, backspace)
 - [x] Implement pause overlay that blurs the grid
 - [x] Add basic win screen navigation
-- [ ] Test complete game flow: start, play, complete
+- [x] Test complete game flow: start, play, complete
 
 ### 4.2 Pause Menu
 
@@ -177,6 +177,22 @@
 - [ ] Add celebration animation (simple scale/fade, confetti optional)
 - [ ] Add buttons: New Game, Change Difficulty, Home
 - [ ] Test win screen with different puzzle completions
+
+### 4.4 Game UI Enhancements
+
+- [ ] Fix grid dimensions: Always use 10 columns (required for neighbor rule), rows variable 3-10
+- [ ] Update `PuzzleGenerator` to enforce 10 columns constraint
+- [ ] Update `Difficulty` settings to work with 10-column grids only
+- [ ] Remove column spacing in GridView - make columns adjacent with no gaps
+- [ ] Add landscape/horizontal layout support for better iPad experience. Landscape is important for iPhone.
+- [ ] Implement intelligent number pad disabling based on column remaining sum
+    - Calculate remaining sum needed for each column (target - current sum)
+    - Disable numbers in number pad that exceed column's remaining sum
+- [ ] Add visual highlighting for neighbor cells when a cell is selected
+    - Apply darker/lighter color overlay to all 8 adjacent cells (including diagonals)
+    - Update cell selection visual feedback to show constraint helpers
+    - Test neighbor highlighting with different cell positions (corners, edges, center)
+- [ ] Ensure performance with real-time neighbor updates during selection
 
 ---
 

@@ -1,12 +1,5 @@
-//
-//  GameViewModelTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import XCTest
+@testable import TennerGrid
 
 @MainActor
 final class GameViewModelTests: XCTestCase {
@@ -21,25 +14,25 @@ final class GameViewModelTests: XCTestCase {
         super.setUp()
 
         // Create a simple 3x3 test puzzle
-        // Solution:
-        // [1, 2, 0]
-        // [3, 0, 1]
-        // [2, 1, 3]
+        // Solution (all adjacent cells have different values):
+        // [1, 2, 3]
+        // [4, 5, 0]
+        // [2, 3, 1]
         let solution = [
-            [1, 2, 0],
-            [3, 0, 1],
-            [2, 1, 3],
+            [1, 2, 3],
+            [4, 5, 0],
+            [2, 3, 1],
         ]
 
         // Initial grid with some pre-filled cells
         let initialGrid: [[Int?]] = [
             [1, nil, nil],
-            [nil, nil, 1],
-            [nil, 1, nil],
+            [nil, nil, 0],
+            [nil, 3, nil],
         ]
 
-        // Target sums: sum of each column
-        let targetSums = [6, 3, 4]
+        // Target sums: sum of each column (1+4+2=7, 2+5+3=10, 3+0+1=4)
+        let targetSums = [7, 10, 4]
 
         puzzle = TennerGridPuzzle(
             columns: 3,
@@ -427,7 +420,7 @@ final class GameViewModelTests: XCTestCase {
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(4)
 
         // Verify no conflicts yet
         XCTAssertTrue(viewModel.conflictingPositions.isEmpty)
@@ -498,23 +491,24 @@ final class GameViewModelTests: XCTestCase {
 
     func testGameCompletionDetection() {
         // Fill in the puzzle correctly
+        // Solution: [1,2,3], [4,5,0], [2,3,1] - Pre-filled: (0,0)=1, (1,2)=0, (2,1)=3
         viewModel.selectCell(at: CellPosition(row: 0, column: 1))
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: CellPosition(row: 0, column: 2))
-        viewModel.enterNumber(0)
-
-        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
         viewModel.enterNumber(3)
 
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+
         viewModel.selectCell(at: CellPosition(row: 1, column: 1))
-        viewModel.enterNumber(0)
+        viewModel.enterNumber(5)
 
         viewModel.selectCell(at: CellPosition(row: 2, column: 0))
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: CellPosition(row: 2, column: 2))
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(1)
 
         // After completing all cells correctly, game should be marked complete
         XCTAssertTrue(viewModel.gameState.isCompleted)
@@ -661,10 +655,10 @@ final class GameViewModelTests: XCTestCase {
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(4)
 
         XCTAssertEqual(viewModel.value(at: position1), 2)
-        XCTAssertEqual(viewModel.value(at: position2), 3)
+        XCTAssertEqual(viewModel.value(at: position2), 4)
         XCTAssertEqual(viewModel.undoCount, 2)
 
         // Undo second action
@@ -714,7 +708,7 @@ final class GameViewModelTests: XCTestCase {
 
         // Place another valid number
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(0)
+        viewModel.enterNumber(3)
 
         XCTAssertTrue(viewModel.conflictingPositions.isEmpty)
 
@@ -733,7 +727,7 @@ final class GameViewModelTests: XCTestCase {
 
         // Perform a valid action
         viewModel.selectCell(at: CellPosition(row: 1, column: 0))
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(4)
 
         // Undo should clear error
         viewModel.undo()
@@ -834,10 +828,10 @@ final class GameViewModelTests: XCTestCase {
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(4)
 
         XCTAssertEqual(viewModel.value(at: position1), 2)
-        XCTAssertEqual(viewModel.value(at: position2), 3)
+        XCTAssertEqual(viewModel.value(at: position2), 4)
 
         // Undo both actions
         viewModel.undo()
@@ -855,7 +849,7 @@ final class GameViewModelTests: XCTestCase {
         // Redo second action
         viewModel.redo()
         XCTAssertEqual(viewModel.value(at: position1), 2)
-        XCTAssertEqual(viewModel.value(at: position2), 3)
+        XCTAssertEqual(viewModel.value(at: position2), 4)
         XCTAssertEqual(viewModel.redoCount, 0)
     }
 
@@ -996,7 +990,7 @@ final class GameViewModelTests: XCTestCase {
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(0)
+        viewModel.enterNumber(3)
 
         XCTAssertTrue(viewModel.conflictingPositions.isEmpty)
 
@@ -1122,7 +1116,7 @@ final class GameViewModelTests: XCTestCase {
     func testHistoryLimitWithMixedActions() {
         // Test with different action types
         let position1 = CellPosition(row: 0, column: 1)
-        let position2 = CellPosition(row: 1, column: 0)
+        _ = CellPosition(row: 1, column: 0) // position2 - reserved for future use
 
         viewModel.selectCell(at: position1)
 
@@ -1196,8 +1190,8 @@ final class GameViewModelTests: XCTestCase {
 
         // Sequence 2: Fill position2
         viewModel.selectCell(at: position2)
-        viewModel.addPencilMark(3)
-        viewModel.enterNumber(3)
+        viewModel.addPencilMark(4)
+        viewModel.enterNumber(4)
 
         XCTAssertEqual(viewModel.undoCount, 5)
 
@@ -1213,8 +1207,8 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.undoCount, 5)
 
         // Undo entire sequence 2
-        viewModel.undo() // Undo enterNumber(3)
-        viewModel.undo() // Undo addPencilMark(3)
+        viewModel.undo() // Undo enterNumber(4)
+        viewModel.undo() // Undo addPencilMark(4)
         XCTAssertNil(viewModel.value(at: position2))
         XCTAssertTrue(viewModel.marks(at: position2).isEmpty)
         XCTAssertEqual(viewModel.undoCount, 3)
@@ -1238,9 +1232,9 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.undoCount, 3)
 
         // Redo sequence 2
-        viewModel.redo() // Redo addPencilMark(3)
-        viewModel.redo() // Redo enterNumber(3)
-        XCTAssertEqual(viewModel.value(at: position2), 3)
+        viewModel.redo() // Redo addPencilMark(4)
+        viewModel.redo() // Redo enterNumber(4)
+        XCTAssertEqual(viewModel.value(at: position2), 4)
         XCTAssertEqual(viewModel.undoCount, 5)
 
         // Redo sequence 3
@@ -1307,19 +1301,21 @@ final class GameViewModelTests: XCTestCase {
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(0)
+        viewModel.enterNumber(3)
 
         XCTAssertEqual(viewModel.value(at: position1), 2)
-        XCTAssertEqual(viewModel.value(at: position2), 0)
+        XCTAssertEqual(viewModel.value(at: position2), 3)
 
         // Store state
         let savedValue1 = viewModel.value(at: position1)
         let savedValue2 = viewModel.value(at: position2)
 
         // Perform many operations and undo all
-        for i in 0 ..< 10 {
+        // Use valid values for position (0,1): not 0 (adjacent to (1,2)=0) and not 1 (adjacent to (0,0)=1)
+        let validValues = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3]
+        for value in validValues {
             viewModel.selectCell(at: position1)
-            viewModel.enterNumber((i + 3) % 10)
+            viewModel.enterNumber(value)
             viewModel.clearSelectedCell()
         }
 
@@ -1480,13 +1476,13 @@ final class GameViewModelTests: XCTestCase {
         viewModel.enterNumber(2)
 
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(0)
-
-        viewModel.selectCell(at: position3)
         viewModel.enterNumber(3)
 
+        viewModel.selectCell(at: position3)
+        viewModel.enterNumber(4)
+
         viewModel.selectCell(at: position4)
-        viewModel.enterNumber(0)
+        viewModel.enterNumber(5)
 
         viewModel.selectCell(at: position5)
         viewModel.enterNumber(2)
@@ -1497,7 +1493,7 @@ final class GameViewModelTests: XCTestCase {
 
         // Complete the puzzle
         viewModel.selectCell(at: position6)
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(1)
 
         // Timer should have stopped
         XCTAssertFalse(viewModel.isTimerRunning)
@@ -1535,15 +1531,15 @@ final class GameViewModelTests: XCTestCase {
         viewModel.selectCell(at: position1)
         viewModel.enterNumber(2)
         viewModel.selectCell(at: position2)
-        viewModel.enterNumber(0)
-        viewModel.selectCell(at: position3)
         viewModel.enterNumber(3)
+        viewModel.selectCell(at: position3)
+        viewModel.enterNumber(4)
         viewModel.selectCell(at: position4)
-        viewModel.enterNumber(0)
+        viewModel.enterNumber(5)
         viewModel.selectCell(at: position5)
         viewModel.enterNumber(2)
         viewModel.selectCell(at: position6)
-        viewModel.enterNumber(3)
+        viewModel.enterNumber(1)
 
         XCTAssertTrue(viewModel.gameState.isCompleted)
         XCTAssertFalse(viewModel.isTimerRunning)
@@ -1792,26 +1788,26 @@ final class GameViewModelTests: XCTestCase {
     }
 
     func testMultipleCellsWithSameNumberHighlighted() {
-        // Place the same number in multiple cells
+        // Place the same number in non-adjacent cells
+        // (0,1) and (2,0) are not adjacent (row diff=2, col diff=1)
         let positions = [
             CellPosition(row: 0, column: 1),
-            CellPosition(row: 1, column: 0),
             CellPosition(row: 2, column: 0),
         ]
 
-        for position in positions {
-            viewModel.selectCell(at: position)
-            viewModel.enterNumber(2)
-        }
+        // Place 2 in both cells (valid for both positions)
+        viewModel.selectCell(at: positions[0])
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: positions[1])
+        viewModel.enterNumber(2)
 
         // Select one of them
         viewModel.selectCell(at: positions[0])
 
-        // All other cells with the same number should be marked
-        for i in 1 ..< positions.count {
-            let cell = viewModel.cell(at: positions[i])
-            XCTAssertTrue(cell.isSameNumber, "Cell at \(positions[i]) should be marked as same number")
-        }
+        // The other cell with the same number should be marked
+        let otherCell = viewModel.cell(at: positions[1])
+        XCTAssertTrue(otherCell.isSameNumber, "Cell at \(positions[1]) should be marked as same number")
 
         // The selected cell should not be marked as same number
         let selectedCell = viewModel.cell(at: positions[0])
@@ -1852,5 +1848,540 @@ final class GameViewModelTests: XCTestCase {
         let newAdjacentPosition = CellPosition(row: 2, column: 1)
         cell = viewModel.cell(at: newAdjacentPosition)
         XCTAssertTrue(cell.isHighlighted)
+    }
+
+    // MARK: - Complete Game Flow Integration Tests
+
+    /// Tests the complete game flow: start → play → complete
+    /// This verifies that a new game can be started, played through, and completed successfully
+    func testCompleteGameFlow_StartPlayComplete() {
+        // PHASE 1: START - Verify initial game state
+        XCTAssertFalse(viewModel.gameState.isCompleted, "Game should not be completed at start")
+        XCTAssertFalse(viewModel.gameState.isPaused, "Game should not be paused at start")
+        XCTAssertTrue(viewModel.isTimerRunning, "Timer should be running at start")
+        XCTAssertEqual(viewModel.gameState.hintsUsed, 0, "No hints should be used at start")
+        XCTAssertEqual(viewModel.gameState.errorCount, 0, "No errors should be recorded at start")
+        XCTAssertNil(viewModel.selectedPosition, "No cell should be selected at start")
+        XCTAssertTrue(viewModel.gameState.progress < 1.0, "Progress should be less than 100% at start")
+
+        // PHASE 2: PLAY - Fill in the puzzle correctly
+        // Solution:
+        // [1, 2, 3]
+        // [4, 5, 0]
+        // [2, 3, 1]
+        // Pre-filled: (0,0)=1, (1,2)=0, (2,1)=3
+
+        // Track progress as we fill cells
+        let initialProgress = viewModel.gameState.progress
+        // For a 3x3 puzzle with 3 pre-filled cells, there are 6 empty cells
+        XCTAssertEqual(viewModel.gameState.emptyCellCount, 6, "Should have 6 empty cells")
+        XCTAssertEqual(initialProgress, 0.0, accuracy: 0.001, "Initial progress should be 0%")
+
+        // Fill cell (0, 1) with value 2
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+        XCTAssertNotNil(viewModel.selectedPosition, "Cell should be selected")
+        viewModel.enterNumber(2)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 0, column: 1)), 2)
+        XCTAssertNil(viewModel.errorMessage, "No error should occur for valid placement")
+        XCTAssertGreaterThan(viewModel.gameState.progress, initialProgress, "Progress should increase")
+
+        // Fill cell (0, 2) with value 3
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 0, column: 2)), 3)
+
+        // Fill cell (1, 0) with value 4
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 1, column: 0)), 4)
+
+        // Fill cell (1, 1) with value 5
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 1, column: 1)), 5)
+
+        // Fill cell (2, 0) with value 2
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 2, column: 0)), 2)
+
+        // Verify game is not yet completed (one cell remaining)
+        XCTAssertFalse(viewModel.gameState.isCompleted, "Game should not be completed yet")
+        XCTAssertTrue(viewModel.isTimerRunning, "Timer should still be running")
+
+        // PHASE 3: COMPLETE - Fill the last cell
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+
+        // Verify game completion
+        XCTAssertTrue(viewModel.gameState.isCompleted, "Game should be completed")
+        XCTAssertFalse(viewModel.isTimerRunning, "Timer should stop after completion")
+        XCTAssertNotNil(viewModel.gameState.completedAt, "Completion time should be recorded")
+        XCTAssertEqual(viewModel.gameState.progress, 1.0, "Progress should be 100%")
+        XCTAssertTrue(viewModel.gameState.isCorrectlyCompleted(), "Solution should be correct")
+    }
+
+    /// Tests game flow with undo/redo during gameplay
+    func testCompleteGameFlow_WithUndoRedo() {
+        // Fill some cells
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+
+        // Make a mistake - enter wrong value
+        // Note: We use 5 instead of 3 because 3 at (1,0) would be diagonally adjacent to pre-filled 3 at (2,1)
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(5) // Wrong value (should be 4)
+
+        XCTAssertEqual(viewModel.undoCount, 3, "Should have 3 actions in undo history")
+
+        // Undo the mistake
+        viewModel.undo()
+        XCTAssertNil(viewModel.value(at: CellPosition(row: 1, column: 0)), "Value should be cleared after undo")
+        XCTAssertEqual(viewModel.undoCount, 2)
+        XCTAssertEqual(viewModel.redoCount, 1)
+
+        // Enter correct value
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+
+        // Redo stack should be cleared after new action
+        XCTAssertEqual(viewModel.redoCount, 0, "Redo stack should be cleared")
+
+        // Continue filling the puzzle
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+
+        // Verify completion
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+        XCTAssertTrue(viewModel.gameState.isCorrectlyCompleted())
+    }
+
+    /// Tests game flow with notes/pencil marks
+    func testCompleteGameFlow_WithNotes() {
+        // Add pencil marks before entering values
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+
+        // Enable notes mode
+        viewModel.setNotesMode(true)
+        XCTAssertTrue(viewModel.notesMode)
+
+        // Add pencil marks
+        viewModel.enterNumber(2)
+        viewModel.enterNumber(5)
+        XCTAssertTrue(viewModel.marks(at: CellPosition(row: 0, column: 1)).contains(2))
+        XCTAssertTrue(viewModel.marks(at: CellPosition(row: 0, column: 1)).contains(5))
+        XCTAssertNil(viewModel.value(at: CellPosition(row: 0, column: 1)), "Cell should still be empty")
+
+        // Disable notes mode
+        viewModel.setNotesMode(false)
+        XCTAssertFalse(viewModel.notesMode)
+
+        // Enter the actual value (should clear pencil marks)
+        viewModel.enterNumber(2)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 0, column: 1)), 2)
+        XCTAssertTrue(viewModel.marks(at: CellPosition(row: 0, column: 1)).isEmpty, "Pencil marks should be cleared")
+
+        // Complete the rest of the puzzle
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+    }
+
+    /// Tests game flow with pause/resume
+    func testCompleteGameFlow_WithPauseResume() async {
+        // Start playing
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+        viewModel.enterNumber(2)
+
+        // Pause the game
+        viewModel.pauseTimer()
+        XCTAssertTrue(viewModel.gameState.isPaused, "Game should be paused")
+        XCTAssertFalse(viewModel.isTimerRunning, "Timer should stop when paused")
+
+        let timeWhenPaused = viewModel.elapsedTime
+
+        // Wait a bit while paused
+        try? await Task.sleep(nanoseconds: 200_000_000)
+
+        // Time should not have increased while paused
+        XCTAssertEqual(viewModel.elapsedTime, timeWhenPaused, accuracy: 0.05)
+
+        // Resume the game
+        viewModel.resumeTimer()
+        XCTAssertFalse(viewModel.gameState.isPaused, "Game should not be paused")
+        XCTAssertTrue(viewModel.isTimerRunning, "Timer should resume")
+
+        // Continue playing and complete
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+        XCTAssertFalse(viewModel.isTimerRunning, "Timer should stop on completion")
+    }
+
+    /// Tests game flow with error handling
+    func testCompleteGameFlow_WithErrors() {
+        // Try to enter invalid values
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+
+        // Try to enter 1 (conflicts with existing 1 in row)
+        viewModel.enterNumber(1)
+        XCTAssertNotNil(viewModel.errorMessage, "Should show error for invalid placement")
+        XCTAssertNil(viewModel.value(at: CellPosition(row: 0, column: 1)), "Invalid value should not be placed")
+        XCTAssertEqual(viewModel.gameState.errorCount, 1, "Error count should be incremented")
+
+        // Try to modify pre-filled cell
+        viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+        viewModel.enterNumber(5)
+        XCTAssertEqual(viewModel.errorMessage, "Cannot modify pre-filled cells")
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 0, column: 0)), 1, "Pre-filled value should remain")
+
+        // Now complete the puzzle correctly
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+
+        // Verify completion despite earlier errors
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+        XCTAssertEqual(viewModel.gameState.errorCount, 1, "Error count should be preserved")
+    }
+
+    /// Tests game flow with hints
+    func testCompleteGameFlow_WithHints() {
+        // Request a hint
+        let initialHintsUsed = viewModel.gameState.hintsUsed
+        viewModel.requestHint()
+
+        XCTAssertEqual(viewModel.gameState.hintsUsed, initialHintsUsed + 1, "Hints used should increment")
+
+        // Hint should have either filled a cell or added pencil marks
+        // Continue filling the puzzle manually
+        let emptyPositions = [
+            CellPosition(row: 0, column: 1),
+            CellPosition(row: 0, column: 2),
+            CellPosition(row: 1, column: 0),
+            CellPosition(row: 1, column: 1),
+            CellPosition(row: 2, column: 0),
+            CellPosition(row: 2, column: 2),
+        ]
+
+        let solutionValues = [2, 3, 4, 5, 2, 1]
+
+        // Fill remaining empty cells with correct values
+        for (position, value) in zip(emptyPositions, solutionValues) {
+            if viewModel.value(at: position) == nil {
+                viewModel.selectCell(at: position)
+                viewModel.enterNumber(value)
+            }
+        }
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+        XCTAssertGreaterThan(viewModel.gameState.hintsUsed, 0, "Hints used should be recorded")
+    }
+
+    /// Tests complete game flow starting from a generated puzzle
+    func testCompleteGameFlow_WithGeneratedPuzzle() {
+        // Generate a simple puzzle
+        let generator = PuzzleGenerator()
+        guard let generatedPuzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy) else {
+            XCTFail("Failed to generate puzzle")
+            return
+        }
+
+        // Create a new view model with the generated puzzle
+        let gameVM = GameViewModel(puzzle: generatedPuzzle)
+
+        // Verify initial state
+        XCTAssertFalse(gameVM.gameState.isCompleted)
+        XCTAssertTrue(gameVM.isTimerRunning)
+
+        // Fill in the puzzle using the solution
+        for row in 0 ..< generatedPuzzle.rows {
+            for col in 0 ..< generatedPuzzle.columns {
+                let position = CellPosition(row: row, column: col)
+
+                // Skip pre-filled cells
+                if generatedPuzzle.isPrefilled(at: position) {
+                    continue
+                }
+
+                // Get the correct value from solution
+                let correctValue = generatedPuzzle.solution[row][col]
+
+                // Enter the value
+                gameVM.selectCell(at: position)
+                gameVM.enterNumber(correctValue)
+            }
+        }
+
+        // Verify completion
+        XCTAssertTrue(gameVM.gameState.isCompleted, "Game should be completed")
+        XCTAssertTrue(gameVM.gameState.isCorrectlyCompleted(), "Solution should be correct")
+        XCTAssertFalse(gameVM.isTimerRunning, "Timer should stop")
+        XCTAssertNotNil(gameVM.gameState.completedAt, "Completion time should be recorded")
+    }
+
+    /// Tests that game state is consistent throughout the flow
+    func testCompleteGameFlow_StateConsistency() {
+        // Verify state at each step of the flow
+        var previousProgress = viewModel.gameState.progress
+
+        let cellsToFill: [(CellPosition, Int)] = [
+            (CellPosition(row: 0, column: 1), 2),
+            (CellPosition(row: 0, column: 2), 3),
+            (CellPosition(row: 1, column: 0), 4),
+            (CellPosition(row: 1, column: 1), 5),
+            (CellPosition(row: 2, column: 0), 2),
+            (CellPosition(row: 2, column: 2), 1),
+        ]
+
+        for (index, (position, value)) in cellsToFill.enumerated() {
+            // Pre-fill checks
+            let preFilledCount = viewModel.gameState.filledCellCount
+            let preEmptyCount = viewModel.gameState.emptyCellCount
+
+            // Enter value
+            viewModel.selectCell(at: position)
+            viewModel.enterNumber(value)
+
+            // Post-fill checks
+            XCTAssertEqual(
+                viewModel.gameState.filledCellCount,
+                preFilledCount + 1,
+                "Filled count should increase by 1 at step \(index)"
+            )
+            XCTAssertEqual(
+                viewModel.gameState.emptyCellCount,
+                preEmptyCount - 1,
+                "Empty count should decrease by 1 at step \(index)"
+            )
+            XCTAssertGreaterThanOrEqual(
+                viewModel.gameState.progress,
+                previousProgress,
+                "Progress should not decrease at step \(index)"
+            )
+
+            previousProgress = viewModel.gameState.progress
+
+            // Verify game is only completed on last step
+            if index < cellsToFill.count - 1 {
+                XCTAssertFalse(
+                    viewModel.gameState.isCompleted,
+                    "Game should not be completed at step \(index)"
+                )
+            } else {
+                XCTAssertTrue(
+                    viewModel.gameState.isCompleted,
+                    "Game should be completed on final step"
+                )
+            }
+        }
+    }
+
+    /// Tests that actions cannot be performed after game completion
+    func testCompleteGameFlow_ActionsBlockedAfterCompletion() {
+        // Complete the puzzle first
+        let cellsToFill: [(CellPosition, Int)] = [
+            (CellPosition(row: 0, column: 1), 2),
+            (CellPosition(row: 0, column: 2), 3),
+            (CellPosition(row: 1, column: 0), 4),
+            (CellPosition(row: 1, column: 1), 5),
+            (CellPosition(row: 2, column: 0), 2),
+            (CellPosition(row: 2, column: 2), 1),
+        ]
+
+        for (position, value) in cellsToFill {
+            viewModel.selectCell(at: position)
+            viewModel.enterNumber(value)
+        }
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+
+        // Try requesting hint after completion
+        let hintsBeforeAttempt = viewModel.gameState.hintsUsed
+        viewModel.requestHint()
+        XCTAssertEqual(
+            viewModel.gameState.hintsUsed,
+            hintsBeforeAttempt,
+            "Hints should not increase after completion"
+        )
+        XCTAssertEqual(viewModel.errorMessage, "Game is already completed")
+    }
+
+    /// Tests game flow with cell clearing
+    func testCompleteGameFlow_WithCellClearing() {
+        // Fill a cell
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+        viewModel.enterNumber(2)
+        XCTAssertEqual(viewModel.value(at: CellPosition(row: 0, column: 1)), 2)
+
+        // Clear the cell
+        viewModel.clearSelectedCell()
+        XCTAssertNil(viewModel.value(at: CellPosition(row: 0, column: 1)))
+
+        // Verify progress decreased
+        XCTAssertEqual(viewModel.gameState.progress, 0.0)
+
+        // Re-fill and complete the puzzle
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+    }
+
+    /// Tests that column sums are tracked correctly throughout the game
+    func testCompleteGameFlow_ColumnSumsVerification() {
+        // Target sums: [7, 10, 4]
+        let expectedTargetSums = puzzle.targetSums
+
+        // Initially all columns should have partial sums from pre-filled cells
+        // Pre-filled: (0,0)=1, (1,2)=0, (2,1)=3
+        XCTAssertEqual(viewModel.columnSum(for: 0), 1) // Only (0,0)=1
+        XCTAssertEqual(viewModel.columnSum(for: 1), 3) // Only (2,1)=3
+        XCTAssertEqual(viewModel.columnSum(for: 2), 0) // Only (1,2)=0
+
+        // Fill the puzzle and verify sums at each step
+        viewModel.selectCell(at: CellPosition(row: 0, column: 1))
+        viewModel.enterNumber(2)
+        XCTAssertEqual(viewModel.columnSum(for: 1), 5) // 2 + 3 = 5
+
+        viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+        viewModel.enterNumber(3)
+        XCTAssertEqual(viewModel.columnSum(for: 2), 3) // 3 + 0 = 3
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 0))
+        viewModel.enterNumber(4)
+        XCTAssertEqual(viewModel.columnSum(for: 0), 5) // 1 + 4 = 5
+
+        viewModel.selectCell(at: CellPosition(row: 1, column: 1))
+        viewModel.enterNumber(5)
+        XCTAssertEqual(viewModel.columnSum(for: 1), 10) // 2 + 5 + 3 = 10
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 0))
+        viewModel.enterNumber(2)
+        XCTAssertEqual(viewModel.columnSum(for: 0), 7) // 1 + 4 + 2 = 7
+
+        viewModel.selectCell(at: CellPosition(row: 2, column: 2))
+        viewModel.enterNumber(1)
+        XCTAssertEqual(viewModel.columnSum(for: 2), 4) // 3 + 0 + 1 = 4
+
+        // Verify all column sums match targets
+        for col in 0 ..< puzzle.columns {
+            XCTAssertEqual(
+                viewModel.columnSum(for: col),
+                expectedTargetSums[col],
+                "Column \(col) sum should match target"
+            )
+            XCTAssertTrue(
+                viewModel.isColumnComplete(col),
+                "Column \(col) should be complete"
+            )
+        }
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+    }
+
+    /// Tests game flow tracks elapsed time correctly
+    func testCompleteGameFlow_TimeTracking() async {
+        // Let some time pass before starting to fill
+        try? await Task.sleep(nanoseconds: 200_000_000)
+
+        let timeBeforeFilling = viewModel.elapsedTime
+        XCTAssertGreaterThan(timeBeforeFilling, 0.1, "Time should have elapsed")
+
+        // Fill the puzzle quickly
+        let cellsToFill: [(CellPosition, Int)] = [
+            (CellPosition(row: 0, column: 1), 2),
+            (CellPosition(row: 0, column: 2), 3),
+            (CellPosition(row: 1, column: 0), 4),
+            (CellPosition(row: 1, column: 1), 5),
+            (CellPosition(row: 2, column: 0), 2),
+            (CellPosition(row: 2, column: 2), 1),
+        ]
+
+        for (position, value) in cellsToFill {
+            viewModel.selectCell(at: position)
+            viewModel.enterNumber(value)
+        }
+
+        XCTAssertTrue(viewModel.gameState.isCompleted)
+
+        let finalTime = viewModel.elapsedTime
+        XCTAssertGreaterThan(finalTime, timeBeforeFilling, "Final time should be greater than initial time")
+
+        // Verify time is preserved in game state
+        XCTAssertEqual(viewModel.gameState.elapsedTime, finalTime, accuracy: 0.1)
+
+        // Wait a bit more and verify time doesn't increase after completion
+        let timeAfterCompletion = viewModel.elapsedTime
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertEqual(
+            viewModel.elapsedTime,
+            timeAfterCompletion,
+            accuracy: 0.05,
+            "Time should not increase after completion"
+        )
     }
 }
