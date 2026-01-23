@@ -7,17 +7,27 @@ struct CellView: View {
     /// The cell data to display
     let cell: Cell
 
+    /// The size of the cell (width and height)
+    let cellSize: CGFloat
+
     /// Action to perform when the cell is tapped
     let onTap: () -> Void
 
     // MARK: - Constants
 
-    private let cellSize: CGFloat = 50
     private let borderWidth: CGFloat = 1
     private let selectedBorderWidth: CGFloat = 3
     private let cornerRadius: CGFloat = 4
-    private let fontSize: CGFloat = 24
-    private let pencilMarkFontSize: CGFloat = 10
+
+    /// Font size scales with cell size
+    private var fontSize: CGFloat {
+        cellSize * 0.48 // Approximately 48% of cell size
+    }
+
+    /// Pencil mark font size scales with cell size
+    private var pencilMarkFontSize: CGFloat {
+        cellSize * 0.20 // Approximately 20% of cell size
+    }
 
     // MARK: - Body
 
@@ -146,135 +156,131 @@ struct CellView: View {
 struct CellView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            // Empty cell
-            CellView(
-                cell: Cell(position: CellPosition(row: 0, column: 0)),
-                onTap: {}
-            )
-            .previewDisplayName("Empty")
-
-            // Pre-filled cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 5,
-                    isInitial: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Pre-filled")
-
-            // User-entered cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 7,
-                    isInitial: false
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("User-entered")
-
-            // Selected cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 3,
-                    isInitial: false,
-                    isSelected: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Selected")
-
-            // Error cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 4,
-                    isInitial: false,
-                    hasError: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Error")
-
-            // Highlighted cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 2,
-                    isInitial: false,
-                    isHighlighted: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Highlighted")
-
-            // Same-number cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 7,
-                    isInitial: false,
-                    isSameNumber: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Same Number")
-
-            // Neighbor cell
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 5,
-                    isInitial: false,
-                    isNeighbor: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Neighbor")
-
-            // Pencil marks
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: nil,
-                    isInitial: false,
-                    pencilMarks: [1, 3, 5, 7, 9]
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Pencil Marks")
-
-            // Combined states: Selected with error
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 6,
-                    isInitial: false,
-                    isSelected: true,
-                    hasError: true
-                ),
-                onTap: {}
-            )
-            .previewDisplayName("Selected + Error")
-
-            // Dark mode
-            CellView(
-                cell: Cell(
-                    position: CellPosition(row: 0, column: 0),
-                    value: 8,
-                    isInitial: false,
-                    isSelected: true
-                ),
-                onTap: {}
-            )
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
+            emptyCell
+            prefilledCell
+            userEnteredCell
+            selectedCell
+            errorCell
+            highlightedCell
+            sameNumberCell
+            neighborCell
+            pencilMarksCell
+            selectedErrorCell
+            darkModeCell
         }
         .padding()
         .previewLayout(.sizeThatFits)
+    }
+
+    static var emptyCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0)),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Empty")
+    }
+
+    static var prefilledCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 5, isInitial: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Pre-filled")
+    }
+
+    static var userEnteredCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 7, isInitial: false),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("User-entered")
+    }
+
+    static var selectedCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 3, isInitial: false, isSelected: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Selected")
+    }
+
+    static var errorCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 4, isInitial: false, hasError: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Error")
+    }
+
+    static var highlightedCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 2, isInitial: false, isHighlighted: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Highlighted")
+    }
+
+    static var sameNumberCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 7, isInitial: false, isSameNumber: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Same Number")
+    }
+
+    static var neighborCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 5, isInitial: false, isNeighbor: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Neighbor")
+    }
+
+    static var pencilMarksCell: some View {
+        CellView(
+            cell: Cell(
+                position: CellPosition(row: 0, column: 0),
+                value: nil,
+                isInitial: false,
+                pencilMarks: [1, 3, 5, 7, 9]
+            ),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Pencil Marks")
+    }
+
+    static var selectedErrorCell: some View {
+        CellView(
+            cell: Cell(
+                position: CellPosition(row: 0, column: 0),
+                value: 6,
+                isInitial: false,
+                isSelected: true,
+                hasError: true
+            ),
+            cellSize: 50,
+            onTap: {}
+        )
+        .previewDisplayName("Selected + Error")
+    }
+
+    static var darkModeCell: some View {
+        CellView(
+            cell: Cell(position: CellPosition(row: 0, column: 0), value: 8, isInitial: false, isSelected: true),
+            cellSize: 50,
+            onTap: {}
+        )
+        .preferredColorScheme(.dark)
+        .previewDisplayName("Dark Mode")
     }
 }
 
@@ -306,40 +312,50 @@ struct CellView_Previews: PreviewProvider {
 
 private var sampleGridRow: some View {
     VStack(spacing: 16) {
-        // 5 cells in a row (typical small puzzle)
-        HStack(spacing: 2) {
-            ForEach(0 ..< 5) { index in
-                CellView(
-                    cell: Cell(
-                        position: CellPosition(row: 0, column: index),
-                        value: index == 2 ? nil : index + 1,
-                        isInitial: index % 2 == 0,
-                        pencilMarks: index == 2 ? [1, 4, 7] : [],
-                        isSelected: index == 1
-                    ),
-                    onTap: {}
-                )
-            }
-        }
-
-        // 10 cells in a row (maximum puzzle width)
-        HStack(spacing: 2) {
-            ForEach(0 ..< 10) { index in
-                CellView(
-                    cell: Cell(
-                        position: CellPosition(row: 1, column: index),
-                        value: index == 5 ? nil : (index % 10),
-                        isInitial: index % 3 == 0,
-                        pencilMarks: index == 5 ? [2, 5, 8] : []
-                    ),
-                    onTap: {}
-                )
-            }
-        }
-
-        Text("Cell size: 50pt × 50pt (fixed)")
-            .font(.caption2)
-            .foregroundColor(.secondary)
+        smallGridRow
+        fullGridRow
+        sizeDescription
     }
     .padding()
+}
+
+private var smallGridRow: some View {
+    HStack(spacing: 2) {
+        ForEach(0 ..< 5) { index in
+            CellView(
+                cell: Cell(
+                    position: CellPosition(row: 0, column: index),
+                    value: index == 2 ? nil : index + 1,
+                    isInitial: index % 2 == 0,
+                    pencilMarks: index == 2 ? [1, 4, 7] : [],
+                    isSelected: index == 1
+                ),
+                cellSize: 50,
+                onTap: {}
+            )
+        }
+    }
+}
+
+private var fullGridRow: some View {
+    HStack(spacing: 2) {
+        ForEach(0 ..< 10) { index in
+            CellView(
+                cell: Cell(
+                    position: CellPosition(row: 1, column: index),
+                    value: index == 5 ? nil : (index % 10),
+                    isInitial: index % 3 == 0,
+                    pencilMarks: index == 5 ? [2, 5, 8] : []
+                ),
+                cellSize: 50,
+                onTap: {}
+            )
+        }
+    }
+}
+
+private var sizeDescription: some View {
+    Text("Cell size: 50pt × 50pt (example)")
+        .font(.caption2)
+        .foregroundColor(.secondary)
 }

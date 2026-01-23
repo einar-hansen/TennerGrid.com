@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// A view displaying the complete Tenner Grid puzzle
+// swiftlint:disable:next swiftui_view_body
 struct GridView: View {
     // MARK: - Properties
 
@@ -17,29 +18,34 @@ struct GridView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: rowSpacing) {
-            // Main grid
-            gridContent
+        GeometryReader { geometry in
+            VStack(spacing: rowSpacing) {
+                // Main grid
+                gridContent(availableWidth: geometry.size.width - (gridPadding * 2))
 
-            // Column sums
-            columnSumsView
+                // Column sums
+                columnSumsView(availableWidth: geometry.size.width - (gridPadding * 2))
+            }
+            .padding(gridPadding)
         }
-        .padding(gridPadding)
     }
 
     // MARK: - Subviews
 
     /// The main grid layout with cells
-    private var gridContent: some View {
-        LazyVGrid(
-            columns: gridColumns,
+    /// - Parameter availableWidth: The available width for the grid
+    private func gridContent(availableWidth: CGFloat) -> some View {
+        let cellSize = calculateCellSize(availableWidth: availableWidth)
+
+        return LazyVGrid(
+            columns: gridColumns(cellSize: cellSize),
             spacing: rowSpacing
         ) {
             ForEach(0 ..< totalCells, id: \.self) { index in
                 let position = cellPosition(for: index)
                 let cell = viewModel.cell(at: position)
 
-                CellView(cell: cell) {
+                CellView(cell: cell, cellSize: cellSize) {
                     viewModel.selectCell(at: position)
                 }
             }
@@ -47,18 +53,23 @@ struct GridView: View {
     }
 
     /// Column sums display below the grid
-    private var columnSumsView: some View {
-        HStack(spacing: columnSpacing) {
+    /// - Parameter availableWidth: The available width for the grid
+    private func columnSumsView(availableWidth: CGFloat) -> some View {
+        let cellSize = calculateCellSize(availableWidth: availableWidth)
+
+        return HStack(spacing: columnSpacing) {
             ForEach(0 ..< columnCount, id: \.self) { column in
-                columnSumCell(for: column)
+                columnSumCell(for: column, cellSize: cellSize)
             }
         }
     }
 
     /// Individual column sum cell
-    /// - Parameter column: The column index
+    /// - Parameters:
+    ///   - column: The column index
+    ///   - cellSize: The width of each cell
     /// - Returns: View displaying the target sum for the column
-    private func columnSumCell(for column: Int) -> some View {
+    private func columnSumCell(for column: Int, cellSize: CGFloat) -> some View {
         let targetSum = viewModel.gameState.puzzle.targetSums[column]
         let currentSum = viewModel.columnSum(for: column)
         let isComplete = viewModel.isColumnComplete(column)
@@ -77,7 +88,7 @@ struct GridView: View {
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
         }
-        .frame(maxWidth: .infinity)
+        .frame(width: cellSize)
         .frame(height: columnSumHeight)
         .background(
             RoundedRectangle(cornerRadius: 4)
@@ -87,9 +98,23 @@ struct GridView: View {
 
     // MARK: - Helper Methods
 
-    /// Calculate grid columns for LazyVGrid
-    private var gridColumns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: columnSpacing), count: columnCount)
+    /// Calculate grid columns for LazyVGrid with fixed cell size
+    /// - Parameter cellSize: The size of each cell
+    /// - Returns: Array of GridItem with fixed sizing
+    private func gridColumns(cellSize: CGFloat) -> [GridItem] {
+        Array(repeating: GridItem(.fixed(cellSize), spacing: columnSpacing), count: columnCount)
+    }
+
+    /// Calculate the appropriate cell size based on available width
+    /// - Parameter availableWidth: The total width available for the grid
+    /// - Returns: The calculated cell size that fits all columns without overlap
+    private func calculateCellSize(availableWidth: CGFloat) -> CGFloat {
+        // Calculate cell size: (available width - total spacing) / number of columns
+        let totalSpacing = columnSpacing * CGFloat(columnCount - 1)
+        let cellSize = (availableWidth - totalSpacing) / CGFloat(columnCount)
+
+        // Return the calculated size, with a minimum of 30 and maximum of 60
+        return min(max(cellSize, 30), 60)
     }
 
     /// Total number of cells in the grid
