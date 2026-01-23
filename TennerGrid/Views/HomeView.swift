@@ -15,8 +15,17 @@ struct HomeView: View {
     /// Callback when user wants to start a new game with a selected difficulty
     var onNewGame: ((Difficulty) -> Void)?
 
+    /// Callback when user wants to play the daily challenge
+    var onDailyChallenge: (() -> Void)?
+
     /// State to control difficulty selection sheet presentation
     @State private var showingDifficultySelection = false
+
+    /// Timer for updating countdown
+    @State private var timer: Timer?
+
+    /// Current time remaining until next daily challenge
+    @State private var timeUntilNextDaily: TimeInterval = 0
 
     // MARK: - Body
 
@@ -38,6 +47,11 @@ struct HomeView: View {
                         .padding(.bottom, 20)
                 }
 
+                // Daily Challenge card - always visible
+                dailyChallengeCard
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 20)
+
                 // New Game button - always visible
                 newGameButton
                     .padding(.horizontal, 24)
@@ -57,6 +71,12 @@ struct HomeView: View {
                 onNewGame?(difficulty)
             }
         }
+        .onAppear {
+            startTimer()
+        }
+        .onDisappear {
+            stopTimer()
+        }
     }
 
     // MARK: - Computed Properties
@@ -64,6 +84,26 @@ struct HomeView: View {
     /// Returns the most recent saved game that can be resumed
     private var mostRecentSavedGame: SavedGame? {
         puzzleManager.savedGames.first { $0.canResume }
+    }
+
+    /// Calculates time remaining until midnight (next daily challenge)
+    private var timeUntilMidnight: TimeInterval {
+        let now = Date()
+        let calendar = Calendar.current
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: now),
+              let midnight = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: tomorrow)
+        else {
+            return 0
+        }
+        return midnight.timeIntervalSince(now)
+    }
+
+    /// Formats the countdown time as HH:MM:SS
+    private var formattedCountdown: String {
+        let hours = Int(timeUntilNextDaily) / 3600
+        let minutes = (Int(timeUntilNextDaily) % 3600) / 60
+        let seconds = Int(timeUntilNextDaily) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 
     // MARK: - Subviews
@@ -348,6 +388,152 @@ struct HomeView: View {
                 Capsule()
                     .fill(difficulty.color)
             )
+    }
+
+    // MARK: - Daily Challenge Card
+
+    /// Daily challenge card with countdown timer
+    private var dailyChallengeCard: some View {
+        Button {
+            onDailyChallenge?()
+        } label: {
+            VStack(alignment: .leading, spacing: 16) {
+                dailyChallengeHeader
+                dailyChallengeDescription
+                Divider()
+                dailyChallengeCountdown
+            }
+            .padding(20)
+            .background(cardBackground)
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Header section for daily challenge card
+    private var dailyChallengeHeader: some View {
+        HStack {
+            HStack(spacing: 8) {
+                dailyChallengeIcon
+                Text("Daily Challenge")
+                    .font(.system(size: 20, weight: .semibold, design: .rounded))
+                    .foregroundColor(.primary)
+            }
+
+            Spacer()
+
+            dailyChallengeNewBadge
+        }
+    }
+
+    /// Icon for daily challenge card
+    private var dailyChallengeIcon: some View {
+        Image(systemName: "calendar.badge.clock")
+            .font(.system(size: 20, weight: .semibold))
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [.orange, .red],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+    }
+
+    /// "NEW" badge for daily challenge
+    private var dailyChallengeNewBadge: some View {
+        Text("NEW")
+            .font(.system(size: 10, weight: .bold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(
+                Capsule()
+                    .fill(Color.red)
+            )
+    }
+
+    /// Description text for daily challenge
+    private var dailyChallengeDescription: some View {
+        Text("Complete today's puzzle and build your streak!")
+            .font(.system(size: 14, weight: .regular))
+            .foregroundColor(.secondary)
+            .lineLimit(2)
+    }
+
+    /// Countdown timer section
+    private var dailyChallengeCountdown: some View {
+        HStack {
+            countdownTimer
+            Spacer()
+            playNowButton
+        }
+    }
+
+    /// Countdown timer display
+    private var countdownTimer: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Next Challenge In")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.secondary)
+
+            Text(formattedCountdown)
+                .font(.system(size: 20, weight: .bold, design: .monospaced))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.orange, .red],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+        }
+    }
+
+    /// Play now button
+    private var playNowButton: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "play.fill")
+                .font(.system(size: 14))
+
+            Text("Play Now")
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 10)
+        .background(dailyChallengeGradient)
+        .cornerRadius(10)
+    }
+
+    /// Gradient for daily challenge elements
+    private var dailyChallengeGradient: some View {
+        LinearGradient(
+            colors: [.orange, .red],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
+    }
+
+    // MARK: - Timer Management
+
+    /// Starts the countdown timer
+    private func startTimer() {
+        // Set initial time
+        timeUntilNextDaily = timeUntilMidnight
+
+        // Create timer that fires every second
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [self] _ in
+            timeUntilNextDaily = timeUntilMidnight
+
+            // If we've passed midnight, reset to the full day
+            if timeUntilNextDaily < 0 {
+                timeUntilNextDaily = timeUntilMidnight
+            }
+        }
+    }
+
+    /// Stops the countdown timer
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
 

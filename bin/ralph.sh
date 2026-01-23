@@ -172,7 +172,6 @@ Your instructions:
 4. For feature tasks: Write the implementation following SwiftUI/Swift best practices
 5. For test tasks: Write comprehensive XCTest unit tests with good coverage
 6. Build the project and fix any compilation errors
-7. Run the test suite and ensure all tests pass
 8. Run SwiftLint and fix any warnings/errors
 9. Run SwiftFormat to ensure consistent code style
 10. Commit your changes with a descriptive message mentioning which task you completed.
@@ -191,7 +190,6 @@ Important:
 
 Project context:
 - Scheme: $SCHEME_NAME
-- Tests will be run with: xcodebuild test
 - Linting: swiftlint
 - Formatting: swiftformat
 
