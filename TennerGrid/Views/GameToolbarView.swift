@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// A toolbar view providing game action buttons: Undo, Erase, Notes, and Hint
+// swiftlint:disable:next swiftui_view_body
 struct GameToolbarView: View {
     // MARK: - Properties
 
@@ -100,6 +101,7 @@ struct GameToolbarView: View {
 // MARK: - Toolbar Button Component
 
 /// A reusable toolbar button with icon, label, and optional state indicators
+// swiftlint:disable:next swiftui_view_body
 private struct ToolbarButton: View {
     let icon: String
     let label: String
@@ -115,47 +117,71 @@ private struct ToolbarButton: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 4) {
-                ZStack {
-                    // Background circle for active state
-                    Circle()
-                        .fill(isActive ? Color.blue.opacity(0.15) : Color.clear)
-                        .frame(width: buttonSize, height: buttonSize)
-
-                    // Icon
-                    Image(systemName: isActive ? "\(icon).fill" : icon)
-                        .font(.system(size: iconSize, weight: .medium))
-                        .foregroundColor(iconColor)
-                        .frame(width: buttonSize, height: buttonSize)
-
-                    // Badge for hint count
-                    if let badgeValue = badge, badgeValue > 0 {
-                        badgeView(value: badgeValue)
-                    }
-                }
-
-                // Label with ON/OFF indicator
-                HStack(spacing: 2) {
-                    Text(label)
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(labelColor)
-
-                    if showIndicator {
-                        Text(isActive ? "ON" : "OFF")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundColor(isActive ? .blue : .secondary)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 1)
-                            .background(
-                                Capsule()
-                                    .fill(isActive ? Color.blue.opacity(0.15) : Color.gray.opacity(0.15))
-                            )
-                    }
-                }
+                iconStack
+                labelStack
             }
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
         .opacity(isEnabled ? 1.0 : 0.4)
+    }
+
+    /// Icon stack with background and optional badge
+    private var iconStack: some View {
+        ZStack {
+            // Background circle for active state
+            Circle()
+                .fill(isActive ? Color.blue.opacity(0.15) : Color.clear)
+                .frame(width: buttonSize, height: buttonSize)
+
+            // Icon
+            Image(systemName: activeIcon)
+                .font(.system(size: iconSize, weight: .medium))
+                .foregroundColor(iconColor)
+                .frame(width: buttonSize, height: buttonSize)
+
+            // Badge for hint count
+            if let badgeValue = badge, badgeValue > 0 {
+                badgeView(value: badgeValue)
+            }
+        }
+    }
+
+    /// Label with optional ON/OFF indicator
+    private var labelStack: some View {
+        HStack(spacing: 2) {
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(labelColor)
+
+            if showIndicator {
+                statusIndicator
+            }
+        }
+    }
+
+    /// ON/OFF status indicator
+    private var statusIndicator: some View {
+        Text(isActive ? "ON" : "OFF")
+            .font(.system(size: 9, weight: .bold))
+            .foregroundColor(isActive ? .blue : .secondary)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 1)
+            .background(
+                Capsule()
+                    .fill(isActive ? Color.blue.opacity(0.15) : Color.gray.opacity(0.15))
+            )
+    }
+
+    /// Active icon name - handles special cases where .fill variant doesn't exist
+    private var activeIcon: String {
+        // Special case: pencil.and.list.clipboard doesn't have a .fill variant
+        // Use pencil.tip.crop.circle.fill for notes mode when active
+        if isActive, icon == "pencil.and.list.clipboard" {
+            return "pencil.tip.crop.circle.fill"
+        }
+        // For other icons, use .fill variant when active
+        return isActive ? "\(icon).fill" : icon
     }
 
     /// Icon color based on state

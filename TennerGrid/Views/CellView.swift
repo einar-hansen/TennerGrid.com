@@ -76,6 +76,7 @@ struct CellView: View {
             }
         }
         .padding(4)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     /// Individual pencil mark cell
