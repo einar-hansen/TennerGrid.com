@@ -277,7 +277,6 @@ struct CellView_Previews: PreviewProvider {
             .font(.caption)
         sampleGridRow
     }
-    .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
 }
 
 #Preview("iPhone 15") {
@@ -286,7 +285,6 @@ struct CellView_Previews: PreviewProvider {
             .font(.caption)
         sampleGridRow
     }
-    .previewDevice(PreviewDevice(rawValue: "iPhone 15"))
 }
 
 #Preview("iPhone 15 Pro Max") {
@@ -295,7 +293,6 @@ struct CellView_Previews: PreviewProvider {
             .font(.caption)
         sampleGridRow
     }
-    .previewDevice(PreviewDevice(rawValue: "iPhone 15 Pro Max"))
 }
 
 private var sampleGridRow: some View {

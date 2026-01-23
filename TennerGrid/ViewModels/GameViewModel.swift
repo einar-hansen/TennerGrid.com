@@ -783,11 +783,17 @@ final class GameViewModel: ObservableObject {
             gameState.setPencilMarks(targetMarks, at: action.position)
 
         case .clearCell:
-            // Restore both value and marks
-            if let value = targetValue {
-                gameState.setValue(value, at: action.position)
-            } else if !targetMarks.isEmpty {
-                gameState.setPencilMarks(targetMarks, at: action.position)
+            if isUndo {
+                // Restore both value and marks
+                if let value = targetValue {
+                    gameState.setValue(value, at: action.position)
+                }
+                if !targetMarks.isEmpty {
+                    gameState.setPencilMarks(targetMarks, at: action.position)
+                }
+            } else {
+                // Redo: actually clear the cell
+                gameState.clearCell(at: action.position)
             }
         }
     }

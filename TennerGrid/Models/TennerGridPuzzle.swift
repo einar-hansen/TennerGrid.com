@@ -101,8 +101,9 @@ extension TennerGridPuzzle {
     /// - Returns: True if the puzzle is valid
     func isValid() -> Bool {
         // Check column and row counts are in valid range
-        guard columns >= 5, columns <= 10 else { return false }
-        guard rows >= 5, rows <= 10 else { return false }
+        // Tenner Grid uses exactly 10 columns, rows can be 3-7
+        guard columns == 10 else { return false }
+        guard rows >= 3, rows <= 7 else { return false }
 
         // Check targetSums array has correct length
         guard targetSums.count == columns else { return false }
@@ -180,7 +181,7 @@ extension TennerGridPuzzle: CustomStringConvertible {
         """
         TennerGridPuzzle(
             id: \(id),
-            size: \(rows)x\(columns),
+            size: \(columns)x\(rows),
             difficulty: \(difficulty.displayName),
             prefilled: \(prefilledCount)/\(totalCells) (\(String(format: "%.1f", prefilledPercentage * 100))%),
             targetSums: \(targetSums)

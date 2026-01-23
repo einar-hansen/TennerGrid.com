@@ -10,17 +10,14 @@ import XCTest
 
 final class HintServiceTests: XCTestCase {
     var hintService: HintService!
-    var puzzleGenerator: PuzzleGenerator!
 
     override func setUp() {
         super.setUp()
         hintService = HintService()
-        puzzleGenerator = PuzzleGenerator()
     }
 
     override func tearDown() {
         hintService = nil
-        puzzleGenerator = nil
         super.tearDown()
     }
 
@@ -111,8 +108,8 @@ final class HintServiceTests: XCTestCase {
 
         // Calculate what the last cell should be
         // Column 4 target sum should force a specific value
-        let column4Sum = 4 + 9 + 5 // = 18, so last cell needs to make up difference
-        let targetSum = 28 // This would make last cell = 10, but that's invalid
+        _ = 4 + 9 + 5 // column4Sum = 18, so last cell needs to make up difference
+        _ = 28 // targetSum would make last cell = 10, but that's invalid
         // Let's use a valid scenario
         let targetSums = [12, 16, 20, 24, 18] // Last cell would be 18 - (4 + 9 + 5) = 0
 
@@ -541,16 +538,9 @@ final class HintServiceTests: XCTestCase {
 
     // MARK: - Integration Tests
 
-    func testHintService_WithGeneratedPuzzle_ProvidesValidHints() {
-        // Generate a real puzzle and test hint service
-        guard let puzzle = puzzleGenerator.generatePuzzle(
-            columns: 5,
-            rows: 4,
-            difficulty: .easy
-        ) else {
-            XCTFail("Failed to generate puzzle")
-            return
-        }
+    func testHintService_WithBundledPuzzle_ProvidesValidHints() {
+        // Use a bundled puzzle from fixtures
+        let puzzle = TestFixtures.easyPuzzle
 
         let gameState = GameState(puzzle: puzzle)
 

@@ -9,6 +9,10 @@
     }
   ],
   "defaultOptions" : {
+    "maximumTestExecutionTimeAllowance" : 60,
+    "maximumTestRepetitions" : 1,
+    "testExecutionOrdering" : "random",
+    "testTimeoutsEnabled" : true,
     "performanceAntipatternCheckerEnabled" : true,
     "targetForVariableExpansion" : {
       "containerPath" : "container:TennerGrid.xcodeproj",

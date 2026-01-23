@@ -7,15 +7,41 @@
 
 import SwiftUI
 
+@MainActor
 struct ContentView: View {
+    @StateObject private var puzzleManager = PuzzleManager()
+    @State private var gameViewModel: GameViewModel?
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if let viewModel = gameViewModel {
+                GameView(viewModel: viewModel)
+            } else {
+                VStack(spacing: 20) {
+                    Text("Tenner Grid")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+
+                    Button("Start New Game") {
+                        startNewGame()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
         }
-        .padding()
+        .task {
+            // Start with a puzzle on first launch
+            if gameViewModel == nil {
+                startNewGame()
+            }
+        }
+    }
+
+    private func startNewGame() {
+        // Get a random puzzle from the bundled puzzles
+        if let puzzle = puzzleManager.randomPuzzle(rows: 5, difficulty: .easy) {
+            gameViewModel = GameViewModel(puzzle: puzzle)
+        }
     }
 }
 

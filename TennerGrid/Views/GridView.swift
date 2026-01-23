@@ -153,27 +153,19 @@ struct GridView: View {
 
 // MARK: - Previews
 
-#Preview("5x5 Grid") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    GridView(viewModel: GameViewModel(puzzle: puzzle))
-}
-
-#Preview("7x5 Grid") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 7, rows: 5, difficulty: .easy)!
-    GridView(viewModel: GameViewModel(puzzle: puzzle))
+#Preview("10x3 Grid") {
+    GridView(viewModel: GameViewModel(puzzle: PreviewPuzzles.easy3Row))
 }
 
 #Preview("10x5 Grid") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 10, rows: 5, difficulty: .easy)!
-    GridView(viewModel: GameViewModel(puzzle: puzzle))
+    GridView(viewModel: GameViewModel(puzzle: PreviewPuzzles.easy5Row))
+}
+
+#Preview("10x7 Grid") {
+    GridView(viewModel: GameViewModel(puzzle: PreviewPuzzles.hard7Row))
 }
 
 #Preview("Dark Mode") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 7, rows: 5, difficulty: .easy)!
-    GridView(viewModel: GameViewModel(puzzle: puzzle))
+    GridView(viewModel: GameViewModel(puzzle: PreviewPuzzles.medium5Row))
         .preferredColorScheme(.dark)
 }

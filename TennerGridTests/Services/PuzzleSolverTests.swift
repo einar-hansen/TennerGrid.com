@@ -565,8 +565,8 @@ final class PuzzleSolverTests: XCTestCase {
         }
     }
 
-    func testSolve_ExpertPuzzle() {
-        // Given: A 5x6 expert puzzle (larger grid)
+    func testSolve_LargerPuzzle() {
+        // Given: A 5x6 hard puzzle (larger grid)
         let initialGrid: [[Int?]] = [
             [nil, nil, nil, nil, nil, nil],
             [nil, nil, 3, nil, nil, nil],
@@ -580,7 +580,7 @@ final class PuzzleSolverTests: XCTestCase {
         let puzzle = TennerGridPuzzle(
             columns: 6,
             rows: 5,
-            difficulty: .expert,
+            difficulty: .hard,
             targetSums: targetSums,
             initialGrid: initialGrid,
             solution: [
@@ -595,7 +595,7 @@ final class PuzzleSolverTests: XCTestCase {
         // When: Solving the puzzle
         let solution = solver.solve(puzzle: puzzle)
 
-        // Then: Should find a solution or nil (expert puzzles can be very hard)
+        // Then: Should find a solution or nil (hard puzzles can be challenging)
         if let solved = solution {
             XCTAssertEqual(solved.count, 5, "Solution should have 5 rows")
             XCTAssertEqual(solved[0].count, 6, "Solution rows should have 6 columns")
@@ -895,12 +895,17 @@ final class PuzzleSolverTests: XCTestCase {
 
     func testGetPossibleValues_NoPossibleValues() {
         // Given: A cell where no values are possible (impossible state)
+        // Position (1,0) is adjacent to (0,0)=0, diagonal to (0,1)=1
+        // Column sum = 1 means we need value 1, but 1 is forbidden (diagonal)
         let grid: [[Int?]] = [
             [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
             [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
         ]
 
-        let targetSums = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        // Column 0 needs sum of 1, but value 1 is diagonally adjacent to (0,1)
+        // Value 0 is adjacent to (0,0), so both are forbidden
+        // No valid value exists that makes sum = 1
+        let targetSums = [1, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
         let puzzle = TennerGridPuzzle(
             columns: 10,
@@ -916,7 +921,8 @@ final class PuzzleSolverTests: XCTestCase {
         // When: Getting possible values
         let possibleValues = solver.getPossibleValues(for: position, in: grid, puzzle: puzzle)
 
-        // Then: Should return empty set (all values in same row or adjacent)
+        // Then: Should return empty set
+        // The only value that satisfies sum=1 is 1 (since 0+1=1), but 1 is forbidden
         XCTAssertTrue(possibleValues.isEmpty, "Should have no possible values in impossible state")
     }
 

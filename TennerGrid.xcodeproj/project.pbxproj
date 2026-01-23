@@ -27,6 +27,7 @@
 		2047B1052F218F1C00F1010E /* TennerGrid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TennerGrid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2047B1122F218F1D00F1010E /* TennerGridTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennerGridTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2047B11C2F218F1E00F1010E /* TennerGridUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TennerGridUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2091D2242F22CC6400CAF795 /* TennerGrid.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TennerGrid.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		2047B0FC2F218F1C00F1010E = {
 			isa = PBXGroup;
 			children = (
+				2091D2242F22CC6400CAF795 /* TennerGrid.xctestplan */,
 				2047B1072F218F1C00F1010E /* TennerGrid */,
 				2047B1152F218F1D00F1010E /* TennerGridTests */,
 				2047B11F2F218F1E00F1010E /* TennerGridUITests */,

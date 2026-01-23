@@ -202,10 +202,7 @@ private struct ToolbarButton: View {
 // MARK: - Previews
 
 #Preview("Toolbar - Default") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy3Row)
     return VStack {
         Spacer()
         GameToolbarView(viewModel: viewModel)
@@ -215,21 +212,9 @@ private struct ToolbarButton: View {
 }
 
 #Preview("Toolbar - Cell Selected") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
+    let puzzle = PreviewPuzzles.easy3Row
     let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Select an empty cell
-    for row in 0 ..< puzzle.rows {
-        for col in 0 ..< puzzle.columns {
-            let pos = CellPosition(row: row, column: col)
-            if !puzzle.isPrefilled(at: pos) {
-                viewModel.selectCell(at: pos)
-                break
-            }
-        }
-    }
-
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     return VStack {
         Text("Empty cell selected")
             .font(.caption)
@@ -242,13 +227,8 @@ private struct ToolbarButton: View {
 }
 
 #Preview("Toolbar - Notes Mode ON") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Enable notes mode
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy3Row)
     viewModel.toggleNotesMode()
-
     return VStack {
         Text("Notes mode enabled")
             .font(.caption)
@@ -261,22 +241,10 @@ private struct ToolbarButton: View {
 }
 
 #Preview("Toolbar - With Undo Available") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
+    let puzzle = PreviewPuzzles.easy3Row
     let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Make some moves to enable undo
-    for row in 0 ..< puzzle.rows {
-        for col in 0 ..< puzzle.columns {
-            let pos = CellPosition(row: row, column: col)
-            if !puzzle.isPrefilled(at: pos) {
-                viewModel.selectCell(at: pos)
-                viewModel.enterNumber(puzzle.solution[row][col])
-                break
-            }
-        }
-    }
-
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
+    viewModel.enterNumber(2)
     return VStack {
         Text("Undo available after entering a number")
             .font(.caption)
@@ -289,12 +257,8 @@ private struct ToolbarButton: View {
 }
 
 #Preview("Toolbar - Dark Mode") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy3Row)
     viewModel.toggleNotesMode()
-
     return VStack {
         Spacer()
         GameToolbarView(viewModel: viewModel)
@@ -305,29 +269,21 @@ private struct ToolbarButton: View {
 }
 
 #Preview("iPhone SE") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy3Row)
     return VStack {
         Spacer()
         GameToolbarView(viewModel: viewModel)
         Spacer()
     }
     .padding()
-    .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
 }
 
 #Preview("iPad") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy3Row)
     return VStack {
         Spacer()
         GameToolbarView(viewModel: viewModel)
         Spacer()
     }
     .padding()
-    .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (6th generation)"))
 }

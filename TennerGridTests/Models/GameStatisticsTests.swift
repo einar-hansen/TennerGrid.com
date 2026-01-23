@@ -573,7 +573,7 @@ struct GameStatisticsTests {
         var stats = GameStatistics.new()
 
         stats.recordGameCompleted(
-            difficulty: .calculator,
+            difficulty: .hard,
             time: 36000, // 10 hours
             hintsUsed: 100,
             errors: 50

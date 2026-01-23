@@ -132,96 +132,45 @@ struct GameHeaderView: View {
 // MARK: - Previews
 
 #Preview("Header - Default") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy3Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
 }
 
 #Preview("Header - Medium Difficulty") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 6, rows: 4, difficulty: .medium)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.medium4Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
 }
 
 #Preview("Header - Hard Difficulty") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 7, rows: 4, difficulty: .hard)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.hard5Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
 }
 
-#Preview("Header - Expert Difficulty") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 8, rows: 5, difficulty: .expert)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+#Preview("Header - Large Grid") {
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.hard6Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
-        Spacer()
-    }
-    .padding()
-}
-
-#Preview("Header - Calculator Difficulty") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 10, rows: 6, difficulty: .calculator)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
 }
 
 #Preview("Header - Dark Mode") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .hard)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.hard5Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
@@ -229,52 +178,28 @@ struct GameHeaderView: View {
 }
 
 #Preview("iPhone SE") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .medium)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.medium5Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
-    .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
 }
 
 #Preview("iPhone 15 Pro Max") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .medium)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.medium5Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
-    .previewDevice(PreviewDevice(rawValue: "iPhone 15 Pro Max"))
 }
 
 #Preview("iPad") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .medium)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.medium5Row)
     return VStack {
-        GameHeaderView(
-            viewModel: viewModel,
-            onPause: {},
-            onSettings: {}
-        )
+        GameHeaderView(viewModel: viewModel, onPause: {}, onSettings: {})
         Spacer()
     }
     .padding()
-    .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (6th generation)"))
 }

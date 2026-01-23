@@ -19,14 +19,6 @@ final class PuzzleManager: ObservableObject {
     /// List of saved games
     @Published private(set) var savedGames: [SavedGame] = []
 
-    /// Whether a puzzle generation is in progress
-    @Published private(set) var isGenerating = false
-
-    // MARK: - Private Properties
-
-    private let generator = PuzzleGenerator()
-    private let solver = PuzzleSolver()
-
     // MARK: - Initialization
 
     init() {
@@ -34,82 +26,79 @@ final class PuzzleManager: ObservableObject {
         loadSavedGames()
     }
 
-    // MARK: - Puzzle Generation
+    // MARK: - Puzzle Selection
 
-    /// Generates a new puzzle with specified parameters
+    /// Returns a random puzzle with specified parameters
     /// - Parameters:
-    ///   - columns: Number of columns (5-10, defaults to 10)
-    ///   - rows: Number of rows (5-10, defaults to 5)
+    ///   - rows: Number of rows (3-7, defaults to 5)
     ///   - difficulty: Desired difficulty level
-    /// - Returns: A new TennerGridPuzzle, or nil if generation fails
-    func generateNewPuzzle(
-        columns: Int = 10,
+    /// - Returns: A random TennerGridPuzzle, or nil if none available
+    func randomPuzzle(
         rows: Int = 5,
         difficulty: Difficulty
-    ) async -> TennerGridPuzzle? {
-        isGenerating = true
-        defer { isGenerating = false }
+    ) -> TennerGridPuzzle? {
+        // Validate dimensions - rows must be 3-7
+        guard rows >= 3, rows <= 7 else { return nil }
 
-        // Validate dimensions
-        guard columns >= 5, columns <= 10 else { return nil }
-        guard rows >= 5, rows <= 10 else { return nil }
-
-        // Run generation on background thread to avoid blocking UI
-        return await Task.detached(priority: .userInitiated) { [weak self] in
-            guard let self else { return nil }
-            return await generator.generatePuzzle(
-                columns: columns,
-                rows: rows,
-                difficulty: difficulty
-            )
-        }.value
+        return BundledPuzzleService.shared.randomPuzzle(difficulty: difficulty, rows: rows)
     }
 
-    /// Generates a daily puzzle deterministically based on the current date
-    /// - Returns: A TennerGridPuzzle for today's date, or nil if generation fails
-    func generateDailyPuzzle() async -> TennerGridPuzzle? {
-        isGenerating = true
-        defer { isGenerating = false }
+    /// Returns the first puzzle matching the criteria (deterministic)
+    /// - Parameters:
+    ///   - rows: Number of rows (3-7, defaults to 5)
+    ///   - difficulty: Desired difficulty level
+    /// - Returns: The first matching TennerGridPuzzle, or nil if none available
+    func firstPuzzle(
+        rows: Int = 5,
+        difficulty: Difficulty
+    ) -> TennerGridPuzzle? {
+        // Validate dimensions - rows must be 3-7
+        guard rows >= 3, rows <= 7 else { return nil }
 
-        // Generate seed from today's date
-        let seed = seedForDate(Date())
-
-        // Run generation on background thread
-        return await Task.detached(priority: .userInitiated) { [weak self] in
-            guard let self else { return nil }
-
-            // Daily puzzles use standard 10x5 grid with medium difficulty
-            return await generator.generatePuzzle(
-                columns: 10,
-                rows: 5,
-                difficulty: .medium,
-                seed: seed
-            )
-        }.value
+        return BundledPuzzleService.shared.firstPuzzle(difficulty: difficulty, rows: rows)
     }
 
-    /// Generates a daily puzzle for a specific date
-    /// - Parameter date: The date to generate a puzzle for
-    /// - Returns: A TennerGridPuzzle for the specified date, or nil if generation fails
-    func generateDailyPuzzle(for date: Date) async -> TennerGridPuzzle? {
-        isGenerating = true
-        defer { isGenerating = false }
+    /// Returns a daily puzzle based on the current date
+    /// Uses a deterministic selection based on day of year
+    /// - Returns: A TennerGridPuzzle for today
+    func dailyPuzzle() -> TennerGridPuzzle? {
+        dailyPuzzle(for: Date())
+    }
 
-        // Generate seed from the specified date
-        let seed = seedForDate(date)
+    /// Returns a daily puzzle for a specific date
+    /// Uses a deterministic selection based on the date
+    /// - Parameter date: The date to get a puzzle for
+    /// - Returns: A TennerGridPuzzle for the specified date
+    func dailyPuzzle(for date: Date) -> TennerGridPuzzle? {
+        let calendar = Calendar.current
+        let dayOfYear = calendar.ordinality(of: .day, in: .year, for: date) ?? 1
 
-        // Run generation on background thread
-        return await Task.detached(priority: .userInitiated) { [weak self] in
-            guard let self else { return nil }
+        // Get all medium puzzles with 5 rows (standard daily puzzle)
+        let puzzles = BundledPuzzleService.shared.puzzles(difficulty: .medium, rows: 5)
+        guard !puzzles.isEmpty else { return nil }
 
-            // Daily puzzles use standard 10x5 grid with medium difficulty
-            return await generator.generatePuzzle(
-                columns: 10,
-                rows: 5,
-                difficulty: .medium,
-                seed: seed
-            )
-        }.value
+        // Use day of year to select deterministically
+        let index = (dayOfYear - 1) % puzzles.count
+        return puzzles[index]
+    }
+
+    /// Returns all available puzzles matching the criteria
+    /// - Parameters:
+    ///   - difficulty: Optional difficulty filter
+    ///   - rows: Optional rows filter
+    /// - Returns: Array of matching puzzles
+    func puzzles(difficulty: Difficulty? = nil, rows: Int? = nil) -> [TennerGridPuzzle] {
+        BundledPuzzleService.shared.puzzles(difficulty: difficulty, rows: rows)
+    }
+
+    /// Returns available row counts for a difficulty
+    func availableRows(for difficulty: Difficulty) -> [Int] {
+        BundledPuzzleService.shared.availableRows(for: difficulty)
+    }
+
+    /// Total number of available puzzles
+    var puzzleCount: Int {
+        BundledPuzzleService.shared.count
     }
 
     // MARK: - Saved Games Management
@@ -159,25 +148,6 @@ final class PuzzleManager: ObservableObject {
     }
 
     // MARK: - Private Helper Methods
-
-    /// Generates a deterministic seed from a date
-    /// - Parameter date: The date to convert to a seed
-    /// - Returns: A UInt64 seed value
-    private func seedForDate(_ date: Date) -> UInt64 {
-        // Get calendar components
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: date)
-
-        // Create a seed from the date components
-        // This ensures the same date always generates the same puzzle
-        let year = UInt64(components.year ?? 2026)
-        let month = UInt64(components.month ?? 1)
-        let day = UInt64(components.day ?? 1)
-
-        // Combine components into a single seed
-        // Formula: year * 10000 + month * 100 + day
-        return year * 10000 + month * 100 + day
-    }
 
     /// Loads saved games from persistent storage
     private func loadSavedGames() {

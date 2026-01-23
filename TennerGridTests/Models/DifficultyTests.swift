@@ -17,8 +17,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.rawValue == "easy")
         #expect(Difficulty.medium.rawValue == "medium")
         #expect(Difficulty.hard.rawValue == "hard")
-        #expect(Difficulty.expert.rawValue == "expert")
-        #expect(Difficulty.calculator.rawValue == "calculator")
     }
 
     // MARK: - Identifiable Tests
@@ -27,8 +25,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.id == "easy")
         #expect(Difficulty.medium.id == "medium")
         #expect(Difficulty.hard.id == "hard")
-        #expect(Difficulty.expert.id == "expert")
-        #expect(Difficulty.calculator.id == "calculator")
     }
 
     // MARK: - Display Name Tests
@@ -37,8 +33,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.displayName == "Easy")
         #expect(Difficulty.medium.displayName == "Medium")
         #expect(Difficulty.hard.displayName == "Hard")
-        #expect(Difficulty.expert.displayName == "Expert")
-        #expect(Difficulty.calculator.displayName == "Calculator")
     }
 
     // MARK: - Color Tests
@@ -47,8 +41,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.color == .green)
         #expect(Difficulty.medium.color == .blue)
         #expect(Difficulty.hard.color == .orange)
-        #expect(Difficulty.expert.color == .red)
-        #expect(Difficulty.calculator.color == .purple)
     }
 
     // MARK: - Prefilled Percentage Tests
@@ -57,12 +49,10 @@ struct DifficultyTests {
         #expect(Difficulty.easy.prefilledPercentage == 0.45)
         #expect(Difficulty.medium.prefilledPercentage == 0.35)
         #expect(Difficulty.hard.prefilledPercentage == 0.25)
-        #expect(Difficulty.expert.prefilledPercentage == 0.15)
-        #expect(Difficulty.calculator.prefilledPercentage == 0.05)
     }
 
     @Test func prefilledPercentagesAreDescending() {
-        let difficulties = Difficulty.allCases.dropLast() // Exclude calculator
+        let difficulties = Difficulty.allCases
         for i in 0 ..< (difficulties.count - 1) {
             let current = Array(difficulties)[i]
             let next = Array(difficulties)[i + 1]
@@ -83,8 +73,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.estimatedMinutes == 5)
         #expect(Difficulty.medium.estimatedMinutes == 10)
         #expect(Difficulty.hard.estimatedMinutes == 20)
-        #expect(Difficulty.expert.estimatedMinutes == 35)
-        #expect(Difficulty.calculator.estimatedMinutes == 60)
     }
 
     @Test func estimatedMinutesAreAscending() {
@@ -107,7 +95,7 @@ struct DifficultyTests {
     @Test func descriptionsAreNotEmpty() {
         for difficulty in Difficulty.allCases {
             #expect(!difficulty.description.isEmpty)
-            #expect(difficulty.description.count > 10) // Should be a meaningful description
+            #expect(difficulty.description.count > 10)
         }
     }
 
@@ -115,8 +103,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.description.contains("beginner"))
         #expect(Difficulty.medium.description.contains("balanced"))
         #expect(Difficulty.hard.description.contains("logical"))
-        #expect(Difficulty.expert.description.contains("challenging"))
-        #expect(Difficulty.calculator.description.contains("ultimate"))
     }
 
     // MARK: - Points Tests
@@ -125,8 +111,6 @@ struct DifficultyTests {
         #expect(Difficulty.easy.points == 10)
         #expect(Difficulty.medium.points == 25)
         #expect(Difficulty.hard.points == 50)
-        #expect(Difficulty.expert.points == 100)
-        #expect(Difficulty.calculator.points == 200)
     }
 
     @Test func pointsAreAscending() {
@@ -147,7 +131,7 @@ struct DifficultyTests {
     // MARK: - CaseIterable Tests
 
     @Test func allCasesCount() {
-        #expect(Difficulty.allCases.count == 5)
+        #expect(Difficulty.allCases.count == 3)
     }
 
     @Test func allCasesOrder() {
@@ -155,8 +139,6 @@ struct DifficultyTests {
         #expect(cases[0] == .easy)
         #expect(cases[1] == .medium)
         #expect(cases[2] == .hard)
-        #expect(cases[3] == .expert)
-        #expect(cases[4] == .calculator)
     }
 
     // MARK: - Codable Tests
@@ -168,9 +150,9 @@ struct DifficultyTests {
         let easyString = String(data: easyData, encoding: .utf8)
         #expect(easyString == "\"easy\"")
 
-        let expertData = try encoder.encode(Difficulty.expert)
-        let expertString = String(data: expertData, encoding: .utf8)
-        #expect(expertString == "\"expert\"")
+        let hardData = try encoder.encode(Difficulty.hard)
+        let hardString = String(data: hardData, encoding: .utf8)
+        #expect(hardString == "\"hard\"")
     }
 
     @Test func codableDecoding() throws {
@@ -180,9 +162,9 @@ struct DifficultyTests {
         let easy = try decoder.decode(Difficulty.self, from: easyData)
         #expect(easy == .easy)
 
-        let calculatorData = "\"calculator\"".data(using: .utf8)!
-        let calculator = try decoder.decode(Difficulty.self, from: calculatorData)
-        #expect(calculator == .calculator)
+        let hardData = "\"hard\"".data(using: .utf8)!
+        let hard = try decoder.decode(Difficulty.self, from: hardData)
+        #expect(hard == .hard)
     }
 
     @Test func codableRoundTrip() throws {

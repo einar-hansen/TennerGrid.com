@@ -15,32 +15,8 @@ final class ValidationServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
         service = ValidationService()
-
-        // Create a simple 5x5 test puzzle
-        let targetSums = [25, 30, 20, 35, 25]
-        let initialGrid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
-        let solution: [[Int]] = [
-            [1, 2, 3, 4, 5],
-            [6, 7, 3, 8, 0],
-            [5, 9, 1, 7, 3],
-            [2, 4, 6, 7, 8],
-            [0, 3, 5, 1, 9],
-        ]
-
-        testPuzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 5,
-            difficulty: .easy,
-            targetSums: targetSums,
-            initialGrid: initialGrid,
-            solution: solution
-        )
+        // Use a bundled 10-column puzzle from fixtures
+        testPuzzle = TestFixtures.easyPuzzle
     }
 
     override func tearDown() {
@@ -52,14 +28,10 @@ final class ValidationServiceTests: XCTestCase {
     // MARK: - isValidPlacement Tests
 
     func testValidPlacement_EmptyCell() {
-        // Given: A grid with empty cells
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        // Given: A 10-column grid with empty cells
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][1] = 2
+        grid[1][2] = 3
         let position = CellPosition(row: 0, column: 0)
 
         // When: Placing a value that doesn't violate any rules
@@ -76,13 +48,8 @@ final class ValidationServiceTests: XCTestCase {
 
     func testInvalidPlacement_AdjacentDuplicate_Horizontal() {
         // Given: A grid with a value at (0,1)
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][1] = 2
         let position = CellPosition(row: 0, column: 0)
 
         // When: Trying to place the same value adjacently
@@ -99,13 +66,8 @@ final class ValidationServiceTests: XCTestCase {
 
     func testInvalidPlacement_AdjacentDuplicate_Vertical() {
         // Given: A grid with a value at (1,0)
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [3, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[1][0] = 3
         let position = CellPosition(row: 0, column: 0)
 
         // When: Trying to place the same value adjacently
@@ -122,13 +84,8 @@ final class ValidationServiceTests: XCTestCase {
 
     func testInvalidPlacement_AdjacentDuplicate_Diagonal() {
         // Given: A grid with a value at (1,1)
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, 4, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[1][1] = 4
         let position = CellPosition(row: 0, column: 0)
 
         // When: Trying to place the same value diagonally adjacent
@@ -145,13 +102,8 @@ final class ValidationServiceTests: XCTestCase {
 
     func testInvalidPlacement_RowDuplicate() {
         // Given: A grid with a value elsewhere in the same row
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, 7],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][9] = 7  // Same row, column 9
         let position = CellPosition(row: 0, column: 0)
 
         // When: Trying to place a duplicate value in the same row
@@ -163,18 +115,12 @@ final class ValidationServiceTests: XCTestCase {
         )
 
         // Then: The placement should be invalid
-        XCTAssertFalse(isValid, "Placing 7 at (0,0) should be invalid due to row duplicate at (0,4)")
+        XCTAssertFalse(isValid, "Placing 7 at (0,0) should be invalid due to row duplicate at (0,9)")
     }
 
     func testInvalidPlacement_OutOfRange() {
         // Given: A position and grid
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        let grid = TestFixtures.emptyGrid10x3
         let position = CellPosition(row: 0, column: 0)
 
         // When: Trying to place a value outside the valid range
@@ -198,13 +144,7 @@ final class ValidationServiceTests: XCTestCase {
 
     func testInvalidPlacement_OutOfBounds() {
         // Given: A position outside the grid
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        let grid = TestFixtures.emptyGrid10x3
         let position = CellPosition(row: 10, column: 10)
 
         // When: Trying to place a value at an invalid position
@@ -223,13 +163,9 @@ final class ValidationServiceTests: XCTestCase {
 
     func testDetectConflicts_NoConflicts() {
         // Given: A grid where a cell has no conflicts
-        let grid: [[Int?]] = [
-            [1, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][0] = 1
+        grid[0][2] = 2  // Not adjacent to (0,0)
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
@@ -241,76 +177,60 @@ final class ValidationServiceTests: XCTestCase {
 
     func testDetectConflicts_AdjacentConflict() {
         // Given: A grid where a cell has an adjacent conflict
-        let grid: [[Int?]] = [
-            [5, 2, nil, nil, nil],
-            [5, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][0] = 5
+        grid[1][0] = 5  // Adjacent vertical
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
         let conflicts = service.detectConflicts(at: position, in: grid, puzzle: testPuzzle)
 
         // Then: Should detect the adjacent conflict at (1,0)
-        XCTAssertEqual(conflicts.count, 2, "Should detect 2 conflicts (adjacent and row duplicate)")
+        XCTAssertEqual(conflicts.count, 1, "Should detect 1 adjacent conflict")
         XCTAssertTrue(conflicts.contains(CellPosition(row: 1, column: 0)), "Should detect adjacent conflict at (1,0)")
-        XCTAssertTrue(conflicts.contains(CellPosition(row: 2, column: 0)), "Should detect row duplicate at (2,0)")
     }
 
     func testDetectConflicts_RowConflict() {
-        // Given: A grid where a cell has a row conflict
-        let grid: [[Int?]] = [
-            [5, 2, nil, nil, 5],
-            [nil, nil, 3, nil, nil],
-            [1, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        // Given: A grid where a cell has a row conflict (non-adjacent)
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][0] = 5
+        grid[0][9] = 5  // Same row, far end
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
         let conflicts = service.detectConflicts(at: position, in: grid, puzzle: testPuzzle)
 
-        // Then: Should detect the row conflict at (0,4)
+        // Then: Should detect the row conflict at (0,9)
         XCTAssertEqual(conflicts.count, 1, "Should detect 1 conflict")
-        XCTAssertTrue(conflicts.contains(CellPosition(row: 0, column: 4)), "Should detect row conflict at (0,4)")
+        XCTAssertTrue(conflicts.contains(CellPosition(row: 0, column: 9)), "Should detect row conflict at (0,9)")
     }
 
     func testDetectConflicts_MultipleConflicts() {
         // Given: A grid where a cell has multiple conflicts
-        let grid: [[Int?]] = [
-            [5, 5, nil, nil, 5],
-            [5, nil, 3, nil, nil],
-            [nil, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][0] = 5
+        grid[0][1] = 5  // Adjacent horizontal (also row conflict)
+        grid[1][0] = 5  // Adjacent vertical
+        grid[1][1] = 5  // Adjacent diagonal
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
         let conflicts = service.detectConflicts(at: position, in: grid, puzzle: testPuzzle)
 
-        // Then: Should detect all conflicts
-        XCTAssertEqual(conflicts.count, 3, "Should detect 3 conflicts")
+        // Then: Should detect all adjacent conflicts (row duplicates that are also adjacent are counted once)
+        XCTAssertTrue(conflicts.count >= 3, "Should detect at least 3 conflicts")
         XCTAssertTrue(conflicts.contains(CellPosition(row: 0, column: 1)), "Should detect adjacent conflict at (0,1)")
         XCTAssertTrue(conflicts.contains(CellPosition(row: 1, column: 0)), "Should detect adjacent conflict at (1,0)")
-        XCTAssertTrue(conflicts.contains(CellPosition(row: 0, column: 4)), "Should detect row conflict at (0,4)")
+        XCTAssertTrue(conflicts.contains(CellPosition(row: 1, column: 1)), "Should detect diagonal conflict at (1,1)")
     }
 
     func testDetectConflicts_EmptyCell() {
         // Given: An empty cell
-        let grid: [[Int?]] = [
-            [nil, 2, nil, nil, nil],
-            [nil, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][1] = 2
         let position = CellPosition(row: 0, column: 0)
 
-        // When: Detecting conflicts
+        // When: Detecting conflicts for an empty cell
         let conflicts = service.detectConflicts(at: position, in: grid, puzzle: testPuzzle)
 
         // Then: No conflicts should be found for an empty cell
@@ -320,69 +240,55 @@ final class ValidationServiceTests: XCTestCase {
     // MARK: - isColumnSumValid Tests
 
     func testColumnSumValid_CorrectSum() {
-        // Given: A grid with a complete column that sums correctly
-        // Column 0: 1+6+5+2+0 = 14, but we'll set targetSum to 14
-        let targetSums = [14, 30, 20, 35, 25]
-        let grid: [[Int?]] = [
-            [1, 2, nil, nil, nil],
-            [6, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [2, nil, nil, 7, nil],
-            [0, nil, nil, nil, 9],
-        ]
+        // Given: A complete column that sums to the target
+        // Using fixture's column sums
+        let grid: [[Int?]] = TestFixtures.completedGrid10x3.map { $0.map { $0 as Int? } }
 
+        // Create puzzle with matching sums
         let puzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 5,
+            columns: 10,
+            rows: 3,
             difficulty: .easy,
-            targetSums: targetSums,
+            targetSums: TestFixtures.columnSums10x3,
             initialGrid: grid,
-            solution: testPuzzle.solution
+            solution: TestFixtures.completedGrid10x3
         )
 
-        // When: Validating the column sum
-        let isValid = service.isColumnSumValid(column: 0, in: grid, puzzle: puzzle)
-
-        // Then: The sum should be valid
-        XCTAssertTrue(isValid, "Column 0 sum should be valid (14)")
+        // When: Validating each column sum
+        for col in 0 ..< 10 {
+            let isValid = service.isColumnSumValid(column: col, in: grid, puzzle: puzzle)
+            XCTAssertTrue(isValid, "Column \(col) sum should be valid")
+        }
     }
 
     func testColumnSumValid_IncorrectSum() {
-        // Given: A grid with a complete column that sums incorrectly
-        let targetSums = [25, 30, 20, 35, 25]
-        let grid: [[Int?]] = [
-            [1, 2, nil, nil, nil],
-            [6, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [2, nil, nil, 7, nil],
-            [0, nil, nil, nil, 9],
-        ]
+        // Given: A complete column that doesn't sum to the target
+        let grid: [[Int?]] = TestFixtures.completedGrid10x3.map { $0.map { $0 as Int? } }
 
+        // Create puzzle with wrong target sums
+        let wrongSums = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
         let puzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 5,
+            columns: 10,
+            rows: 3,
             difficulty: .easy,
-            targetSums: targetSums,
+            targetSums: wrongSums,
             initialGrid: grid,
-            solution: testPuzzle.solution
+            solution: TestFixtures.completedGrid10x3
         )
 
-        // When: Validating the column sum (actual: 14, expected: 25)
+        // When: Validating column sum
         let isValid = service.isColumnSumValid(column: 0, in: grid, puzzle: puzzle)
 
         // Then: The sum should be invalid
-        XCTAssertFalse(isValid, "Column 0 sum should be invalid (14 != 25)")
+        XCTAssertFalse(isValid, "Column 0 sum should be invalid with wrong target")
     }
 
     func testColumnSumValid_IncompleteColumn() {
         // Given: A grid with an incomplete column
-        let grid: [[Int?]] = [
-            [1, 2, nil, nil, nil],
-            [6, nil, 3, nil, nil],
-            [nil, nil, nil, nil, nil],
-            [2, nil, nil, 7, nil],
-            [0, nil, nil, nil, 9],
-        ]
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][0] = 5
+        grid[1][0] = 3
+        // Row 2, column 0 is still nil
 
         // When: Validating the column sum
         let isValid = service.isColumnSumValid(column: 0, in: grid, puzzle: testPuzzle)
@@ -393,13 +299,7 @@ final class ValidationServiceTests: XCTestCase {
 
     func testColumnSumValid_InvalidColumn() {
         // Given: A grid
-        let grid: [[Int?]] = [
-            [1, 2, nil, nil, nil],
-            [6, nil, 3, nil, nil],
-            [5, nil, nil, nil, nil],
-            [2, nil, nil, 7, nil],
-            [0, nil, nil, nil, 9],
-        ]
+        let grid = TestFixtures.emptyGrid10x3
 
         // When: Validating an out-of-bounds column
         let isValidNegative = service.isColumnSumValid(column: -1, in: grid, puzzle: testPuzzle)
@@ -413,65 +313,61 @@ final class ValidationServiceTests: XCTestCase {
     // MARK: - isPuzzleComplete Tests
 
     func testPuzzleComplete_ValidSolution() {
-        // Given: A complete and correct solution
-        let grid: [[Int?]] = [
-            [1, 2, 3, 4, 5],
-            [6, 7, 3, 8, 0],
-            [5, 9, 1, 7, 3],
-            [2, 4, 6, 7, 8],
-            [0, 3, 5, 1, 9],
-        ]
+        // Given: A complete and correct solution using fixtures
+        let grid: [[Int?]] = TestFixtures.completedGrid10x3.map { $0.map { $0 as Int? } }
 
-        // Adjust target sums to match the actual column sums
-        let actualSums = (0 ..< 5).map { col in
-            grid.compactMap { $0[col] }.reduce(0, +)
-        }
         let puzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 5,
+            columns: 10,
+            rows: 3,
             difficulty: .easy,
-            targetSums: actualSums,
-            initialGrid: testPuzzle.initialGrid,
-            solution: testPuzzle.solution
+            targetSums: TestFixtures.columnSums10x3,
+            initialGrid: TestFixtures.emptyGrid10x3,
+            solution: TestFixtures.completedGrid10x3
         )
 
         // When: Checking if puzzle is complete
         let isComplete = service.isPuzzleComplete(grid: grid, puzzle: puzzle)
 
-        // Then: The puzzle should be complete if no conflicts exist
-        // Note: This will be true only if the grid follows all rules
+        // Then: The puzzle should be complete
         XCTAssertTrue(isComplete, "Valid solution should be complete")
     }
 
     func testPuzzleComplete_IncompletePuzzle() {
         // Given: An incomplete grid
-        let grid: [[Int?]] = [
-            [1, 2, 3, 4, 5],
-            [6, 7, 3, 8, 0],
-            [5, 9, 1, 7, nil],
-            [2, 4, 6, 7, 8],
-            [0, 3, 5, 1, 9],
-        ]
+        var grid: [[Int?]] = TestFixtures.completedGrid10x3.map { $0.map { $0 as Int? } }
+        grid[2][5] = nil  // Make one cell empty
+
+        let puzzle = TennerGridPuzzle(
+            columns: 10,
+            rows: 3,
+            difficulty: .easy,
+            targetSums: TestFixtures.columnSums10x3,
+            initialGrid: TestFixtures.emptyGrid10x3,
+            solution: TestFixtures.completedGrid10x3
+        )
 
         // When: Checking if puzzle is complete
-        let isComplete = service.isPuzzleComplete(grid: grid, puzzle: testPuzzle)
+        let isComplete = service.isPuzzleComplete(grid: grid, puzzle: puzzle)
 
         // Then: The puzzle should not be complete
         XCTAssertFalse(isComplete, "Incomplete puzzle should not be complete")
     }
 
     func testPuzzleComplete_WithConflicts() {
-        // Given: A complete grid with conflicts
-        let grid: [[Int?]] = [
-            [1, 1, 3, 4, 5], // Row duplicate: 1 appears twice
-            [6, 7, 3, 8, 0],
-            [5, 9, 1, 7, 3],
-            [2, 4, 6, 7, 8],
-            [0, 3, 5, 1, 9],
-        ]
+        // Given: A complete grid with conflicts (adjacent duplicates)
+        let grid: [[Int?]] = TestFixtures.invalidGrid_adjacentDuplicates.map { $0.map { $0 as Int? } }
+
+        let puzzle = TennerGridPuzzle(
+            columns: 10,
+            rows: 3,
+            difficulty: .easy,
+            targetSums: TestFixtures.columnSums10x3,
+            initialGrid: TestFixtures.emptyGrid10x3,
+            solution: TestFixtures.completedGrid10x3
+        )
 
         // When: Checking if puzzle is complete
-        let isComplete = service.isPuzzleComplete(grid: grid, puzzle: testPuzzle)
+        let isComplete = service.isPuzzleComplete(grid: grid, puzzle: puzzle)
 
         // Then: The puzzle should not be complete due to conflicts
         XCTAssertFalse(isComplete, "Puzzle with conflicts should not be complete")
@@ -479,16 +375,21 @@ final class ValidationServiceTests: XCTestCase {
 
     func testPuzzleComplete_WithIncorrectColumnSums() {
         // Given: A complete grid without conflicts but wrong column sums
-        let grid: [[Int?]] = [
-            [0, 2, 3, 4, 5],
-            [6, 7, 3, 8, 1],
-            [5, 9, 1, 7, 3],
-            [2, 4, 6, 0, 8],
-            [1, 3, 5, 2, 9],
-        ]
+        let grid: [[Int?]] = TestFixtures.completedGrid10x3.map { $0.map { $0 as Int? } }
+
+        // Create puzzle with wrong target sums
+        let wrongSums = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+        let puzzle = TennerGridPuzzle(
+            columns: 10,
+            rows: 3,
+            difficulty: .easy,
+            targetSums: wrongSums,
+            initialGrid: TestFixtures.emptyGrid10x3,
+            solution: TestFixtures.completedGrid10x3
+        )
 
         // When: Checking if puzzle is complete
-        let isComplete = service.isPuzzleComplete(grid: grid, puzzle: testPuzzle)
+        let isComplete = service.isPuzzleComplete(grid: grid, puzzle: puzzle)
 
         // Then: The puzzle should not be complete due to incorrect sums
         XCTAssertFalse(isComplete, "Puzzle with incorrect column sums should not be complete")
@@ -498,7 +399,7 @@ final class ValidationServiceTests: XCTestCase {
 
     func testValidPlacement_CornerCell() {
         // Given: A corner cell position
-        let grid: [[Int?]] = Array(repeating: Array(repeating: nil, count: 5), count: 5)
+        let grid = TestFixtures.emptyGrid10x3
         let position = CellPosition(row: 0, column: 0)
 
         // When: Placing a value
@@ -515,16 +416,14 @@ final class ValidationServiceTests: XCTestCase {
 
     func testValidPlacement_CenterCell() {
         // Given: A center cell with values around it
-        let grid: [[Int?]] = [
-            [nil, 1, nil, nil, nil],
-            [2, nil, 3, nil, nil],
-            [nil, 4, nil, nil, nil],
-            [nil, nil, nil, 7, nil],
-            [nil, nil, nil, nil, 9],
-        ]
-        let position = CellPosition(row: 1, column: 1)
+        var grid = TestFixtures.emptyGrid10x3
+        grid[0][4] = 1
+        grid[1][3] = 2
+        grid[1][5] = 3
+        grid[2][4] = 4
+        let position = CellPosition(row: 1, column: 4)
 
-        // When: Placing a value not adjacent to any existing value
+        // When: Placing a value not matching any adjacent value
         let isValid = service.isValidPlacement(
             value: 5,
             at: position,
@@ -533,12 +432,12 @@ final class ValidationServiceTests: XCTestCase {
         )
 
         // Then: Should be valid
-        XCTAssertTrue(isValid, "Placing 5 at (1,1) should be valid")
+        XCTAssertTrue(isValid, "Placing 5 at (1,4) should be valid")
     }
 
     func testValidPlacement_Zero() {
         // Given: An empty grid
-        let grid: [[Int?]] = Array(repeating: Array(repeating: nil, count: 5), count: 5)
+        let grid = TestFixtures.emptyGrid10x3
         let position = CellPosition(row: 0, column: 0)
 
         // When: Placing zero

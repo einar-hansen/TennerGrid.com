@@ -365,53 +365,30 @@ private struct KeyboardInputModifierIOS17: ViewModifier {
 // MARK: - Previews
 
 #Preview("Game View - Easy") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    return GameView(puzzle: puzzle)
+    GameView(puzzle: PreviewPuzzles.easy3Row)
 }
 
 #Preview("Game View - Medium") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 7, rows: 4, difficulty: .medium)!
-    return GameView(puzzle: puzzle)
+    GameView(puzzle: PreviewPuzzles.medium4Row)
 }
 
 #Preview("Game View - Hard") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 8, rows: 5, difficulty: .hard)!
-    return GameView(puzzle: puzzle)
-}
-
-#Preview("Game View - Expert") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 10, rows: 5, difficulty: .expert)!
-    return GameView(puzzle: puzzle)
+    GameView(puzzle: PreviewPuzzles.hard5Row)
 }
 
 #Preview("Dark Mode") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 7, rows: 4, difficulty: .medium)!
-    return GameView(puzzle: puzzle)
+    GameView(puzzle: PreviewPuzzles.medium5Row)
         .preferredColorScheme(.dark)
 }
 
-#Preview("iPhone SE") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 3, difficulty: .easy)!
-    return GameView(puzzle: puzzle)
-        .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
+#Preview("iPhone SE - Small") {
+    GameView(puzzle: PreviewPuzzles.easy3Row)
 }
 
 #Preview("iPhone 15 Pro Max") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 8, rows: 5, difficulty: .hard)!
-    return GameView(puzzle: puzzle)
-        .previewDevice(PreviewDevice(rawValue: "iPhone 15 Pro Max"))
+    GameView(puzzle: PreviewPuzzles.hard5Row)
 }
 
 #Preview("iPad") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 10, rows: 5, difficulty: .expert)!
-    return GameView(puzzle: puzzle)
-        .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (6th generation)"))
+    GameView(puzzle: PreviewPuzzles.hard7Row)
 }

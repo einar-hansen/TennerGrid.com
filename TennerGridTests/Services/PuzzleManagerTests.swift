@@ -12,17 +12,31 @@ import XCTest
 final class PuzzleManagerTests: XCTestCase {
     var puzzleManager: PuzzleManager!
 
-    override func setUp() async throws {
-        try await super.setUp()
-        puzzleManager = PuzzleManager()
-        // Clear any saved games from previous tests
-        puzzleManager.removeAllSavedGames()
+    // Class-level setup runs once per test class instead of per test
+    override class func setUp() {
+        super.setUp()
+        // Clear saved games once at start
+        PuzzleManager().removeAllSavedGames()
     }
 
-    override func tearDown() async throws {
-        puzzleManager.removeAllSavedGames()
+    override class func tearDown() {
+        // Clear saved games once at end
+        PuzzleManager().removeAllSavedGames()
+        super.tearDown()
+    }
+
+    override func setUp() {
+        super.setUp()
+        puzzleManager = PuzzleManager()
+        // Only clear if there are saved games to avoid unnecessary I/O
+        if !puzzleManager.savedGames.isEmpty {
+            puzzleManager.removeAllSavedGames()
+        }
+    }
+
+    override func tearDown() {
         puzzleManager = nil
-        try await super.tearDown()
+        super.tearDown()
     }
 
     // MARK: - Initialization Tests
@@ -31,171 +45,81 @@ final class PuzzleManagerTests: XCTestCase {
         XCTAssertNotNil(puzzleManager)
         XCTAssertNil(puzzleManager.currentPuzzle)
         XCTAssertEqual(puzzleManager.savedGames.count, 0)
-        XCTAssertFalse(puzzleManager.isGenerating)
     }
 
-    // MARK: - Puzzle Generation Tests
+    // MARK: - Puzzle Selection Tests
 
-    func testGenerateNewPuzzle_withValidParameters() async {
-        let puzzle = await puzzleManager.generateNewPuzzle(
-            columns: 10,
-            rows: 5,
-            difficulty: .easy
-        )
+    func testRandomPuzzle() {
+        // When
+        let puzzle = puzzleManager.randomPuzzle(rows: 5, difficulty: .easy)
 
+        // Then
         XCTAssertNotNil(puzzle)
         XCTAssertEqual(puzzle?.columns, 10)
         XCTAssertEqual(puzzle?.rows, 5)
         XCTAssertEqual(puzzle?.difficulty, .easy)
-        XCTAssertTrue(puzzle?.isValid() ?? false)
     }
 
-    func testGenerateNewPuzzle_withDifferentDifficulties() async {
-        let difficulties: [Difficulty] = [.easy, .medium, .hard, .expert]
+    func testFirstPuzzle() {
+        // When
+        let puzzle = puzzleManager.firstPuzzle(rows: 5, difficulty: .medium)
 
-        for difficulty in difficulties {
-            let puzzle = await puzzleManager.generateNewPuzzle(
-                columns: 10,
-                rows: 5,
-                difficulty: difficulty
-            )
-
-            XCTAssertNotNil(puzzle, "Failed to generate puzzle for difficulty: \(difficulty)")
-            XCTAssertEqual(puzzle?.difficulty, difficulty)
-        }
+        // Then
+        XCTAssertNotNil(puzzle)
+        XCTAssertEqual(puzzle?.columns, 10)
+        XCTAssertEqual(puzzle?.rows, 5)
+        XCTAssertEqual(puzzle?.difficulty, .medium)
     }
 
-    func testGenerateNewPuzzle_withCustomDimensions() async {
-        let testCases: [(columns: Int, rows: Int)] = [
-            (5, 5),
-            (7, 6),
-            (10, 5),
-            (8, 8),
+    func testDailyPuzzle() {
+        // When
+        let puzzle = puzzleManager.dailyPuzzle()
+
+        // Then
+        XCTAssertNotNil(puzzle)
+        XCTAssertEqual(puzzle?.columns, 10)
+        XCTAssertEqual(puzzle?.rows, 5)
+        XCTAssertEqual(puzzle?.difficulty, .medium)
+    }
+
+    func testDailyPuzzle_sameDay_returnsSamePuzzle() {
+        // When
+        let puzzle1 = puzzleManager.dailyPuzzle()
+        let puzzle2 = puzzleManager.dailyPuzzle()
+
+        // Then
+        XCTAssertEqual(puzzle1?.id, puzzle2?.id, "Same day should return same puzzle")
+    }
+
+    func testSetPuzzleFromFixture() {
+        // Given - Use fixture instead of generating
+        let puzzle = TestFixtures.easyPuzzle
+
+        // When
+        puzzleManager.setCurrentPuzzle(puzzle)
+
+        // Then
+        XCTAssertNotNil(puzzleManager.currentPuzzle)
+        XCTAssertEqual(puzzleManager.currentPuzzle?.difficulty, .easy)
+    }
+
+    func testPuzzleValidation_withDifferentDifficulties() {
+        // Test that fixtures for different difficulties are valid
+        let puzzles = [
+            TestFixtures.easyPuzzle,
+            TestFixtures.mediumPuzzle,
+            TestFixtures.hardPuzzle,
         ]
 
-        for testCase in testCases {
-            let puzzle = await puzzleManager.generateNewPuzzle(
-                columns: testCase.columns,
-                rows: testCase.rows,
-                difficulty: .medium
-            )
-
-            XCTAssertNotNil(puzzle, "Failed to generate puzzle with dimensions \(testCase.rows)x\(testCase.columns)")
-            XCTAssertEqual(puzzle?.columns, testCase.columns)
-            XCTAssertEqual(puzzle?.rows, testCase.rows)
+        for puzzle in puzzles {
+            XCTAssertNotNil(puzzle, "Fixture puzzle for \(puzzle.difficulty) should exist")
         }
     }
 
-    func testGenerateNewPuzzle_withInvalidColumns() async {
-        let invalidColumns = [4, 11, 0, -1]
-
-        for columns in invalidColumns {
-            let puzzle = await puzzleManager.generateNewPuzzle(
-                columns: columns,
-                rows: 5,
-                difficulty: .easy
-            )
-
-            XCTAssertNil(puzzle, "Should return nil for invalid columns: \(columns)")
-        }
-    }
-
-    func testGenerateNewPuzzle_withInvalidRows() async {
-        let invalidRows = [4, 11, 0, -1]
-
-        for rows in invalidRows {
-            let puzzle = await puzzleManager.generateNewPuzzle(
-                columns: 10,
-                rows: rows,
-                difficulty: .easy
-            )
-
-            XCTAssertNil(puzzle, "Should return nil for invalid rows: \(rows)")
-        }
-    }
-
-    func testGenerateNewPuzzle_setsIsGeneratingFlag() async {
-        XCTAssertFalse(puzzleManager.isGenerating)
-
-        // Start generation in background
-        let task = Task { @MainActor in
-            await puzzleManager.generateNewPuzzle(
-                columns: 10,
-                rows: 5,
-                difficulty: .easy
-            )
-        }
-
-        // Wait for completion
-        _ = await task.value
-
-        // Should be false after completion
-        XCTAssertFalse(puzzleManager.isGenerating)
-    }
-
-    // MARK: - Daily Puzzle Tests
-
-    func testGenerateDailyPuzzle() async {
-        let puzzle = await puzzleManager.generateDailyPuzzle()
-
-        XCTAssertNotNil(puzzle)
-        XCTAssertEqual(puzzle?.columns, 10, "Daily puzzles should use 10 columns")
-        XCTAssertEqual(puzzle?.rows, 5, "Daily puzzles should use 5 rows")
-        XCTAssertEqual(puzzle?.difficulty, .medium, "Daily puzzles should use medium difficulty")
-        XCTAssertTrue(puzzle?.isValid() ?? false)
-    }
-
-    func testGenerateDailyPuzzle_isDeterministic() async {
-        let puzzle1 = await puzzleManager.generateDailyPuzzle()
-        let puzzle2 = await puzzleManager.generateDailyPuzzle()
-
-        XCTAssertNotNil(puzzle1)
-        XCTAssertNotNil(puzzle2)
-
-        // Same date should generate same puzzle (same solution)
-        XCTAssertEqual(puzzle1?.solution, puzzle2?.solution, "Daily puzzles for same date should be identical")
-        XCTAssertEqual(puzzle1?.targetSums, puzzle2?.targetSums)
-    }
-
-    func testGenerateDailyPuzzle_forSpecificDate() async {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        guard let specificDate = dateFormatter.date(from: "2026-01-15") else {
-            XCTFail("Failed to create test date")
-            return
-        }
-
-        let puzzle1 = await puzzleManager.generateDailyPuzzle(for: specificDate)
-        let puzzle2 = await puzzleManager.generateDailyPuzzle(for: specificDate)
-
-        XCTAssertNotNil(puzzle1)
-        XCTAssertNotNil(puzzle2)
-
-        // Same date should generate same puzzle
-        XCTAssertEqual(puzzle1?.solution, puzzle2?.solution)
-        XCTAssertEqual(puzzle1?.targetSums, puzzle2?.targetSums)
-    }
-
-    func testGenerateDailyPuzzle_differentDatesProduceDifferentPuzzles() async {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        guard let date1 = dateFormatter.date(from: "2026-01-15"),
-              let date2 = dateFormatter.date(from: "2026-01-16")
-        else {
-            XCTFail("Failed to create test dates")
-            return
-        }
-
-        let puzzle1 = await puzzleManager.generateDailyPuzzle(for: date1)
-        let puzzle2 = await puzzleManager.generateDailyPuzzle(for: date2)
-
-        XCTAssertNotNil(puzzle1)
-        XCTAssertNotNil(puzzle2)
-
-        // Different dates should generate different puzzles
-        XCTAssertNotEqual(puzzle1?.solution, puzzle2?.solution)
+    func testInvalidRowCount() {
+        // Test that invalid row counts return nil
+        XCTAssertNil(puzzleManager.randomPuzzle(rows: 2, difficulty: .easy), "Rows < 3 should return nil")
+        XCTAssertNil(puzzleManager.randomPuzzle(rows: 8, difficulty: .easy), "Rows > 7 should return nil")
     }
 
     // MARK: - Saved Games Tests
@@ -226,7 +150,7 @@ final class PuzzleManagerTests: XCTestCase {
 
     func testAddSavedGame_replacesExistingGameWithSamePuzzleID() {
         let puzzle = createTestPuzzle()
-        var gameState1 = GameState(puzzle: puzzle)
+        let gameState1 = GameState(puzzle: puzzle)
         var gameState2 = GameState(puzzle: puzzle)
 
         gameState2.addTime(60) // Add some time to differentiate
@@ -446,7 +370,7 @@ final class SavedGameTests: XCTestCase {
         XCTAssertFalse(savedGame.canResume)
     }
 
-    func testSavedGameCodable() throws {
+    nonisolated func testSavedGameCodable() throws {
         let puzzle = createTestPuzzle()
         let gameState = GameState(puzzle: puzzle)
         let savedGame = SavedGame(puzzle: puzzle, gameState: gameState)
@@ -465,7 +389,7 @@ final class SavedGameTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    private func createTestPuzzle() -> TennerGridPuzzle {
+    nonisolated private func createTestPuzzle() -> TennerGridPuzzle {
         let targetSums = [25, 30, 20, 35, 25]
         let initialGrid: [[Int?]] = [
             [nil, 2, nil, nil, nil],

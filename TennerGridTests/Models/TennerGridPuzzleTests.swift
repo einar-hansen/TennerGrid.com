@@ -13,8 +13,39 @@ import XCTest
 struct TennerGridPuzzleTests {
     // MARK: - Test Helpers
 
-    /// Creates a simple 5x5 valid puzzle for testing
+    /// Creates a valid 10x5 puzzle that passes validation
     private func createValidPuzzle() -> TennerGridPuzzle {
+        let solution = [
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+            [8, 9, 0, 1, 2, 3, 4, 5, 6, 7],
+            [2, 3, 4, 5, 6, 7, 8, 9, 0, 1],
+        ]
+
+        let initialGrid: [[Int?]] = [
+            [0, nil, nil, nil, 4, 5, nil, nil, nil, 9],
+            [nil, 8, nil, nil, nil, nil, nil, nil, 1, nil],
+            [nil, nil, 3, nil, nil, nil, nil, 8, nil, nil],
+            [nil, nil, nil, 1, nil, nil, 4, nil, nil, nil],
+            [2, nil, nil, nil, nil, nil, nil, nil, nil, 1],
+        ]
+
+        // Column sums: 0+9+1+8+2=20, 1+8+2+9+3=23, etc.
+        let targetSums = [20, 23, 16, 19, 22, 25, 28, 31, 24, 17]
+
+        return TennerGridPuzzle(
+            columns: 10,
+            rows: 5,
+            difficulty: .medium,
+            targetSums: targetSums,
+            initialGrid: initialGrid,
+            solution: solution
+        )
+    }
+
+    /// Creates a simple test puzzle for basic property tests (doesn't need to pass isValid)
+    private func createTestPuzzle() -> TennerGridPuzzle {
         let solution = [
             [0, 1, 2, 3, 4],
             [5, 6, 7, 8, 9],
@@ -48,10 +79,10 @@ struct TennerGridPuzzleTests {
     @Test func defaultInitialization() {
         let puzzle = createValidPuzzle()
 
-        #expect(puzzle.columns == 5)
+        #expect(puzzle.columns == 10)
         #expect(puzzle.rows == 5)
         #expect(puzzle.difficulty == .medium)
-        #expect(puzzle.targetSums.count == 5)
+        #expect(puzzle.targetSums.count == 10)
         #expect(puzzle.initialGrid.count == 5)
         #expect(puzzle.solution.count == 5)
     }
@@ -105,24 +136,24 @@ struct TennerGridPuzzleTests {
     // MARK: - Computed Properties Tests
 
     @Test func testTotalCells() {
-        let puzzle5x5 = createValidPuzzle()
-        #expect(puzzle5x5.totalCells == 25)
+        let puzzle10x5 = createValidPuzzle()
+        #expect(puzzle10x5.totalCells == 50)
 
-        let puzzle8x6 = TennerGridPuzzle(
-            columns: 8,
+        let puzzle10x6 = TennerGridPuzzle(
+            columns: 10,
             rows: 6,
             difficulty: .hard,
-            targetSums: Array(repeating: 30, count: 8),
-            initialGrid: Array(repeating: Array(repeating: nil, count: 8), count: 6),
-            solution: Array(repeating: Array(repeating: 5, count: 8), count: 6)
+            targetSums: Array(repeating: 30, count: 10),
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 6),
+            solution: Array(repeating: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], count: 6)
         )
-        #expect(puzzle8x6.totalCells == 48)
+        #expect(puzzle10x6.totalCells == 60)
     }
 
     @Test func testPrefilledCount() {
         let puzzle = createValidPuzzle()
-        // Count non-nil values in initialGrid
-        let expectedCount = 8 // Based on createValidPuzzle()
+        // Count non-nil values in initialGrid: 4+2+2+2+2 = 12
+        let expectedCount = 12
         #expect(puzzle.prefilledCount == expectedCount)
     }
 
@@ -130,7 +161,7 @@ struct TennerGridPuzzleTests {
         let puzzle = TennerGridPuzzle(
             columns: 5,
             rows: 5,
-            difficulty: .calculator,
+            difficulty: .hard,
             targetSums: Array(repeating: 10, count: 5),
             initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 5),
             solution: Array(repeating: Array(repeating: 0, count: 5), count: 5)
@@ -156,12 +187,12 @@ struct TennerGridPuzzleTests {
     @Test func testEmptyCellCount() {
         let puzzle = createValidPuzzle()
         #expect(puzzle.emptyCellCount == puzzle.totalCells - puzzle.prefilledCount)
-        #expect(puzzle.emptyCellCount == 17) // 25 - 8
+        #expect(puzzle.emptyCellCount == 38) // 50 - 12
     }
 
     @Test func testPrefilledPercentage() {
         let puzzle = createValidPuzzle()
-        let expectedPercentage = Double(8) / Double(25)
+        let expectedPercentage = Double(12) / Double(50)
         #expect(puzzle.prefilledPercentage == expectedPercentage)
     }
 
@@ -169,7 +200,7 @@ struct TennerGridPuzzleTests {
         let puzzle = TennerGridPuzzle(
             columns: 5,
             rows: 5,
-            difficulty: .calculator,
+            difficulty: .hard,
             targetSums: Array(repeating: 10, count: 5),
             initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 5),
             solution: Array(repeating: Array(repeating: 0, count: 5), count: 5)
@@ -227,12 +258,12 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidRowCountTooSmall() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 4, // Too small
+            columns: 10,
+            rows: 2, // Too small (minimum is 3)
             difficulty: .easy,
-            targetSums: Array(repeating: 10, count: 5),
-            initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 4),
-            solution: Array(repeating: Array(repeating: 0, count: 5), count: 4)
+            targetSums: Array(repeating: 10, count: 10),
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 2),
+            solution: Array(repeating: Array(repeating: 0, count: 10), count: 2)
         )
 
         #expect(!puzzle.isValid())
@@ -240,12 +271,12 @@ struct TennerGridPuzzleTests {
 
     @Test func invalidRowCountTooLarge() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 11, // Too large
+            columns: 10,
+            rows: 8, // Too large (maximum is 7)
             difficulty: .easy,
-            targetSums: Array(repeating: 10, count: 5),
-            initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 11),
-            solution: Array(repeating: Array(repeating: 0, count: 5), count: 11)
+            targetSums: Array(repeating: 10, count: 10),
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 8),
+            solution: Array(repeating: Array(repeating: 0, count: 10), count: 8)
         )
 
         #expect(!puzzle.isValid())
@@ -391,8 +422,8 @@ struct TennerGridPuzzleTests {
 
         #expect(puzzle.initialValue(at: CellPosition(row: 0, column: 0)) == 0)
         #expect(puzzle.initialValue(at: CellPosition(row: 0, column: 1)) == nil)
-        #expect(puzzle.initialValue(at: CellPosition(row: 1, column: 1)) == 6)
-        #expect(puzzle.initialValue(at: CellPosition(row: 4, column: 4)) == 6)
+        #expect(puzzle.initialValue(at: CellPosition(row: 1, column: 1)) == 8)
+        #expect(puzzle.initialValue(at: CellPosition(row: 4, column: 9)) == 1)
     }
 
     @Test func initialValueOutOfBounds() {
@@ -401,7 +432,7 @@ struct TennerGridPuzzleTests {
         #expect(puzzle.initialValue(at: CellPosition(row: -1, column: 0)) == nil)
         #expect(puzzle.initialValue(at: CellPosition(row: 0, column: -1)) == nil)
         #expect(puzzle.initialValue(at: CellPosition(row: 5, column: 0)) == nil)
-        #expect(puzzle.initialValue(at: CellPosition(row: 0, column: 5)) == nil)
+        #expect(puzzle.initialValue(at: CellPosition(row: 0, column: 10)) == nil)
     }
 
     @Test func testSolutionValue() {
@@ -409,7 +440,7 @@ struct TennerGridPuzzleTests {
 
         #expect(puzzle.solutionValue(at: CellPosition(row: 0, column: 0)) == 0)
         #expect(puzzle.solutionValue(at: CellPosition(row: 0, column: 1)) == 1)
-        #expect(puzzle.solutionValue(at: CellPosition(row: 1, column: 1)) == 6)
+        #expect(puzzle.solutionValue(at: CellPosition(row: 1, column: 1)) == 8)
         #expect(puzzle.solutionValue(at: CellPosition(row: 4, column: 4)) == 6)
     }
 
@@ -419,20 +450,20 @@ struct TennerGridPuzzleTests {
         #expect(puzzle.solutionValue(at: CellPosition(row: -1, column: 0)) == nil)
         #expect(puzzle.solutionValue(at: CellPosition(row: 0, column: -1)) == nil)
         #expect(puzzle.solutionValue(at: CellPosition(row: 5, column: 0)) == nil)
-        #expect(puzzle.solutionValue(at: CellPosition(row: 0, column: 5)) == nil)
+        #expect(puzzle.solutionValue(at: CellPosition(row: 0, column: 10)) == nil)
     }
 
     @Test func testIsValidPosition() {
         let puzzle = createValidPuzzle()
 
         #expect(puzzle.isValidPosition(CellPosition(row: 0, column: 0)))
-        #expect(puzzle.isValidPosition(CellPosition(row: 4, column: 4)))
-        #expect(puzzle.isValidPosition(CellPosition(row: 2, column: 3)))
+        #expect(puzzle.isValidPosition(CellPosition(row: 4, column: 9)))
+        #expect(puzzle.isValidPosition(CellPosition(row: 2, column: 5)))
 
         #expect(!puzzle.isValidPosition(CellPosition(row: -1, column: 0)))
         #expect(!puzzle.isValidPosition(CellPosition(row: 0, column: -1)))
         #expect(!puzzle.isValidPosition(CellPosition(row: 5, column: 0)))
-        #expect(!puzzle.isValidPosition(CellPosition(row: 0, column: 5)))
+        #expect(!puzzle.isValidPosition(CellPosition(row: 0, column: 10)))
         #expect(!puzzle.isValidPosition(CellPosition(row: 10, column: 10)))
     }
 
@@ -486,9 +517,9 @@ struct TennerGridPuzzleTests {
         let description = puzzle.description
 
         #expect(description.contains("TennerGridPuzzle"))
-        #expect(description.contains("5x5"))
+        #expect(description.contains("10x5"))
         #expect(description.contains("Medium"))
-        #expect(description.contains("8/25")) // prefilledCount/totalCells
+        #expect(description.contains("12/50")) // prefilledCount/totalCells
     }
 
     // MARK: - Codable Tests
@@ -501,7 +532,7 @@ struct TennerGridPuzzleTests {
         #expect(!data.isEmpty)
 
         let json = String(data: data, encoding: .utf8)!
-        #expect(json.contains("\"columns\":5"))
+        #expect(json.contains("\"columns\":10"))
         #expect(json.contains("\"rows\":5"))
         #expect(json.contains("\"difficulty\":\"medium\""))
     }
@@ -536,41 +567,41 @@ struct TennerGridPuzzleTests {
 
     @Test func minimumSizePuzzle() {
         let puzzle = TennerGridPuzzle(
-            columns: 5,
-            rows: 5,
+            columns: 10,
+            rows: 3,
             difficulty: .easy,
-            targetSums: Array(repeating: 10, count: 5),
-            initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 5),
-            solution: Array(repeating: Array(repeating: 2, count: 5), count: 5)
+            targetSums: Array(repeating: 10, count: 10),
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 3),
+            solution: Array(repeating: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], count: 3)
         )
 
         #expect(puzzle.isValid())
-        #expect(puzzle.totalCells == 25)
+        #expect(puzzle.totalCells == 30)
     }
 
     @Test func maximumSizePuzzle() {
         let puzzle = TennerGridPuzzle(
             columns: 10,
-            rows: 10,
-            difficulty: .expert,
+            rows: 7,
+            difficulty: .hard,
             targetSums: Array(repeating: 45, count: 10),
-            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 10),
-            solution: Array(repeating: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], count: 10)
+            initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 7),
+            solution: Array(repeating: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], count: 7)
         )
 
         #expect(puzzle.isValid())
-        #expect(puzzle.totalCells == 100)
+        #expect(puzzle.totalCells == 70)
     }
 
     @Test func allDifficulties() {
         for difficulty in Difficulty.allCases {
             let puzzle = TennerGridPuzzle(
-                columns: 5,
+                columns: 10,
                 rows: 5,
                 difficulty: difficulty,
-                targetSums: Array(repeating: 10, count: 5),
-                initialGrid: Array(repeating: Array(repeating: nil, count: 5), count: 5),
-                solution: Array(repeating: Array(repeating: 2, count: 5), count: 5)
+                targetSums: Array(repeating: 10, count: 10),
+                initialGrid: Array(repeating: Array(repeating: nil, count: 10), count: 5),
+                solution: Array(repeating: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], count: 5)
             )
 
             #expect(puzzle.difficulty == difficulty)

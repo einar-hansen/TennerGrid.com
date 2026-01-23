@@ -13,8 +13,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
     case easy
     case medium
     case hard
-    case expert
-    case calculator
 
     var id: String { rawValue }
 
@@ -27,10 +25,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             "Medium"
         case .hard:
             "Hard"
-        case .expert:
-            "Expert"
-        case .calculator:
-            "Calculator"
         }
     }
 
@@ -43,10 +37,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             .blue
         case .hard:
             .orange
-        case .expert:
-            .red
-        case .calculator:
-            .purple
         }
     }
 
@@ -59,10 +49,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             0.35 // 35% of cells pre-filled
         case .hard:
             0.25 // 25% of cells pre-filled
-        case .expert:
-            0.15 // 15% of cells pre-filled
-        case .calculator:
-            0.05 // 5% of cells pre-filled (extremely challenging)
         }
     }
 
@@ -75,10 +61,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             10
         case .hard:
             20
-        case .expert:
-            35
-        case .calculator:
-            60
         }
     }
 
@@ -91,10 +73,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             "A balanced challenge with moderate pre-filled cells."
         case .hard:
             "Requires logical deduction and strategic thinking."
-        case .expert:
-            "Very challenging puzzles for experienced players."
-        case .calculator:
-            "The ultimate challenge. Minimal clues, maximum difficulty."
         }
     }
 
@@ -107,10 +85,6 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             25
         case .hard:
             50
-        case .expert:
-            100
-        case .calculator:
-            200
         }
     }
 }

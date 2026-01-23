@@ -246,48 +246,30 @@ struct NumberPadView: View {
 // MARK: - Previews
 
 #Preview("Number Pad - Default") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
     return NumberPadView(viewModel: viewModel)
         .padding()
 }
 
 #Preview("Number Pad - Cell Selected") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Select a cell
-    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
-
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     return NumberPadView(viewModel: viewModel)
         .padding()
 }
 
 #Preview("Number Pad - With Value") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Select a cell and enter a value
-    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     viewModel.enterNumber(5)
-
     return NumberPadView(viewModel: viewModel)
         .padding()
 }
 
 #Preview("Number Pad - Selected Number Highlighted") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Select a cell and enter a value to show the highlight
-    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     viewModel.enterNumber(5)
-
     return VStack(spacing: 20) {
         Text("Button '5' should be highlighted blue")
             .font(.caption)
@@ -298,41 +280,26 @@ struct NumberPadView: View {
 }
 
 #Preview("Number Pad - Dark Mode") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    // Select a cell and enter a value
-    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     viewModel.enterNumber(7)
-
     return NumberPadView(viewModel: viewModel)
         .padding()
         .preferredColorScheme(.dark)
 }
 
 #Preview("iPhone SE") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     viewModel.enterNumber(3)
-
     return NumberPadView(viewModel: viewModel)
         .padding()
-        .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
 }
 
 #Preview("iPad") {
-    let generator = PuzzleGenerator()
-    let puzzle = generator.generatePuzzle(columns: 5, rows: 5, difficulty: .easy)!
-    let viewModel = GameViewModel(puzzle: puzzle)
-
-    viewModel.selectCell(at: CellPosition(row: 0, column: 0))
+    let viewModel = GameViewModel(puzzle: PreviewPuzzles.easy5Row)
+    viewModel.selectCell(at: CellPosition(row: 0, column: 2))
     viewModel.enterNumber(8)
-
     return NumberPadView(viewModel: viewModel)
         .padding()
-        .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (6th generation)"))
 }

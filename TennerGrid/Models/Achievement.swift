@@ -375,14 +375,6 @@ extension Achievement {
                 iconName: "bolt.fill",
                 points: 40
             ),
-            .oneTime(
-                id: "expert_master",
-                title: "Expert Level",
-                achievementDescription: "Complete 10 Expert puzzles",
-                category: .difficulty,
-                iconName: "crown.fill",
-                points: 75
-            ),
 
             // Speed
             .oneTime(
