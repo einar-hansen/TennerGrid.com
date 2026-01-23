@@ -38,15 +38,13 @@ TASKS_FILE=${2:-tasks.md}
 SCHEME_NAME=${3:-TennerGrid}
 COMPLETE_FLAG="tasks_complete"
 BUILD_FAILED_FLAG="build_failed"
-TEST_FAILED_FLAG="tests_failed"
 BUILD_ERROR_LOG="/tmp/ralph_build_errors.log"
-TEST_LOG="/tmp/ralph_test_log.log"
-MODEL="opus"
+MODEL="sonnet"
 
 # Configuration
 XCODE_PROJECT="TennerGrid.xcodeproj"  # Change to your project name
 XCODE_WORKSPACE=""  # Set to "TennerGrid.xcworkspace" if using CocoaPods/SPM
-# Use iPhone 17 simulator - fast and reliable
+# TEST_DESTINATION="platform=iOS Simulator,name=iPhone 15,OS=latest"
 TEST_DESTINATION="platform=iOS Simulator,name=iPhone 17"
 
 # Color output
@@ -109,17 +107,9 @@ for i in $(seq 1 "$MAX_ITERATIONS"); do
     log_error "Priority: Fix compilation errors before continuing with tasks"
   fi
 
-  # Check if tests are currently failing
-  TESTS_ARE_FAILING=false
-  if [[ -f "$TEST_FAILED_FLAG" ]]; then
-    TESTS_ARE_FAILING=true
-    log_error "🧪 Test failures detected from previous iteration!"
-    log_error "Priority: Fix failing tests before continuing with tasks"
-  fi
-
-  # Prepare the agent prompt based on current state
+  # Prepare the agent prompt
   if [[ "$BUILD_IS_FAILING" == true ]]; then
-    # Build is broken - tell agent to fix it (highest priority)
+    # Build is broken - tell agent to fix it
     AGENT_PROMPT=$(cat <<PROMPT
 🚨 **CRITICAL: BUILD IS CURRENTLY FAILING** 🚨
 
@@ -138,7 +128,7 @@ DO NOT work on any tasks from $TASKS_FILE until the build is fixed.
 
 Project context:
 - Scheme: $SCHEME_NAME
-- Build command: xcodebuild clean build $BUILD_FLAG -scheme "$SCHEME_NAME" -destination "$TEST_DESTINATION"
+- Build command: xcodebuild build $BUILD_FLAG -scheme "$SCHEME_NAME" -destination "$TEST_DESTINATION"
 
 Common Swift compilation errors and fixes:
 - Duplicate declarations: Remove or rename the duplicate
@@ -150,40 +140,8 @@ Common Swift compilation errors and fixes:
 Once the build succeeds, the build_failed flag will be automatically removed and normal task work will resume.
 PROMPT
 )
-  elif [[ "$TESTS_ARE_FAILING" == true ]]; then
-    # Tests are failing - tell agent to fix them (second priority)
-    AGENT_PROMPT=$(cat <<PROMPT
-🧪 **CRITICAL: TESTS ARE FAILING** 🧪
-
-The test suite failed in the previous iteration. You MUST fix the failing tests before working on any new tasks.
-
-Test output log is available at: $TEST_LOG
-
-Your task for this iteration:
-1. Review the test failures in $TEST_LOG
-2. Identify which tests are failing and why
-3. Fix the failing tests OR fix the code that's causing tests to fail
-4. Run the test suite to verify all tests pass
-5. Commit your fixes with message: "Fix failing tests"
-
-DO NOT work on any new tasks from $TASKS_FILE until all tests pass.
-
-Project context:
-- Scheme: $SCHEME_NAME
-- Test command: xcodebuild test $BUILD_FLAG -scheme "$SCHEME_NAME" -destination "$TEST_DESTINATION" -skip-testing:TennerGridUITests
-
-Common causes of test failures:
-- Async timing issues: Use expectations with proper timeouts
-- State pollution: Ensure setUp/tearDown properly reset state
-- Optional unwrapping: Check for nil values in assertions
-- Changed API: Update tests to match implementation changes
-- Mock/stub issues: Ensure test doubles return expected values
-
-Once all tests pass, the tests_failed flag will be automatically removed and normal task work will resume.
-PROMPT
-)
   else
-    # Build and tests are working - proceed with normal tasks
+    # Build is working - proceed with normal tasks
     log_info "Reading tasks from $TASKS_FILE..."
 
     # Check if there are any uncompleted tasks (lines starting with "- [ ]")
@@ -246,7 +204,9 @@ PROMPT
 
   # Call the agent
   log_info "Calling Claude Code agent... Model $MODEL..."
-  claude --model "$MODEL" \
+  claude --print \
+    --no-session-persistence \
+    --model "$MODEL" \
     --permission-mode acceptEdits \
     "$AGENT_PROMPT"
 
@@ -298,44 +258,16 @@ PROMPT
   check_interrupt  # Check before tests
 
   # Step 2: Run tests (only if build succeeded)
-  # Note: UI tests are skipped for faster iteration (-skip-testing:TennerGridUITests)
-  # Only unit tests (TennerGridTests) are run
-  log_info "Running unit tests (skipping UI tests)..."
+  log_info "Running tests..."
   if xcodebuild test \
     $BUILD_FLAG \
     -scheme "$SCHEME_NAME" \
     -destination "$TEST_DESTINATION" \
-    -skip-testing:TennerGridUITests 2>&1 | tee "$TEST_LOG"; then
-    log_info "✓ All unit tests passed"
-
-    # Remove test failed flag if it exists
-    if [[ -f "$TEST_FAILED_FLAG" ]]; then
-      log_info "Removing test failed flag (tests now passing)"
-      rm "$TEST_FAILED_FLAG"
-    fi
+    -quiet; then
+    log_info "✓ All tests passed"
   else
-    log_error "✗ Some tests failed. Creating test failed flag."
-
-    # Create the test failed flag
-    echo "Tests failed at iteration $i on $(date)" > "$TEST_FAILED_FLAG"
-
-    log_error "Test failures have been logged to: $TEST_LOG"
-    log_error "Next iteration will prioritize fixing these test failures."
-
-    # Commit current state so agent can see what failed
-    if [[ -n "$(git status --porcelain)" ]]; then
-      git add -A
-      git commit -m "Ralph iOS: iteration $i - tests failed (errors logged)" || true
-    fi
-
-    # Continue to next iteration to fix the tests
-    echo ""
-    log_info "=== Iteration $i Complete (tests failed) ==="
-    echo "  Next iteration will focus on fixing test failures"
-    echo ""
-    echo "---"
-    echo ""
-    continue
+    log_warn "✗ Some tests failed. Review test output above."
+    # Don't exit - let the developer decide whether to continue
   fi
 
   check_interrupt  # Check before linting
