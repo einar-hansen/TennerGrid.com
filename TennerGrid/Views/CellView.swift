@@ -64,30 +64,34 @@ struct CellView: View {
 
     /// View displaying pencil marks in a 3x3 grid
     private var pencilMarksView: some View {
-        VStack(spacing: 2) {
-            ForEach(0 ..< 3) { row in
-                HStack(spacing: 2) {
-                    ForEach(0 ..< 3) { col in
-                        let number = row * 3 + col + 1
-                        if number <= 9 {
-                            pencilMarkCell(for: number)
+        GeometryReader { geometry in
+            VStack(spacing: 1) {
+                ForEach(0 ..< 3) { row in
+                    HStack(spacing: 1) {
+                        ForEach(0 ..< 3) { col in
+                            let number = row * 3 + col + 1
+                            if number <= 9 {
+                                pencilMarkCell(for: number, geometry: geometry)
+                            }
                         }
                     }
                 }
             }
         }
-        .frame(width: cellSize - 8, height: cellSize - 8)
+        .frame(width: cellSize, height: cellSize)
     }
 
     /// Individual pencil mark cell
-    /// - Parameter number: The number (1-9) to display
+    /// - Parameters:
+    ///   - number: The number (1-9) to display
+    ///   - geometry: Geometry proxy for calculating cell size
     /// - Returns: View for the pencil mark
-    private func pencilMarkCell(for number: Int) -> some View {
-        let gridCellSize = (cellSize - 8 - 4) / 3 // (cellSize - padding - spacing) / 3 rows/cols
-        return Text(cell.pencilMarks.contains(number) ? String(number) : "")
+    private func pencilMarkCell(for number: Int, geometry: GeometryProxy) -> some View {
+        Text(cell.pencilMarks.contains(number) ? String(number) : "")
             .font(.system(size: pencilMarkFontSize, weight: .light, design: .rounded))
             .foregroundColor(.secondary)
-            .frame(width: gridCellSize, height: gridCellSize)
+            .frame(width: geometry.size.width / 3, height: geometry.size.height / 3)
+            .minimumScaleFactor(0.5)
     }
 
     // MARK: - Styling

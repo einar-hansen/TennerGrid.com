@@ -10,3 +10,6 @@ Really great to fix errors with Xcode's calude integration.
 Dont make the tasks way to small, then everything takes forever.
 
 Dont run the UI tests with code. 
+
+
+Probably better to ralph in the beginning for logic, and claude it regularly when working with the UI
