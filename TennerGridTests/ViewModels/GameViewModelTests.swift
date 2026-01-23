@@ -2714,7 +2714,7 @@ final class GameViewModelTests: XCTestCase {
         // Only 0 or the current value (7) should be allowed
         XCTAssertFalse(viewModel.wouldExceedColumnSum(0, at: CellPosition(row: 0, column: 1)))
         XCTAssertFalse(viewModel.wouldExceedColumnSum(7, at: CellPosition(row: 0, column: 1)))
-        
+
         // Any other non-zero value at (0,1) should now exceed (since remaining is 0)
         for number in 1 ... 6 {
             XCTAssertTrue(

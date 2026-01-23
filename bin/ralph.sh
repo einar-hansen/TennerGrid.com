@@ -209,8 +209,8 @@ $(cat "$TASKS_FILE")
 
 Your instructions:
 1. Read the tasks file above carefully.
-2. Select EXACTLY ONE uncompleted task (marked with "- [ ]") to work on.
-   - Choose the first uncompleted task in the list, OR
+2. Select EXACTLY section of a phase with uncompleted tasks (marked with "- [ ]") to work on.
+   - Choose the first uncompleted sub section of tasks (for example 4.5 etc) in the list, OR
    - Choose the most important/blocking task if priority is indicated
 3. Complete that ONE task fully and thoroughly.
 4. For feature tasks: Write the implementation following SwiftUI/Swift best practices
@@ -246,10 +246,12 @@ PROMPT
 
   # Call the agent
   log_info "Calling Claude Code agent... Model $MODEL..."
-  echo "$AGENT_PROMPT" | claude --print \
-    --no-session-persistence \
-    --model "$MODEL" \
-    --permission-mode acceptEdits
+  # echo "$AGENT_PROMPT" | claude --print \
+  #   --no-session-persistence \
+  #   --model "$MODEL" \
+  #   --permission-mode acceptEdits
+
+  echo "$AGENT_PROMPT" | claude --model "$MODEL" --permission-mode acceptEdits
 
   check_interrupt  # Check after agent completes
 
@@ -340,9 +342,8 @@ PROMPT
 
     # Run Claude to review test output (using print mode for quick analysis)
     log_info "Test failure analysis:"
-    echo "$TEST_REVIEW_PROMPT" | claude --print \
-      --model "$MODEL" \
-      2>&1 | tee /tmp/test_analysis.txt
+    echo "$TEST_REVIEW_PROMPT" | claude --print --model "$MODEL" --permission-mode acceptEdits 2>&1 | tee /tmp/test_analysis.txt
+  # echo "$AGENT_PROMPT" | claude --model "$MODEL" --permission-mode acceptEdits
 
     echo ""
     log_warn "Test failures detected. Next iteration will prioritize fixing them."

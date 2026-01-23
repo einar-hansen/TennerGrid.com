@@ -1028,33 +1028,32 @@ final class GameViewModel: ObservableObject {
 
         let column = position.column
         let currentValue = gameState.value(at: position)
-        
+
         // Value 0 is always allowed (it clears the cell)
         if value == 0 {
             return false
         }
-        
+
         // If replacing with the same value, it doesn't exceed
-        if let currentValue = currentValue, currentValue == value {
+        if let currentValue, currentValue == value {
             return false
         }
-        
+
         // Calculate the net change in the column sum
-        let netChange: Int
-        if let currentValue = currentValue {
-            netChange = value - currentValue
+        let netChange: Int = if let currentValue {
+            value - currentValue
         } else {
-            netChange = value
+            value
         }
-        
+
         // Get the remaining sum for the column
         let remaining = remainingSum(for: column)
-        
+
         // If remaining is 0 and we're replacing with a different value, it would break the exact sum
-        if remaining == 0 && currentValue != nil {
+        if remaining == 0, currentValue != nil {
             return true
         }
-        
+
         // Check if the net change would exceed the remaining sum
         return netChange > remaining
     }
