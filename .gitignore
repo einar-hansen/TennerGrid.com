@@ -28,3 +28,6 @@ Pods/
 
 # Ralph completion flag
 tasks_complete
+test_run_full.txt
+test_single.log
+current_test_output.txt

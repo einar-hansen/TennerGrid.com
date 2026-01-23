@@ -11,14 +11,14 @@
   "defaultOptions" : {
     "maximumTestExecutionTimeAllowance" : 60,
     "maximumTestRepetitions" : 1,
-    "testExecutionOrdering" : "random",
-    "testTimeoutsEnabled" : true,
     "performanceAntipatternCheckerEnabled" : true,
     "targetForVariableExpansion" : {
       "containerPath" : "container:TennerGrid.xcodeproj",
       "identifier" : "2047B1042F218F1C00F1010E",
       "name" : "TennerGrid"
-    }
+    },
+    "testExecutionOrdering" : "random",
+    "testTimeoutsEnabled" : true
   },
   "testTargets" : [
     {

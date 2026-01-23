@@ -2711,17 +2711,23 @@ final class GameViewModelTests: XCTestCase {
         // Remaining should now be 0
         XCTAssertEqual(viewModel.remainingSum(for: 1), 0)
 
-        // Any non-zero value at (0,1) should now exceed (since remaining is 0)
-        for number in 1 ... 9 {
+        // Only 0 or the current value (7) should be allowed
+        XCTAssertFalse(viewModel.wouldExceedColumnSum(0, at: CellPosition(row: 0, column: 1)))
+        XCTAssertFalse(viewModel.wouldExceedColumnSum(7, at: CellPosition(row: 0, column: 1)))
+        
+        // Any other non-zero value at (0,1) should now exceed (since remaining is 0)
+        for number in 1 ... 6 {
             XCTAssertTrue(
                 viewModel.wouldExceedColumnSum(number, at: CellPosition(row: 0, column: 1)),
                 "Number \(number) should exceed remaining sum of 0 when replacing 7"
             )
         }
-
-        // Only 0 or the current value (7) should be allowed
-        XCTAssertFalse(viewModel.wouldExceedColumnSum(0, at: CellPosition(row: 0, column: 1)))
-        XCTAssertFalse(viewModel.wouldExceedColumnSum(7, at: CellPosition(row: 0, column: 1)))
+        for number in 8 ... 9 {
+            XCTAssertTrue(
+                viewModel.wouldExceedColumnSum(number, at: CellPosition(row: 0, column: 1)),
+                "Number \(number) should exceed remaining sum of 0 when replacing 7"
+            )
+        }
     }
 
     /// Tests that column sum validation works with undo/redo
