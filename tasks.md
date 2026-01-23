@@ -172,7 +172,7 @@
 
 ### 4.3 Win Screen
 
-- [ ] Create `WinScreenView` with congratulations message
+- [x] Create `WinScreenView` with congratulations message
 - [ ] Display game statistics: time, hints used, difficulty
 - [ ] Add celebration animation (simple scale/fade, confetti optional)
 - [ ] Add buttons: New Game, Change Difficulty, Home
