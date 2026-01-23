@@ -1,10 +1,3 @@
-//
-//  GridView.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
 
 /// A view displaying the complete Tenner Grid puzzle

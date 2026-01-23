@@ -1,10 +1,3 @@
-//
-//  TennerGridUITestsLaunchTests.swift
-//  TennerGridUITests
-//
-//  Created by Einar-Johan Hansen on 21/01/2026.
-//
-
 import XCTest
 
 final class TennerGridUITestsLaunchTests: XCTestCase {

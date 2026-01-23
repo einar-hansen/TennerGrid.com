@@ -204,9 +204,10 @@ PROMPT
 
   # Call the agent
   log_info "Calling Claude Code agent... Model $MODEL..."
-  claude --print \
-    --no-session-persistence \
-    --model "$MODEL" \
+  # claude --print \
+    # --no-session-persistence \
+    # --model "$MODEL" \
+  claude --model "$MODEL" \
     --permission-mode acceptEdits \
     "$AGENT_PROMPT"
 

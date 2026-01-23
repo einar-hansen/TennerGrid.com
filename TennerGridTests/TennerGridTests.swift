@@ -1,12 +1,5 @@
-//
-//  TennerGridTests.swift
-//  TennerGridTests
-//
-//  Created by Einar-Johan Hansen on 21/01/2026.
-//
-
-@testable import TennerGrid
 import Testing
+@testable import TennerGrid
 
 struct TennerGridTests {
     @Test func example() async throws {

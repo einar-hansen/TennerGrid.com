@@ -1,10 +1,3 @@
-//
-//  Cell.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Represents a single cell in the Tenner Grid puzzle

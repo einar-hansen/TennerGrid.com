@@ -1,10 +1,3 @@
-//
-//  GameStatistics.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Represents aggregated statistics about games played

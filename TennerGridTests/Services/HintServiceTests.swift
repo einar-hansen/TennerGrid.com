@@ -1,12 +1,5 @@
-//
-//  HintServiceTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import XCTest
+@testable import TennerGrid
 
 final class HintServiceTests: XCTestCase {
     var hintService: HintService!

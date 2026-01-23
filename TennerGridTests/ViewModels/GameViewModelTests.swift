@@ -1322,8 +1322,8 @@ final class GameViewModelTests: XCTestCase {
 
     func testActionSequencePreservesGameState() {
         // Find two empty cells in the 10x3 TestFixtures.smallPuzzle
-        let position1 = CellPosition(row: 0, column: 1)  // nil in initial grid, solution=7
-        let position2 = CellPosition(row: 0, column: 2)  // nil in initial grid, solution=4
+        let position1 = CellPosition(row: 0, column: 1) // nil in initial grid, solution=7
+        let position2 = CellPosition(row: 0, column: 2) // nil in initial grid, solution=4
 
         // Create a specific game state with values that don't conflict
         // Position (0,1) - Row 0 has pre-filled: 2,1,8,5,6 - Diagonal (1,1)=9
@@ -2536,7 +2536,7 @@ final class GameViewModelTests: XCTestCase {
         for (index, (position, value)) in cellsToFill.enumerated() {
             viewModel.selectCell(at: position)
             viewModel.enterNumber(value)
-            
+
             // Add a small delay every few moves to allow timer to update
             if index % 5 == 4 {
                 try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds

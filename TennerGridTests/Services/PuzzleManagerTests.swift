@@ -1,12 +1,5 @@
-//
-//  PuzzleManagerTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import XCTest
+@testable import TennerGrid
 
 @MainActor
 final class PuzzleManagerTests: XCTestCase {
@@ -271,7 +264,7 @@ final class PuzzleManagerTests: XCTestCase {
     func testSavedGamesPersistence() async throws {
         // Ensure clean state
         puzzleManager.removeAllSavedGames()
-        
+
         let puzzle = createTestPuzzle()
         let savedGame = SavedGame(puzzle: puzzle, gameState: GameState(puzzle: puzzle))
 
@@ -281,13 +274,13 @@ final class PuzzleManagerTests: XCTestCase {
 
         // Force UserDefaults to synchronize
         UserDefaults.standard.synchronize()
-        
+
         // Verify data was written to UserDefaults
         let savedData = UserDefaults.standard.data(forKey: "savedGames")
         XCTAssertNotNil(savedData, "UserDefaults should contain saved games data")
-        
+
         // Verify we can decode the data manually
-        if let savedData = savedData {
+        if let savedData {
             do {
                 let loadedGames = try JSONDecoder().decode([SavedGame].self, from: savedData)
                 XCTAssertEqual(loadedGames.count, 1, "Should decode 1 saved game")
@@ -296,7 +289,7 @@ final class PuzzleManagerTests: XCTestCase {
                 XCTFail("Failed to decode saved games: \(error)")
             }
         }
-        
+
         // Create a new manager instance (simulating app restart)
         // This must happen on MainActor since PuzzleManager is @MainActor isolated
         let newManager = await MainActor.run {
@@ -407,7 +400,7 @@ final class SavedGameTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    nonisolated private func createTestPuzzle() -> TennerGridPuzzle {
+    private nonisolated func createTestPuzzle() -> TennerGridPuzzle {
         // Load a puzzle from the bundle as template
         guard let template = BundledPuzzleService.shared.firstPuzzle(difficulty: .easy, rows: 5) else {
             fatalError("Failed to load test puzzle from bundle")

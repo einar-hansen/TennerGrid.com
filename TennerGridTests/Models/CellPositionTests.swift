@@ -1,13 +1,6 @@
-//
-//  CellPositionTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import Foundation
 import Testing
+@testable import TennerGrid
 
 struct CellPositionTests {
     // MARK: - Initialization Tests
@@ -249,8 +242,10 @@ struct CellPositionTests {
         ]
 
         for adjacentPos in allAdjacentPositions {
-            #expect(center.isAdjacent(to: adjacentPos),
-                    "\(center) should be adjacent to \(adjacentPos)")
+            #expect(
+                center.isAdjacent(to: adjacentPos),
+                "\(center) should be adjacent to \(adjacentPos)"
+            )
         }
     }
 

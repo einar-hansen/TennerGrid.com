@@ -1,11 +1,3 @@
-//
-//  BundledPuzzleService.swift
-//  TennerGrid
-//
-//  Service for loading pre-generated puzzles from the app bundle.
-//  These puzzles are used for offline play and as fallback when API is unavailable.
-//
-
 import Foundation
 
 /// Response structure matching the API format
@@ -59,8 +51,8 @@ struct APIPuzzle: Codable {
         var uuidBytes = Array(hashBytes.prefix(16))
 
         // Set version 4 (random) UUID variant bits
-        uuidBytes[6] = (uuidBytes[6] & 0x0F) | 0x40  // Version 4
-        uuidBytes[8] = (uuidBytes[8] & 0x3F) | 0x80  // Variant 1
+        uuidBytes[6] = (uuidBytes[6] & 0x0F) | 0x40 // Version 4
+        uuidBytes[8] = (uuidBytes[8] & 0x3F) | 0x80 // Variant 1
 
         return UUID(uuid: (
             uuidBytes[0], uuidBytes[1], uuidBytes[2], uuidBytes[3],
@@ -150,11 +142,11 @@ final class BundledPuzzleService {
     func puzzles(difficulty: Difficulty? = nil, rows: Int? = nil) -> [TennerGridPuzzle] {
         var filtered = puzzles
 
-        if let difficulty = difficulty {
+        if let difficulty {
             filtered = filtered.filter { $0.difficulty == difficulty.rawValue }
         }
 
-        if let rows = rows {
+        if let rows {
             filtered = filtered.filter { $0.rows == rows }
         }
 
@@ -175,7 +167,7 @@ final class BundledPuzzleService {
     func availableRows(for difficulty: Difficulty) -> [Int] {
         puzzles
             .filter { $0.difficulty == difficulty.rawValue }
-            .map { $0.rows }
+            .map(\.rows)
             .unique()
             .sorted()
     }

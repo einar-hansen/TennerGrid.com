@@ -1,12 +1,5 @@
-//
-//  ValidationServiceTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import XCTest
+@testable import TennerGrid
 
 final class ValidationServiceTests: XCTestCase {
     var service: ValidationService!
@@ -103,7 +96,7 @@ final class ValidationServiceTests: XCTestCase {
     func testInvalidPlacement_RowDuplicate() {
         // Given: A grid with a value elsewhere in the same row
         var grid = TestFixtures.emptyGrid10x3
-        grid[0][9] = 7  // Same row, column 9
+        grid[0][9] = 7 // Same row, column 9
         let position = CellPosition(row: 0, column: 0)
 
         // When: Trying to place a duplicate value in the same row
@@ -165,7 +158,7 @@ final class ValidationServiceTests: XCTestCase {
         // Given: A grid where a cell has no conflicts
         var grid = TestFixtures.emptyGrid10x3
         grid[0][0] = 1
-        grid[0][2] = 2  // Not adjacent to (0,0)
+        grid[0][2] = 2 // Not adjacent to (0,0)
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
@@ -179,7 +172,7 @@ final class ValidationServiceTests: XCTestCase {
         // Given: A grid where a cell has an adjacent conflict
         var grid = TestFixtures.emptyGrid10x3
         grid[0][0] = 5
-        grid[1][0] = 5  // Adjacent vertical
+        grid[1][0] = 5 // Adjacent vertical
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
@@ -194,7 +187,7 @@ final class ValidationServiceTests: XCTestCase {
         // Given: A grid where a cell has a row conflict (non-adjacent)
         var grid = TestFixtures.emptyGrid10x3
         grid[0][0] = 5
-        grid[0][9] = 5  // Same row, far end
+        grid[0][9] = 5 // Same row, far end
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
@@ -209,9 +202,9 @@ final class ValidationServiceTests: XCTestCase {
         // Given: A grid where a cell has multiple conflicts
         var grid = TestFixtures.emptyGrid10x3
         grid[0][0] = 5
-        grid[0][1] = 5  // Adjacent horizontal (also row conflict)
-        grid[1][0] = 5  // Adjacent vertical
-        grid[1][1] = 5  // Adjacent diagonal
+        grid[0][1] = 5 // Adjacent horizontal (also row conflict)
+        grid[1][0] = 5 // Adjacent vertical
+        grid[1][1] = 5 // Adjacent diagonal
         let position = CellPosition(row: 0, column: 0)
 
         // When: Detecting conflicts
@@ -335,7 +328,7 @@ final class ValidationServiceTests: XCTestCase {
     func testPuzzleComplete_IncompletePuzzle() {
         // Given: An incomplete grid
         var grid: [[Int?]] = TestFixtures.completedGrid10x3.map { $0.map { $0 as Int? } }
-        grid[2][5] = nil  // Make one cell empty
+        grid[2][5] = nil // Make one cell empty
 
         let puzzle = TennerGridPuzzle(
             columns: 10,

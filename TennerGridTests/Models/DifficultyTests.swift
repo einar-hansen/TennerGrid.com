@@ -1,14 +1,7 @@
-//
-//  DifficultyTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-import SwiftUI
-@testable import TennerGrid
 import Foundation
+import SwiftUI
 import Testing
+@testable import TennerGrid
 
 struct DifficultyTests {
     // MARK: - Raw Value Tests
@@ -192,12 +185,18 @@ struct DifficultyTests {
             let easier = Array(difficulties)[i]
             let harder = Array(difficulties)[i + 1]
 
-            #expect(easier.prefilledPercentage > harder.prefilledPercentage,
-                    "\(easier.displayName) should have more prefilled cells than \(harder.displayName)")
-            #expect(easier.estimatedMinutes < harder.estimatedMinutes,
-                    "\(easier.displayName) should take less time than \(harder.displayName)")
-            #expect(easier.points < harder.points,
-                    "\(easier.displayName) should award fewer points than \(harder.displayName)")
+            #expect(
+                easier.prefilledPercentage > harder.prefilledPercentage,
+                "\(easier.displayName) should have more prefilled cells than \(harder.displayName)"
+            )
+            #expect(
+                easier.estimatedMinutes < harder.estimatedMinutes,
+                "\(easier.displayName) should take less time than \(harder.displayName)"
+            )
+            #expect(
+                easier.points < harder.points,
+                "\(easier.displayName) should award fewer points than \(harder.displayName)"
+            )
         }
     }
 }

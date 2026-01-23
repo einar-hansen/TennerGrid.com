@@ -1,10 +1,3 @@
-//
-//  GameToolbarView.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
 
 /// A toolbar view providing game action buttons: Undo, Erase, Notes, and Hint
@@ -113,7 +106,7 @@ private struct ToolbarButton: View {
     let isEnabled: Bool
     var isActive: Bool = false
     var showIndicator: Bool = false
-    var badge: Int? = nil
+    var badge: Int?
     let action: () -> Void
 
     private let buttonSize: CGFloat = 44

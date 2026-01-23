@@ -1,10 +1,3 @@
-//
-//  PuzzleSolver.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Service responsible for solving Tenner Grid puzzles using backtracking algorithm
@@ -439,7 +432,10 @@ struct PuzzleSolver {
     ///   - grid: The current grid state
     ///   - puzzle: The puzzle definition
     /// - Returns: Position and value of hidden single, or nil if none found
-    private func findHiddenSingle(in grid: [[Int?]], puzzle: TennerGridPuzzle) -> (position: CellPosition, value: Int)? {
+    private func findHiddenSingle(
+        in grid: [[Int?]],
+        puzzle: TennerGridPuzzle
+    ) -> (position: CellPosition, value: Int)? {
         // Check rows for hidden singles
         for row in 0 ..< puzzle.rows {
             for value in 0 ... 9 {
@@ -497,7 +493,10 @@ struct PuzzleSolver {
     ///   - grid: The current grid state
     ///   - puzzle: The puzzle definition
     /// - Returns: Position and value of forced move, or nil if none found
-    private func findColumnConstraintMove(in grid: [[Int?]], puzzle: TennerGridPuzzle) -> (position: CellPosition, value: Int)? {
+    private func findColumnConstraintMove(
+        in grid: [[Int?]],
+        puzzle: TennerGridPuzzle
+    ) -> (position: CellPosition, value: Int)? {
         for column in 0 ..< puzzle.columns {
             guard column < puzzle.targetSums.count else { continue }
 

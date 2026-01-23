@@ -1,13 +1,5 @@
-//
-//  TestFixtures.swift
-//  TennerGridTests
-//
-//  Pre-loaded test puzzles for fast test execution.
-//  Uses bundled puzzles when available, falls back to static fixtures.
-//
-
-@testable import TennerGrid
 import Foundation
+@testable import TennerGrid
 
 /// Test fixtures providing pre-built puzzles for fast test execution
 enum TestFixtures {
@@ -96,72 +88,66 @@ enum TestFixtures {
     // MARK: - Static Fallback Fixtures (10 columns as required by Tenner Grid)
 
     /// Static easy puzzle (fallback when bundle not available)
-    private static let staticEasyPuzzle: TennerGridPuzzle = {
-        TennerGridPuzzle(
-            columns: 10,
-            rows: 3,
-            difficulty: .easy,
-            targetSums: [5, 20, 17, 4, 22, 15, 14, 12, 19, 7],
-            initialGrid: [
-                [2, nil, nil, 1, nil, 8, 5, nil, 6, nil],
-                [nil, 9, nil, 2, 5, nil, nil, 7, nil, nil],
-                [0, 4, 7, 1, nil, nil, 9, nil, nil, 6],
-            ],
-            solution: [
-                [2, 7, 4, 1, 9, 8, 5, 3, 6, 0],
-                [3, 9, 6, 2, 5, 4, 0, 7, 8, 1],
-                [0, 4, 7, 1, 8, 3, 9, 2, 5, 6],
-            ]
-        )
-    }()
+    private static let staticEasyPuzzle: TennerGridPuzzle = .init(
+        columns: 10,
+        rows: 3,
+        difficulty: .easy,
+        targetSums: [5, 20, 17, 4, 22, 15, 14, 12, 19, 7],
+        initialGrid: [
+            [2, nil, nil, 1, nil, 8, 5, nil, 6, nil],
+            [nil, 9, nil, 2, 5, nil, nil, 7, nil, nil],
+            [0, 4, 7, 1, nil, nil, 9, nil, nil, 6],
+        ],
+        solution: [
+            [2, 7, 4, 1, 9, 8, 5, 3, 6, 0],
+            [3, 9, 6, 2, 5, 4, 0, 7, 8, 1],
+            [0, 4, 7, 1, 8, 3, 9, 2, 5, 6],
+        ]
+    )
 
     /// Static medium puzzle (fallback)
-    private static let staticMediumPuzzle: TennerGridPuzzle = {
-        TennerGridPuzzle(
-            columns: 10,
-            rows: 5,
-            difficulty: .medium,
-            targetSums: [20, 25, 18, 22, 30, 20, 25, 18, 22, 25],
-            initialGrid: [
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, 9, nil, nil, 5, nil, nil, 7, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, 3, nil, nil, 8, nil, nil, 2, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-            ],
-            solution: [
-                [2, 7, 4, 1, 9, 8, 5, 3, 6, 0],
-                [3, 9, 6, 2, 5, 4, 0, 7, 8, 1],
-                [0, 4, 7, 1, 8, 3, 9, 2, 5, 6],
-                [6, 3, 0, 9, 8, 2, 4, 2, 1, 5],
-                [9, 2, 1, 9, 0, 3, 7, 4, 2, 3],
-            ]
-        )
-    }()
+    private static let staticMediumPuzzle: TennerGridPuzzle = .init(
+        columns: 10,
+        rows: 5,
+        difficulty: .medium,
+        targetSums: [20, 25, 18, 22, 30, 20, 25, 18, 22, 25],
+        initialGrid: [
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, 9, nil, nil, 5, nil, nil, 7, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, 3, nil, nil, 8, nil, nil, 2, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+        ],
+        solution: [
+            [2, 7, 4, 1, 9, 8, 5, 3, 6, 0],
+            [3, 9, 6, 2, 5, 4, 0, 7, 8, 1],
+            [0, 4, 7, 1, 8, 3, 9, 2, 5, 6],
+            [6, 3, 0, 9, 8, 2, 4, 2, 1, 5],
+            [9, 2, 1, 9, 0, 3, 7, 4, 2, 3],
+        ]
+    )
 
     /// Static hard puzzle (fallback)
-    private static let staticHardPuzzle: TennerGridPuzzle = {
-        TennerGridPuzzle(
-            columns: 10,
-            rows: 5,
-            difficulty: .hard,
-            targetSums: [20, 25, 18, 22, 30, 20, 25, 18, 22, 25],
-            initialGrid: [
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-                [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-            ],
-            solution: [
-                [2, 7, 4, 1, 9, 8, 5, 3, 6, 0],
-                [3, 9, 6, 2, 5, 4, 0, 7, 8, 1],
-                [0, 4, 7, 1, 8, 3, 9, 2, 5, 6],
-                [6, 3, 0, 9, 8, 2, 4, 2, 1, 5],
-                [9, 2, 1, 9, 0, 3, 7, 4, 2, 3],
-            ]
-        )
-    }()
+    private static let staticHardPuzzle: TennerGridPuzzle = .init(
+        columns: 10,
+        rows: 5,
+        difficulty: .hard,
+        targetSums: [20, 25, 18, 22, 30, 20, 25, 18, 22, 25],
+        initialGrid: [
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+        ],
+        solution: [
+            [2, 7, 4, 1, 9, 8, 5, 3, 6, 0],
+            [3, 9, 6, 2, 5, 4, 0, 7, 8, 1],
+            [0, 4, 7, 1, 8, 3, 9, 2, 5, 6],
+            [6, 3, 0, 9, 8, 2, 4, 2, 1, 5],
+            [9, 2, 1, 9, 0, 3, 7, 4, 2, 3],
+        ]
+    )
 
     // MARK: - Completed Grids (for validation tests - 10 columns)
 
@@ -191,14 +177,14 @@ enum TestFixtures {
 
     /// Grid with adjacent duplicates (invalid)
     static let invalidGrid_adjacentDuplicates: [[Int]] = [
-        [0, 0, 2, 3, 4, 5, 6, 7, 8, 9],  // 0 appears twice adjacently
+        [0, 0, 2, 3, 4, 5, 6, 7, 8, 9], // 0 appears twice adjacently
         [9, 1, 3, 2, 5, 4, 7, 6, 0, 8],
         [8, 9, 0, 1, 2, 3, 4, 5, 6, 7],
     ]
 
     /// Grid with row duplicates (invalid)
     static let invalidGrid_rowDuplicates: [[Int]] = [
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 0],  // 0 appears twice in same row
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 0], // 0 appears twice in same row
         [9, 2, 1, 4, 3, 6, 5, 8, 7, 1],
         [8, 9, 0, 1, 2, 3, 4, 5, 6, 7],
     ]

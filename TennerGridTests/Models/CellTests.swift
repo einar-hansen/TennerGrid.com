@@ -1,13 +1,6 @@
-//
-//  CellTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
-@testable import TennerGrid
 import Foundation
 import Testing
+@testable import TennerGrid
 
 struct CellTests {
     // MARK: - Initialization Tests

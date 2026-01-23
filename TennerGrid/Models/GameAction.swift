@@ -1,10 +1,3 @@
-//
-//  GameAction.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Represents an action that can be undone/redone in the game

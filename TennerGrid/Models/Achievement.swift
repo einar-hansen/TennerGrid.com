@@ -1,10 +1,3 @@
-//
-//  Achievement.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 import SwiftUI
 

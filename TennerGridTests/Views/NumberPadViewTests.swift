@@ -1,13 +1,6 @@
-//
-//  NumberPadViewTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
-@testable import TennerGrid
 import XCTest
+@testable import TennerGrid
 
 /// Tests for NumberPadView component with various interactions
 /// Uses pre-built fixtures instead of generating puzzles for fast execution
@@ -122,7 +115,7 @@ final class NumberPadViewTests: XCTestCase {
         ]
 
         for pos2 in adjacentPositions {
-            if puzzle.isValidPosition(pos2) && !puzzle.isPrefilled(at: pos2) {
+            if puzzle.isValidPosition(pos2), !puzzle.isPrefilled(at: pos2) {
                 viewModel.selectCell(at: pos2)
                 // Check if placing 5 would create a conflict
                 let conflicts = viewModel.conflictCount(for: 5, at: pos2)
@@ -167,7 +160,7 @@ final class NumberPadViewTests: XCTestCase {
 
         // Find adjacent empty cell
         let pos2 = CellPosition(row: pos1.row, column: pos1.column + 1)
-        if puzzle.isValidPosition(pos2) && !puzzle.isPrefilled(at: pos2) {
+        if puzzle.isValidPosition(pos2), !puzzle.isPrefilled(at: pos2) {
             viewModel.selectCell(at: pos2)
             let canPlace = viewModel.canPlaceValue(5, at: pos2)
             XCTAssertFalse(canPlace, "Cannot place duplicate in adjacent cell")
@@ -333,8 +326,8 @@ final class NumberPadViewTests: XCTestCase {
     // MARK: - Helper Methods
 
     private func findEmptyCell(in puzzle: TennerGridPuzzle) -> CellPosition? {
-        for row in 0..<puzzle.rows {
-            for col in 0..<puzzle.columns {
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
                 let pos = CellPosition(row: row, column: col)
                 if !puzzle.isPrefilled(at: pos) {
                     return pos
@@ -345,8 +338,8 @@ final class NumberPadViewTests: XCTestCase {
     }
 
     private func findPrefilledCell(in puzzle: TennerGridPuzzle) -> CellPosition? {
-        for row in 0..<puzzle.rows {
-            for col in 0..<puzzle.columns {
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
                 let pos = CellPosition(row: row, column: col)
                 if puzzle.isPrefilled(at: pos) {
                     return pos
@@ -358,8 +351,8 @@ final class NumberPadViewTests: XCTestCase {
 
     private func findMultipleEmptyCells(in puzzle: TennerGridPuzzle, count: Int) -> [CellPosition] {
         var cells: [CellPosition] = []
-        for row in 0..<puzzle.rows {
-            for col in 0..<puzzle.columns {
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
                 let pos = CellPosition(row: row, column: col)
                 if !puzzle.isPrefilled(at: pos) {
                     cells.append(pos)

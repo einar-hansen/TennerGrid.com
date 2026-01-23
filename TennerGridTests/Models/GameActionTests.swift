@@ -1,13 +1,6 @@
-//
-//  GameActionTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
-@testable import TennerGrid
 import Testing
+@testable import TennerGrid
 
 struct GameActionTests {
     // MARK: - Initialization Tests

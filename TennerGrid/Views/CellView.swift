@@ -1,10 +1,3 @@
-//
-//  CellView.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
 
 /// A view representing a single cell in the Tenner Grid puzzle
@@ -87,7 +80,8 @@ struct CellView: View {
 
     // MARK: - Styling
 
-    /// Background color based on cell state (priority order: error > selected > same-number > highlighted > initial > empty)
+    /// Background color based on cell state (priority order: error > selected > same-number > highlighted > initial >
+    /// empty)
     private var backgroundColor: Color {
         if cell.hasError {
             // Error state: red tint to indicate invalid placement

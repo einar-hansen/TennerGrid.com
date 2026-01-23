@@ -1,10 +1,3 @@
-//
-//  GameHeaderView.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
 
 /// A header view displaying game information: timer, difficulty, and control buttons
@@ -115,11 +108,11 @@ struct GameHeaderView: View {
     /// Timer text color based on game state
     private var timerColor: Color {
         if viewModel.gameState.isCompleted {
-            return .green
+            .green
         } else if viewModel.gameState.isPaused {
-            return .secondary
+            .secondary
         } else {
-            return .primary
+            .primary
         }
     }
 

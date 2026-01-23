@@ -1,10 +1,3 @@
-//
-//  HintService.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Type of hint provided to the player

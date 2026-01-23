@@ -1,10 +1,3 @@
-//
-//  NumberPadView.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
 
 /// A view displaying a number pad with buttons for digits 0-9

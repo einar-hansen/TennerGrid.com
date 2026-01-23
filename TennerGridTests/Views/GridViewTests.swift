@@ -1,13 +1,6 @@
-//
-//  GridViewTests.swift
-//  TennerGridTests
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import SwiftUI
-@testable import TennerGrid
 import XCTest
+@testable import TennerGrid
 
 /// Tests for GridView component
 /// Uses pre-built fixtures instead of generating puzzles for fast execution
@@ -95,8 +88,8 @@ final class GridViewTests: XCTestCase {
         XCTAssertNotNil(view, "GridView should be created")
 
         // Verify we can access cells at valid positions
-        for row in 0..<puzzle.rows {
-            for col in 0..<puzzle.columns {
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
                 let position = CellPosition(row: row, column: col)
                 XCTAssertTrue(puzzle.isValidPosition(position), "Position (\(row), \(col)) should be valid")
             }
@@ -180,8 +173,8 @@ final class GridViewTests: XCTestCase {
 
         // Verify pre-filled cells exist
         var foundPrefilled = false
-        for row in 0..<puzzle.rows {
-            for col in 0..<puzzle.columns {
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
                 let pos = CellPosition(row: row, column: col)
                 if puzzle.isPrefilled(at: pos) {
                     foundPrefilled = true

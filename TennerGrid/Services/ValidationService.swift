@@ -1,10 +1,3 @@
-//
-//  ValidationService.swift
-//  TennerGrid
-//
-//  Created by Claude on 2026-01-22.
-//
-
 import Foundation
 
 /// Service responsible for validating Tenner Grid puzzle rules
