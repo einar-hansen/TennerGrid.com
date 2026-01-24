@@ -189,6 +189,11 @@ final class GameViewModel: ObservableObject {
 
         // Clear error message when changing selection
         errorMessage = nil
+
+        // Provide haptic feedback for cell selection
+        if position != nil {
+            HapticManager.shared.lightImpact()
+        }
     }
 
     /// Updates cached neighbor and highlighted positions for performance optimization
