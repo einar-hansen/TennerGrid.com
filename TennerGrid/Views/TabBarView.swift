@@ -11,6 +11,9 @@ struct TabBarView: View {
     /// Puzzle manager shared across tabs for state preservation
     @StateObject private var puzzleManager = PuzzleManager()
 
+    /// User's theme preference from settings
+    @AppStorage("themePreference") private var themePreference = ThemePreference.system.rawValue
+
     // MARK: - Tab Enumeration
 
     /// Available tabs in the app
@@ -55,6 +58,14 @@ struct TabBarView: View {
             dailyChallengesTab
             profileTab
         }
+        .preferredColorScheme(selectedColorScheme)
+    }
+
+    // MARK: - Computed Properties
+
+    /// Converts the stored theme preference string to a ColorScheme
+    private var selectedColorScheme: ColorScheme? {
+        ThemePreference(rawValue: themePreference)?.colorScheme
     }
 
     // MARK: - Tab Views
