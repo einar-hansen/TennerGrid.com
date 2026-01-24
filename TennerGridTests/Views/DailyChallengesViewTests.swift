@@ -480,4 +480,5 @@ final class DailyChallengesViewTests: XCTestCase {
         return formatter.string(from: date)
     }
 }
+
 // swiftlint:enable type_body_length implicitly_unwrapped_optional
