@@ -77,7 +77,7 @@ struct ProfileView: View {
     private var settingsSection: some View {
         Section {
             NavigationLink {
-                settingsPlaceholder
+                SettingsView()
             } label: {
                 HStack(spacing: 12) {
                     sectionIcon("gearshape.fill", color: .gray)
@@ -235,17 +235,6 @@ struct ProfileView: View {
             title: "Statistics",
             subtitle: "Coming in Phase 8",
             navigationTitle: "Statistics"
-        )
-    }
-
-    /// Placeholder for Settings view (Phase 6.1)
-    private var settingsPlaceholder: some View {
-        PlaceholderView(
-            icon: "gearshape.fill",
-            iconColor: .gray,
-            title: "Settings",
-            subtitle: "Coming in Phase 6",
-            navigationTitle: "Settings"
         )
     }
 
