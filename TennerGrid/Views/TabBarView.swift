@@ -71,7 +71,7 @@ struct TabBarView: View {
 
     /// Daily challenges tab showing calendar and streak tracking
     private var dailyChallengesTab: some View {
-        DailyChallengesPlaceholderView()
+        DailyChallengesView()
             .tabItem {
                 Label(Tab.dailyChallenges.title, systemImage: Tab.dailyChallenges.icon)
             }
@@ -89,56 +89,6 @@ struct TabBarView: View {
 }
 
 // MARK: - Placeholder Views
-
-/// Placeholder view for Daily Challenges tab (to be implemented in Phase 5.4)
-// swiftlint:disable:next swiftui_view_body
-private struct DailyChallengesPlaceholderView: View {
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                iconView
-
-                titleView
-
-                subtitleView
-
-                descriptionView
-            }
-            .navigationTitle("Daily Challenges")
-        }
-    }
-
-    private var iconView: some View {
-        Image(systemName: "calendar.badge.clock")
-            .font(.system(size: 64))
-            .foregroundStyle(
-                LinearGradient(
-                    colors: [.orange, .red],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-    }
-
-    private var titleView: some View {
-        Text("Daily Challenges")
-            .font(.system(size: 28, weight: .bold, design: .rounded))
-    }
-
-    private var subtitleView: some View {
-        Text("Coming Soon")
-            .font(.system(size: 16, weight: .medium))
-            .foregroundColor(.secondary)
-    }
-
-    private var descriptionView: some View {
-        Text("Track your daily puzzle streak and compete with yourself!")
-            .font(.system(size: 14))
-            .foregroundColor(.secondary)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 40)
-    }
-}
 
 /// Placeholder view for Profile/Me tab (to be implemented in Phase 5.5)
 // swiftlint:disable:next swiftui_view_body

@@ -85,6 +85,7 @@ run_claude_streaming() {
 
   echo "$prompt" | claude \
     --print \
+    --verbose \
     --output-format stream-json \
     --model "$MODEL" \
     --permission-mode acceptEdits \
