@@ -212,7 +212,7 @@
 - [x] List all difficulty levels with color indicators
 - [x] Add optional "Custom Grid Size" option
 - [x] Wire up selection to start new game
-- [ ] Test difficulty selection flow
+- [x] Test difficulty selection flow
 
 ### 5.3 Tab Navigation
 
