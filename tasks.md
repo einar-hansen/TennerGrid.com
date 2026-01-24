@@ -359,7 +359,7 @@
 
 - [x] Add number entry animation (scale + fade in)
 - [x] Add error shake animation for invalid moves
-- [ ] Add cell selection bounce animation
+- [x] Add cell selection bounce animation
 - [ ] Add smooth transitions between screens
 - [ ] Add win celebration confetti or particle effect
 
