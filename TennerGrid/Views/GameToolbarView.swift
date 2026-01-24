@@ -124,6 +124,10 @@ private struct ToolbarButton: View {
         .buttonStyle(.plain)
         .disabled(!isEnabled)
         .opacity(isEnabled ? 1.0 : 0.4)
+        .accessibilityLabel(buttonAccessibilityLabel)
+        .accessibilityValue(buttonAccessibilityValue)
+        .accessibilityHint(buttonAccessibilityHint)
+        .accessibilityAddTraits(isActive ? .isSelected : [])
     }
 
     /// Icon stack with background and optional badge
@@ -215,6 +219,53 @@ private struct ToolbarButton: View {
             Spacer()
         }
         .frame(width: buttonSize, height: buttonSize)
+    }
+
+    // MARK: - Accessibility
+
+    /// Accessibility label for the button
+    private var buttonAccessibilityLabel: String {
+        label
+    }
+
+    /// Accessibility value for the button
+    private var buttonAccessibilityValue: String {
+        if let badgeValue = badge, badgeValue > 0 {
+            return "\(badgeValue) remaining"
+        }
+        if showIndicator {
+            return isActive ? "On" : "Off"
+        }
+        return ""
+    }
+
+    /// Accessibility hint for the button
+    private var buttonAccessibilityHint: String {
+        if !isEnabled {
+            switch label {
+            case "Undo":
+                return "No actions to undo"
+            case "Erase":
+                return "Select a cell with a value or pencil marks to erase"
+            case "Hint":
+                return "No hints remaining or puzzle is complete"
+            default:
+                return "Button is disabled"
+            }
+        }
+
+        switch label {
+        case "Undo":
+            return "Double tap to undo the last action"
+        case "Erase":
+            return "Double tap to erase the selected cell"
+        case "Notes":
+            return isActive ? "Double tap to turn off notes mode" : "Double tap to turn on notes mode"
+        case "Hint":
+            return "Double tap to get a hint for the current puzzle"
+        default:
+            return "Double tap to activate"
+        }
     }
 }
 

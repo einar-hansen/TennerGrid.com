@@ -194,6 +194,30 @@ struct PauseMenuView: View {
             )
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel(title)
+        .accessibilityHint(menuButtonHint(for: title))
+    }
+
+    // MARK: - Accessibility
+
+    /// Accessibility hint for menu buttons
+    /// - Parameter title: The button title
+    /// - Returns: Hint describing what the button does
+    private func menuButtonHint(for title: String) -> String {
+        switch title {
+        case "Resume":
+            return "Double tap to resume the game"
+        case "Restart":
+            return "Double tap to restart the current puzzle from the beginning"
+        case "New Game":
+            return "Double tap to start a new puzzle with different difficulty"
+        case "Settings":
+            return "Double tap to access game settings"
+        case "Quit":
+            return "Double tap to quit and return to the home screen"
+        default:
+            return "Double tap to activate"
+        }
     }
 
     /// Custom button style with scale animation on press

@@ -46,6 +46,9 @@ struct GameHeaderView: View {
             Capsule()
                 .fill(Color.themeButtonSecondary)
         )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Difficulty level")
+        .accessibilityValue(viewModel.gameState.puzzle.difficulty.displayName)
     }
 
     /// Timer display showing elapsed time in MM:SS format
@@ -59,6 +62,9 @@ struct GameHeaderView: View {
                 .font(.system(size: 18, weight: .semibold, design: .monospaced))
                 .foregroundColor(timerColor)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Elapsed time")
+        .accessibilityValue(timerAccessibilityValue)
     }
 
     /// Control buttons (pause and settings)
@@ -119,6 +125,20 @@ struct GameHeaderView: View {
     /// Icon name for pause button based on game state
     private var pauseIconName: String {
         viewModel.gameState.isPaused ? "play.fill" : "pause.fill"
+    }
+
+    // MARK: - Accessibility
+
+    /// Timer accessibility value with spoken time
+    private var timerAccessibilityValue: String {
+        let minutes = Int(viewModel.gameState.elapsedTime) / 60
+        let seconds = Int(viewModel.gameState.elapsedTime) % 60
+
+        if minutes > 0 {
+            return "\(minutes) minute\(minutes == 1 ? "" : "s") and \(seconds) second\(seconds == 1 ? "" : "s")"
+        } else {
+            return "\(seconds) second\(seconds == 1 ? "" : "s")"
+        }
     }
 }
 

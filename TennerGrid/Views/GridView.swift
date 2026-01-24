@@ -94,6 +94,9 @@ struct GridView: View {
             RoundedRectangle(cornerRadius: 4)
                 .fill(sumBackgroundColor(isComplete: isComplete, isValid: isValid))
         )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Column \(column + 1)")
+        .accessibilityValue(columnSumAccessibilityValue(column: column, current: currentSum, target: targetSum, isComplete: isComplete, isValid: isValid))
     }
 
     // MARK: - Helper Methods
@@ -166,6 +169,30 @@ struct GridView: View {
             Color.red.opacity(0.1)
         } else {
             Color.themeTertiaryBackground
+        }
+    }
+
+    // MARK: - Accessibility
+
+    /// Accessibility value for column sum cell
+    /// - Parameters:
+    ///   - column: Column index
+    ///   - current: Current sum
+    ///   - target: Target sum
+    ///   - isComplete: Whether column is complete
+    ///   - isValid: Whether sum is valid
+    /// - Returns: Accessibility value string
+    private func columnSumAccessibilityValue(column: Int, current: Int, target: Int, isComplete: Bool, isValid: Bool) -> String {
+        if isComplete {
+            if isValid {
+                return "Complete. Target \(target), Current \(current). Correct"
+            } else {
+                return "Complete. Target \(target), Current \(current). Incorrect"
+            }
+        } else if current > 0 {
+            return "Target sum \(target), Current sum \(current), Remaining \(target - current)"
+        } else {
+            return "Target sum \(target), No values entered yet"
         }
     }
 }

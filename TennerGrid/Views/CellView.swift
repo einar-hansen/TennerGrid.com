@@ -76,6 +76,11 @@ struct CellView: View {
         .onTapGesture {
             onTap()
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityValue(accessibilityValue)
+        .accessibilityHint(accessibilityHint)
+        .accessibilityAddTraits(accessibilityTraits)
         .onChange(of: cell.value) { newValue in
             // Only animate when a number is entered (not when cleared or for initial values)
             if newValue != nil, !cell.isInitial {
@@ -260,6 +265,59 @@ struct CellView: View {
     /// Text weight based on whether cell is pre-filled
     private var textWeight: Font.Weight {
         cell.isInitial ? .bold : .regular
+    }
+
+    // MARK: - Accessibility
+
+    /// Accessibility label describing the cell
+    private var accessibilityLabel: String {
+        "Cell at row \(cell.position.row + 1), column \(cell.position.column + 1)"
+    }
+
+    /// Accessibility value describing the cell's content
+    private var accessibilityValue: String {
+        if let value = cell.value {
+            if cell.isInitial {
+                return "Pre-filled with \(value)"
+            } else {
+                return "Contains \(value)"
+            }
+        } else if cell.hasPencilMarks {
+            let marks = cell.pencilMarks.sorted()
+            let marksString = marks.map(String.init).joined(separator: ", ")
+            return "Pencil marks: \(marksString)"
+        } else {
+            return "Empty"
+        }
+    }
+
+    /// Accessibility hint providing context
+    private var accessibilityHint: String {
+        if cell.isInitial {
+            return "This cell is pre-filled and cannot be changed"
+        } else if cell.hasError {
+            return "This cell has an error. Double tap to select and enter a different number"
+        } else if cell.isSelected {
+            return "Selected. Use number pad to enter a value"
+        } else {
+            return "Double tap to select this cell"
+        }
+    }
+
+    /// Accessibility traits based on cell state
+    private var accessibilityTraits: AccessibilityTraits {
+        var traits: AccessibilityTraits = [.isButton]
+
+        if cell.isSelected {
+            traits.insert(.isSelected)
+        }
+
+        if cell.isInitial {
+            traits.insert(.isStaticText)
+            traits.remove(.isButton)
+        }
+
+        return traits
     }
 }
 

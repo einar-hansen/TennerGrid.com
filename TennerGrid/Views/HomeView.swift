@@ -210,6 +210,8 @@ struct HomeView: View {
             .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel("Start New Game")
+        .accessibilityHint("Double tap to select a difficulty and start a new puzzle")
     }
 
     /// Gradient for new game button
@@ -254,6 +256,9 @@ struct HomeView: View {
             .background(cardBackground)
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel("Continue saved game")
+        .accessibilityValue(continueGameAccessibilityValue(for: savedGame))
+        .accessibilityHint("Double tap to continue playing your saved puzzle")
     }
 
     /// Card background with rounded rectangle and shadow
@@ -418,6 +423,9 @@ struct HomeView: View {
             .background(cardBackground)
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel("Play Daily Challenge")
+        .accessibilityValue("New challenge in \(formattedCountdown)")
+        .accessibilityHint("Double tap to play today's daily puzzle challenge")
     }
 
     /// Header section for daily challenge card
@@ -545,6 +553,18 @@ struct HomeView: View {
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
+    }
+
+    // MARK: - Accessibility
+
+    /// Accessibility value for continue game card
+    /// - Parameter savedGame: The saved game
+    /// - Returns: Accessibility value describing the game progress
+    private func continueGameAccessibilityValue(for savedGame: SavedGame) -> String {
+        let progress = Int(savedGame.progressPercentage)
+        let time = savedGame.formattedElapsedTime
+        let difficulty = savedGame.puzzle.difficulty.displayName
+        return "\(difficulty) difficulty, \(progress)% complete, Time played: \(time)"
     }
 }
 

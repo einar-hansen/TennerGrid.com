@@ -75,6 +75,10 @@ struct NumberPadView: View {
         }
         .buttonStyle(.plain)
         .disabled(isNumberDisabled(for: number))
+        .accessibilityLabel("Number \(number)")
+        .accessibilityValue(numberAccessibilityValue(for: number))
+        .accessibilityHint(numberAccessibilityHint(for: number))
+        .accessibilityAddTraits(isSelectedNumber(number) ? .isSelected : [])
     }
 
     /// Creates a badge showing conflict count for a number
@@ -239,6 +243,44 @@ struct NumberPadView: View {
 
         // Check if this placement would be invalid (violates game rules)
         return !viewModel.canPlaceValue(number, at: selected)
+    }
+
+    // MARK: - Accessibility Helpers
+
+    /// Accessibility value for a number button
+    /// - Parameter number: The number
+    /// - Returns: The accessibility value
+    private func numberAccessibilityValue(for number: Int) -> String {
+        let conflicts = conflictCount(for: number)
+        if conflicts > 0 {
+            return "\(conflicts) conflict\(conflicts == 1 ? "" : "s")"
+        }
+        if isSelectedNumber(number) {
+            return "Currently selected in cell"
+        }
+        return ""
+    }
+
+    /// Accessibility hint for a number button
+    /// - Parameter number: The number
+    /// - Returns: The accessibility hint
+    private func numberAccessibilityHint(for number: Int) -> String {
+        guard viewModel.selectedPosition != nil else {
+            return "Select a cell first to enter this number"
+        }
+
+        if isNumberDisabled(for: number) {
+            if viewModel.wouldExceedColumnSum(number, at: viewModel.selectedPosition!) {
+                return "Cannot enter this number. It would exceed the column sum"
+            }
+            return "Cannot enter this number. It violates game rules"
+        }
+
+        if viewModel.notesMode {
+            return "Double tap to add or remove this number as a pencil mark"
+        } else {
+            return "Double tap to enter this number in the selected cell"
+        }
     }
 }
 
