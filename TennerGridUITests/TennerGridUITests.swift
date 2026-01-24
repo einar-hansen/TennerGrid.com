@@ -467,7 +467,10 @@ final class TennerGridUITests: XCTestCase {
             themeButton.tap()
         } else {
             // Fallback: try to find it in other elements
-            let allElements = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", themeName))
+            let allElements = app.descendants(matching: .any).matching(NSPredicate(
+                format: "label CONTAINS %@",
+                themeName
+            ))
             let element = allElements.firstMatch
             XCTAssertTrue(element.exists, "\(themeName) theme option should exist")
             element.tap()
@@ -501,7 +504,7 @@ final class TennerGridUITests: XCTestCase {
         XCTAssertTrue(app.state == .runningForeground, "App should still be running in foreground")
 
         // Check that content is still visible (more lenient check)
-        let hasVisibleContent = app.buttons.count > 0 || app.staticTexts.count > 0 || app.images.count > 0
+        let hasVisibleContent = app.buttons.count > 0 || !app.staticTexts.isEmpty || !app.images.isEmpty
         XCTAssertTrue(hasVisibleContent, "UI should have visible content after theme change")
     }
 
