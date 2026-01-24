@@ -8,11 +8,33 @@ struct NumberPadView: View {
     /// The view model managing game state
     @ObservedObject var viewModel: GameViewModel
 
+    // MARK: - Environment
+
+    /// Size class to detect iPad vs iPhone
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     // MARK: - Constants
 
-    private let buttonSize: CGFloat = 60
-    private let buttonCornerRadius: CGFloat = 8
-    private let spacing: CGFloat = 8
+    /// Check if running on iPad based on size classes
+    private var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+
+    /// Button size scales with device - larger on iPad
+    private var buttonSize: CGFloat {
+        isIPad ? 80 : 60
+    }
+
+    /// Corner radius scales with button size
+    private var buttonCornerRadius: CGFloat {
+        isIPad ? 10 : 8
+    }
+
+    /// Spacing between buttons scales with device
+    private var spacing: CGFloat {
+        isIPad ? 12 : 8
+    }
 
     // MARK: - Body
 
@@ -58,8 +80,7 @@ struct NumberPadView: View {
 
                 // Number
                 Text(String(number))
-                    .font(.numberPadButton)
-                    .fontWeight(isSelected ? .bold : .medium)
+                    .font(.system(size: isIPad ? 32 : 24, weight: isSelected ? .bold : .medium, design: .rounded))
                     .foregroundColor(buttonTextColor(for: number))
 
                 // Conflict count badge
@@ -90,18 +111,19 @@ struct NumberPadView: View {
     private func conflictBadge(for number: Int) -> some View {
         let conflicts = conflictCount(for: number)
         if conflicts > 0 {
+            let badgeSize: CGFloat = isIPad ? 20 : 16
             VStack {
                 HStack {
                     Spacer()
                     Text("\(conflicts)")
-                        .font(.badgeText)
+                        .font(.system(size: isIPad ? 12 : 10, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
-                        .frame(width: 16, height: 16)
+                        .frame(width: badgeSize, height: badgeSize)
                         .background(Circle().fill(Color.red))
                 }
                 Spacer()
             }
-            .padding(4)
+            .padding(isIPad ? 6 : 4)
         }
     }
 

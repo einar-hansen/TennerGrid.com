@@ -10,6 +10,10 @@ struct GameView: View {
     /// Scene phase for detecting app backgrounding
     @Environment(\.scenePhase) private var scenePhase
 
+    /// Size class to detect iPad vs iPhone
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     /// Whether the pause menu is showing
     @State private var showingPauseMenu = false
 
@@ -27,6 +31,18 @@ struct GameView: View {
 
     /// Callback when user starts a new game (for navigation to difficulty selection)
     var onNewGame: (() -> Void)?
+
+    // MARK: - Computed Properties
+
+    /// Check if running on iPad based on size classes
+    private var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+
+    /// Vertical spacing between components - larger on iPad
+    private var verticalSpacing: CGFloat {
+        isIPad ? 24 : 16
+    }
 
     // MARK: - Initialization
 
@@ -109,7 +125,7 @@ struct GameView: View {
 
     /// Portrait layout - vertical arrangement
     private var portraitLayout: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: verticalSpacing) {
             // Header with timer, difficulty, and controls
             GameHeaderView(
                 viewModel: viewModel,
@@ -126,19 +142,19 @@ struct GameView: View {
 
             // Game toolbar with action buttons
             GameToolbarView(viewModel: viewModel)
-                .padding(.bottom, 8)
+                .padding(.bottom, isIPad ? 12 : 8)
 
             // Number pad for input
             NumberPadView(viewModel: viewModel)
-                .padding(.bottom, 16)
+                .padding(.bottom, isIPad ? 24 : 16)
         }
     }
 
     /// Landscape layout - horizontal arrangement
     private var landscapeLayout: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: isIPad ? 32 : 20) {
             // Left side: Grid takes most of the space
-            VStack(spacing: 8) {
+            VStack(spacing: isIPad ? 12 : 8) {
                 // Compact header for landscape
                 GameHeaderView(
                     viewModel: viewModel,
@@ -152,24 +168,24 @@ struct GameView: View {
             .frame(maxWidth: .infinity)
 
             // Right side: Controls in a vertical stack
-            VStack(spacing: 16) {
+            VStack(spacing: isIPad ? 24 : 16) {
                 Spacer()
 
                 // Game toolbar with action buttons
                 GameToolbarView(viewModel: viewModel)
 
                 Spacer()
-                    .frame(maxHeight: 40)
+                    .frame(maxHeight: isIPad ? 50 : 40)
 
                 // Number pad for input
                 NumberPadView(viewModel: viewModel)
 
                 Spacer()
             }
-            .frame(maxWidth: 400) // Limit control panel width
-            .padding(.trailing, 16)
+            .frame(maxWidth: isIPad ? 500 : 400) // Larger control panel on iPad
+            .padding(.trailing, isIPad ? 24 : 16)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, isIPad ? 24 : 16)
     }
 
     /// Pause overlay shown when game is paused

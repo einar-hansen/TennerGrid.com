@@ -15,21 +15,21 @@ struct GridView: View {
 
     // MARK: - Constants
 
-    /// Row spacing - slightly larger on iPad for better visual separation
+    /// Row spacing - larger on iPad for better visual separation
     private var rowSpacing: CGFloat {
-        isIPad ? 3 : 2
+        isIPad ? 4 : 2
     }
 
     private let columnSpacing: CGFloat = 0
 
     /// Column sum display height - larger on iPad for better readability
     private var columnSumHeight: CGFloat {
-        isIPad ? 50 : 40
+        isIPad ? 60 : 40
     }
 
     /// Grid padding - larger on iPad to make better use of screen space
     private var gridPadding: CGFloat {
-        isIPad ? 24 : 16
+        isIPad ? 32 : 16
     }
 
     /// Check if running on iPad based on size classes
@@ -97,17 +97,17 @@ struct GridView: View {
         let isComplete = viewModel.isColumnComplete(column)
         let isValid = currentSum == targetSum
 
-        return VStack(spacing: isIPad ? 6 : 4) {
+        return VStack(spacing: isIPad ? 8 : 4) {
             // Current sum (if any values filled)
             if currentSum > 0 {
                 Text(String(currentSum))
-                    .font(.system(size: isIPad ? 18 : 14, weight: .medium, design: .rounded))
+                    .font(.system(size: isIPad ? 20 : 14, weight: .medium, design: .rounded))
                     .foregroundColor(sumColor(isComplete: isComplete, isValid: isValid))
             }
 
             // Target sum
             Text(String(targetSum))
-                .font(.system(size: isIPad ? 24 : 18, weight: .bold, design: .rounded))
+                .font(.system(size: isIPad ? 28 : 18, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
         }
         .frame(width: cellSize)
@@ -145,8 +145,9 @@ struct GridView: View {
         let cellSize = (availableWidth - totalSpacing) / CGFloat(columnCount)
 
         // iPad gets larger cells for better visibility and easier tapping
-        let minSize: CGFloat = isIPad ? 40 : 30
-        let maxSize: CGFloat = isIPad ? 85 : 60
+        // Increased max size for iPad to better utilize larger screens
+        let minSize: CGFloat = isIPad ? 50 : 30
+        let maxSize: CGFloat = isIPad ? 110 : 60
 
         // Return the calculated size, clamped to device-appropriate bounds
         return min(max(cellSize, minSize), maxSize)

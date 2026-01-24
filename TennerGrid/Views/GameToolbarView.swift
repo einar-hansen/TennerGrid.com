@@ -11,11 +11,33 @@ struct GameToolbarView: View {
     /// Maximum hints allowed per game (for displaying remaining)
     var maxHints: Int = 3
 
+    // MARK: - Environment
+
+    /// Size class to detect iPad vs iPhone
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     // MARK: - Constants
 
-    private let buttonSize: CGFloat = 44
-    private let iconSize: CGFloat = 22
-    private let spacing: CGFloat = 24
+    /// Check if running on iPad based on size classes
+    private var isIPad: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+
+    /// Button size scales with device
+    private var buttonSize: CGFloat {
+        isIPad ? 56 : 44
+    }
+
+    /// Icon size scales with device
+    private var iconSize: CGFloat {
+        isIPad ? 28 : 22
+    }
+
+    /// Spacing between buttons scales with device
+    private var spacing: CGFloat {
+        isIPad ? 32 : 24
+    }
 
     // MARK: - Body
 
@@ -37,6 +59,8 @@ struct GameToolbarView: View {
             icon: "arrow.uturn.backward",
             label: "Undo",
             isEnabled: viewModel.canUndo,
+            buttonSize: buttonSize,
+            iconSize: iconSize,
             action: { viewModel.undo() }
         )
     }
@@ -47,6 +71,8 @@ struct GameToolbarView: View {
             icon: "eraser",
             label: "Erase",
             isEnabled: canErase,
+            buttonSize: buttonSize,
+            iconSize: iconSize,
             action: { viewModel.clearSelectedCell() }
         )
     }
@@ -59,6 +85,8 @@ struct GameToolbarView: View {
             isEnabled: true,
             isActive: viewModel.notesMode,
             showIndicator: true,
+            buttonSize: buttonSize,
+            iconSize: iconSize,
             action: { viewModel.toggleNotesMode() }
         )
     }
@@ -70,6 +98,8 @@ struct GameToolbarView: View {
             label: "Hint",
             isEnabled: canUseHint,
             badge: remainingHints,
+            buttonSize: buttonSize,
+            iconSize: iconSize,
             action: { viewModel.requestHint() }
         )
     }
@@ -109,10 +139,9 @@ private struct ToolbarButton: View {
     var isActive: Bool = false
     var showIndicator: Bool = false
     var badge: Int?
+    let buttonSize: CGFloat
+    let iconSize: CGFloat
     let action: () -> Void
-
-    private let buttonSize: CGFloat = 44
-    private let iconSize: CGFloat = 22
 
     var body: some View {
         Button(action: action) {
@@ -153,24 +182,27 @@ private struct ToolbarButton: View {
 
     /// Label with optional ON/OFF indicator
     private var labelStack: some View {
-        HStack(spacing: 2) {
+        let fontSize: CGFloat = buttonSize > 50 ? 13 : 11
+        let indicatorFontSize: CGFloat = buttonSize > 50 ? 11 : 9
+
+        return HStack(spacing: 2) {
             Text(label)
-                .font(.system(size: 11, weight: .medium))
+                .font(.system(size: fontSize, weight: .medium))
                 .foregroundColor(labelColor)
 
             if showIndicator {
-                statusIndicator
+                statusIndicator(fontSize: indicatorFontSize)
             }
         }
     }
 
     /// ON/OFF status indicator
-    private var statusIndicator: some View {
+    private func statusIndicator(fontSize: CGFloat) -> some View {
         Text(isActive ? "ON" : "OFF")
-            .font(.system(size: 9, weight: .bold))
+            .font(.system(size: fontSize, weight: .bold))
             .foregroundColor(isActive ? .blue : .secondary)
-            .padding(.horizontal, 4)
-            .padding(.vertical, 1)
+            .padding(.horizontal, buttonSize > 50 ? 6 : 4)
+            .padding(.vertical, buttonSize > 50 ? 2 : 1)
             .background(
                 Capsule()
                     .fill(isActive ? Color.blue.opacity(0.15) : Color.themeButtonSecondary)
@@ -206,15 +238,19 @@ private struct ToolbarButton: View {
 
     /// Badge view showing remaining count
     private func badgeView(value: Int) -> some View {
-        VStack {
+        let badgeSize: CGFloat = buttonSize > 50 ? 20 : 16
+        let badgeFontSize: CGFloat = buttonSize > 50 ? 12 : 10
+        let badgeOffset: CGFloat = buttonSize > 50 ? 6 : 4
+
+        return VStack {
             HStack {
                 Spacer()
                 Text("\(value)")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .font(.system(size: badgeFontSize, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
-                    .frame(width: 16, height: 16)
+                    .frame(width: badgeSize, height: badgeSize)
                     .background(Circle().fill(Color.orange))
-                    .offset(x: 4, y: -4)
+                    .offset(x: badgeOffset, y: -badgeOffset)
             }
             Spacer()
         }
