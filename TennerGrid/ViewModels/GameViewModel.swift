@@ -299,6 +299,9 @@ final class GameViewModel: ObservableObject {
             recordAction(action)
 
             errorMessage = nil
+
+            // Auto-save after pencil mark toggle
+            saveIfNeeded()
         } else {
             // Validate placement
             let isValid = validationService.isValidPlacement(
@@ -332,6 +335,9 @@ final class GameViewModel: ObservableObject {
 
                 // Check for completion
                 checkCompletion()
+
+                // Auto-save after number entry
+                saveIfNeeded()
             } else {
                 // Record error
                 gameState.recordError()
@@ -383,6 +389,9 @@ final class GameViewModel: ObservableObject {
 
         // Update conflicts
         updateConflicts()
+
+        // Auto-save after cell clear
+        saveIfNeeded()
     }
 
     // MARK: - Notes Mode
@@ -724,6 +733,9 @@ final class GameViewModel: ObservableObject {
 
         // Clear any error messages
         errorMessage = nil
+
+        // Auto-save after hint usage
+        saveIfNeeded()
     }
 
     // MARK: - Timer Management
@@ -901,6 +913,9 @@ final class GameViewModel: ObservableObject {
 
         // Update conflicts
         updateConflicts()
+
+        // Auto-save after undo
+        saveIfNeeded()
     }
 
     /// Redoes the last undone action
@@ -925,6 +940,9 @@ final class GameViewModel: ObservableObject {
 
         // Update conflicts
         updateConflicts()
+
+        // Auto-save after redo
+        saveIfNeeded()
     }
 
     /// Applies an action to the game state
@@ -1215,7 +1233,7 @@ final class GameViewModel: ObservableObject {
     // MARK: - Auto-Save
 
     /// Saves the current game state to disk
-    /// Called automatically when the app backgrounds
+    /// Called automatically when the app backgrounds or after significant state changes
     func saveGame() {
         guard autoSaveEnabled else { return }
 
@@ -1234,6 +1252,20 @@ final class GameViewModel: ObservableObject {
         } catch {
             // Log error but don't crash - auto-save failures should be graceful
             print("Failed to auto-save game: \(error)")
+        }
+    }
+
+    /// Saves the game state if needed after a significant change
+    /// This is called automatically after actions like number entry, undo/redo, etc.
+    private func saveIfNeeded() {
+        // Debounce saves slightly to avoid excessive I/O
+        // We use a Task to avoid blocking the main thread
+        Task {
+            // Small delay to batch rapid changes (e.g., multiple undos)
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+            await MainActor.run {
+                saveGame()
+            }
         }
     }
 
