@@ -130,10 +130,12 @@ final class GameViewModel: ObservableObject {
     /// - Parameter settings: The updated settings
     private func handleSettingsChange(_ settings: UserSettings) {
         // Update auto-check errors
-        // When this changes, we need to update conflict display
-        // Note: We update UserDefaults to keep @AppStorage in sync
-        if autoCheckErrors != settings.autoCheckErrors {
-            UserDefaults.standard.set(settings.autoCheckErrors, forKey: "autoCheckErrors")
+        // Always update UserDefaults to keep @AppStorage in sync
+        // Then perform actions based on the new value
+        let previousAutoCheck = UserDefaults.standard.bool(forKey: "autoCheckErrors")
+        UserDefaults.standard.set(settings.autoCheckErrors, forKey: "autoCheckErrors")
+
+        if previousAutoCheck != settings.autoCheckErrors {
             if settings.autoCheckErrors {
                 // Re-check for conflicts if auto-check is now enabled
                 updateConflicts()
@@ -145,27 +147,23 @@ final class GameViewModel: ObservableObject {
 
         // Update show timer setting
         // The UI will respond to this change automatically via @AppStorage
-        if showTimer != settings.showTimer {
-            UserDefaults.standard.set(settings.showTimer, forKey: "showTimer")
-        }
+        UserDefaults.standard.set(settings.showTimer, forKey: "showTimer")
 
         // Update highlight same numbers
         // This affects the cell highlighting logic
-        if highlightSameNumbers != settings.highlightSameNumbers {
-            UserDefaults.standard.set(settings.highlightSameNumbers, forKey: "highlightSameNumbers")
+        let previousHighlight = UserDefaults.standard.bool(forKey: "highlightSameNumbers")
+        UserDefaults.standard.set(settings.highlightSameNumbers, forKey: "highlightSameNumbers")
+
+        if previousHighlight != settings.highlightSameNumbers {
             // Trigger a refresh of cached positions to update highlighting
             updateCachedPositions(for: selectedPosition)
         }
 
         // Update haptic feedback setting
-        if hapticFeedback != settings.hapticFeedback {
-            UserDefaults.standard.set(settings.hapticFeedback, forKey: "hapticFeedback")
-        }
+        UserDefaults.standard.set(settings.hapticFeedback, forKey: "hapticFeedback")
 
         // Update sound effects setting
-        if soundEffects != settings.soundEffects {
-            UserDefaults.standard.set(settings.soundEffects, forKey: "soundEffects")
-        }
+        UserDefaults.standard.set(settings.soundEffects, forKey: "soundEffects")
     }
 
     // MARK: - Cell Selection

@@ -22,7 +22,7 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:TennerGrid.xcodeproj",
         "identifier" : "2047B1112F218F1D00F1010E",
