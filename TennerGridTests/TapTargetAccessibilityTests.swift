@@ -246,9 +246,9 @@ final class TapTargetAccessibilityTests: XCTestCase {
         // Given: iPhone SE (1st gen) has 320 point width
         let smallestDeviceWidth: CGFloat = 320
         let numberOfButtons = 5 // Number pad has 5 buttons per row
-        let buttonSize: CGFloat = 60 // From NumberPadView for iPhone
+        let buttonSize: CGFloat = 52 // From NumberPadView for very compact devices (iPhone SE)
         let spacing: CGFloat = 8 // From NumberPadView
-        let horizontalPadding: CGFloat = 32
+        let horizontalPadding: CGFloat = 24 // 12 per side for very compact devices
 
         // When: Calculate total width needed
         let totalButtonWidth = CGFloat(numberOfButtons) * buttonSize

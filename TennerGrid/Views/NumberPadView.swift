@@ -21,9 +21,20 @@ struct NumberPadView: View {
         horizontalSizeClass == .regular && verticalSizeClass == .regular
     }
 
-    /// Button size scales with device - larger on iPad
+    /// Check if running on very compact width device (iPhone SE)
+    private var isVeryCompact: Bool {
+        horizontalSizeClass == .compact && UIScreen.main.bounds.width <= 320
+    }
+
+    /// Button size scales with device - larger on iPad, smaller on very compact devices
     private var buttonSize: CGFloat {
-        isIPad ? 80 : 60
+        if isIPad {
+            return 80
+        } else if isVeryCompact {
+            return 52  // Smaller for iPhone SE to fit in 320pt width
+        } else {
+            return 60
+        }
     }
 
     /// Corner radius scales with button size
@@ -34,6 +45,17 @@ struct NumberPadView: View {
     /// Spacing between buttons scales with device
     private var spacing: CGFloat {
         isIPad ? 12 : 8
+    }
+
+    /// Horizontal padding scales with device - tighter on very compact devices
+    private var horizontalPadding: CGFloat {
+        if isIPad {
+            return 16
+        } else if isVeryCompact {
+            return 12  // Tighter padding for iPhone SE
+        } else {
+            return 16
+        }
     }
 
     // MARK: - Body
@@ -55,7 +77,7 @@ struct NumberPadView: View {
                 }
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, horizontalPadding)
     }
 
     // MARK: - Subviews

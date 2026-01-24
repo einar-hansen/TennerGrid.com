@@ -19,18 +19,17 @@ https://sudoku.one/fobidoshi
 https://sudoku.one/renban
 
 
-Update difficulties to: Easy = 55%, Medium = 45%, Hard = 35% and Extreme = 25%. The backend/API is already updates. The 
 
-When I input a value tat is in the notes of the row, then remove the number from the note.
+Add the following tasks where relevant in the tasks.md file:
+-The first 50 puzzles are located in a file here that you should copy: /Users/einar/Sites/utvikler-einar-hansen/tennergrid-web/puzzles.json
+-Update difficulties to: Easy = 55%, Medium = 45%, Hard = 35% and Extreme = 25%. The backend/API is already updates. 
+-When the user input a value that exists in the notes of another cell in the same row or nearest neighbour, then update the notes in the cell to exclude the solved number.
+-Add the ability to zoom in and out (make table larger) by using two fingers, or with buttons on devices that doesnt have touchscreen (macos). 
+-If we hide invalid options is enabled, then the invalid options should be hidden for notes as well.
+-If we have existing notes in a cell, and we are in "notes off" mode, looking to set a value. Then make the numbers that are in the notes in a different color (of your choice) to highlight that they are special.
+-The playtime timer when playing game must pause when we go ton another app or leave the app to go to the homescreen. At the moment is pausing the game when the app reopens, which is not accurate as the timer is running while in the background. 
+-Wire up so that the settings work button work when we are in the game, and also the button when we have the pause screen
+-Make sure button to start the game on "daily challenge" works. Right now the game is not starting.
 
-Ability to zoom in (make table larger). 
 
-If we hide invalid options, then they should be hidden for notes as well.
-
-If we have notes, then make the number input cell in another color to show what we think they are
-
-The timer when playing game must stop when we gontonanother app or to the homescreen. Now it is pausing when the app reopens. 
-
-Wire up settings when in rhe game, and when paused
-
-make sure daily challenge works 
+Neste er backend for å hente spill og dele statistikk

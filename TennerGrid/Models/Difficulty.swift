@@ -6,6 +6,7 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
     case easy
     case medium
     case hard
+    case extreme
 
     var id: String { rawValue }
 
@@ -18,6 +19,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             "Medium"
         case .hard:
             "Hard"
+        case .extreme:
+            "Extreme"
         }
     }
 
@@ -30,6 +33,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             .blue
         case .hard:
             .orange
+        case .extreme:
+            .red
         }
     }
 
@@ -37,10 +42,12 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
     var prefilledPercentage: Double {
         switch self {
         case .easy:
-            0.45 // 45% of cells pre-filled
+            0.55 // 55% of cells pre-filled
         case .medium:
-            0.35 // 35% of cells pre-filled
+            0.45 // 45% of cells pre-filled
         case .hard:
+            0.35 // 35% of cells pre-filled
+        case .extreme:
             0.25 // 25% of cells pre-filled
         }
     }
@@ -54,6 +61,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             10
         case .hard:
             20
+        case .extreme:
+            30
         }
     }
 
@@ -66,6 +75,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             "A balanced challenge with moderate pre-filled cells."
         case .hard:
             "Requires logical deduction and strategic thinking."
+        case .extreme:
+            "Only for experts. Very few clues and maximum challenge."
         }
     }
 
@@ -78,6 +89,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             25
         case .hard:
             50
+        case .extreme:
+            100
         }
     }
 
@@ -90,6 +103,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
             4
         case .hard:
             5
+        case .extreme:
+            6
         }
     }
 
@@ -101,6 +116,8 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
         case .medium:
             7
         case .hard:
+            10
+        case .extreme:
             10
         }
     }

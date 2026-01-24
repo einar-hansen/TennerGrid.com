@@ -70,6 +70,23 @@
 - [x] Track hint usage count in game state
 - [x] Write unit tests for hint service with various game states
 
+### 1.5 Puzzle Data Import
+
+- [x] Copy first 50 puzzles from `/Users/einar/Sites/utvikler-einar-hansen/tennergrid-web/puzzles.json`
+- [x] Import puzzles into app's bundled puzzle collection
+- [x] Verify all imported puzzles are valid and solvable
+- [x] Update puzzle loading to include the new puzzles
+
+### 1.6 Difficulty Configuration Update
+
+- [ ] Update difficulty thresholds to match backend API:
+  - Easy = 55% (update from current value)
+  - Medium = 45%
+  - Hard = 35%
+  - Extreme = 25%
+- [x] Verify backend API is already updated with these percentages
+- [ ] Test puzzle generation and validation with new thresholds
+
 ---
 
 ## Phase 2: Game State Management
@@ -97,6 +114,10 @@
 - [x] Implement completion check after each number entry
 - [x] Trigger win state when puzzle is correctly completed
 - [x] Write unit tests for timer and game flow state transitions
+- [ ] [BUG] Fix playtime timer to pause when app goes to background or homescreen
+  - Timer must pause immediately when app enters background
+  - Currently timer continues running in background and only pauses when app reopens
+  - Auto-pause game when user switches apps or goes to homescreen
 
 ### 2.4 Puzzle Manager
 
@@ -229,6 +250,10 @@
 - [x] Display current streak and monthly stats
 - [x] Enable tap to play daily puzzle
 - [x] Test daily puzzle generation and display
+- [ ] [BUG] Fix "Start Game" button on Daily Challenge screen
+  - Button currently does not start the game
+  - Ensure proper navigation to GameView with daily puzzle
+  - Test complete flow from Daily Challenge card to game start
 
 ### 5.5 Profile/Me View
 
@@ -249,6 +274,10 @@
 - [x] Add appearance section with light/dark/auto theme selector
 - [x] Add notification section with daily reminder toggle
 - [x] Wire all settings to UserDefaults persistence
+- [ ] [BUG] Wire up settings button to work during active gameplay
+  - Settings button in game header should open SettingsView
+  - Settings button in pause menu should open SettingsView
+  - Test navigation from both locations
 
 ### 6.2 User Settings Model
 
@@ -395,6 +424,22 @@
 - [x] Test with largest accessibility text sizes
 - [x] Add high contrast support for color-blind users
 
+### 10.6 Notes & Smart Input Enhancements
+
+- [ ] Auto-update notes when values are solved
+  - When user inputs a value in a cell, scan same row and all neighbor cells
+  - Remove that number from notes in all affected cells
+  - Update notes display immediately
+- [ ] Hide invalid options in notes mode when "Hide Invalid Options" is enabled
+  - Apply same validation logic used for number pad to notes display
+  - Gray out or hide invalid note numbers based on column sum constraints
+  - Test with "Hide Invalid Options" toggle on/off
+- [ ] Highlight existing notes when in "notes off" mode
+  - When a cell has existing notes and user is in value entry mode
+  - Display note numbers in a different color (e.g., blue or accent color)
+  - Helps users see which numbers they previously marked as possibilities
+  - Clear visual distinction between empty cells and cells with notes
+
 ---
 
 ## Phase 11: iPad Optimization
@@ -406,6 +451,13 @@
 - [x] Adjust spacing and sizing for larger screens
 - [ ] Test on iPad Mini, iPad Air, iPad Pro
 - [x] Ensure all tap targets are appropriately sized
+- [ ] Add zoom in/out functionality
+  - Implement pinch-to-zoom gesture for touchscreen devices (iPhone/iPad)
+  - Add zoom in/out buttons for non-touchscreen devices (macOS)
+  - Allow grid to scale up to 2x and down to 0.5x
+  - Persist zoom level in UserDefaults
+  - Ensure number pad and toolbar remain accessible at all zoom levels
+  - Test zoom on both iPhone and iPad in portrait/landscape
 
 ### 11.2 Multitasking Support
 
