@@ -1,6 +1,9 @@
 import Combine
 import Foundation
 
+// Note: GameStatistics, Difficulty, GameState, and Achievement are defined in the project
+// but may need explicit imports if in separate modules
+
 /// Service for managing game statistics persistence
 /// Handles recording game completions, updating streaks, and calculating trends
 final class StatisticsManager: ObservableObject {
@@ -38,12 +41,16 @@ final class StatisticsManager: ObservableObject {
     ///   - time: Time taken to complete the game (in seconds)
     ///   - hintsUsed: Number of hints used during the game
     ///   - errors: Number of errors made during the game
+    ///   - gameState: Optional game state for achievement checking
+    /// - Returns: Array of newly unlocked achievements
+    @discardableResult
     func recordGameCompleted(
         difficulty: Difficulty,
         time: TimeInterval,
         hintsUsed: Int = 0,
-        errors: Int = 0
-    ) {
+        errors: Int = 0,
+        gameState: GameState? = nil
+    ) -> [Achievement] {
         statistics.recordGameCompleted(
             difficulty: difficulty,
             time: time,
@@ -51,6 +58,11 @@ final class StatisticsManager: ObservableObject {
             errors: errors
         )
         saveStatistics()
+
+        // Check for newly unlocked achievements after updating statistics
+        let unlockedAchievements = AchievementManager.shared.checkAchievements(gameState: gameState)
+
+        return unlockedAchievements
     }
 
     /// Updates the streak information based on today's play

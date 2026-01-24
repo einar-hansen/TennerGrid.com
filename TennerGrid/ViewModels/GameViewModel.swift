@@ -28,6 +28,9 @@ final class GameViewModel: ObservableObject {
     /// Whether the timer is currently running
     @Published private(set) var isTimerRunning: Bool = false
 
+    /// Newly unlocked achievements (for displaying unlock notifications)
+    @Published private(set) var newlyUnlockedAchievements: [Achievement] = []
+
     // MARK: - Settings (AppStorage)
 
     /// Automatically highlight invalid moves
@@ -807,7 +810,30 @@ final class GameViewModel: ObservableObject {
 
             // Mark game as complete
             gameState.complete()
+
+            // Record completion in statistics and check achievements
+            recordGameCompletion()
         }
+    }
+
+    /// Records the game completion in statistics and checks for unlocked achievements
+    private func recordGameCompletion() {
+        // Record completion in statistics manager
+        let unlockedAchievements = StatisticsManager.shared.recordGameCompleted(
+            difficulty: gameState.puzzle.difficulty,
+            time: gameState.elapsedTime,
+            hintsUsed: gameState.hintsUsed,
+            errors: gameState.errorCount,
+            gameState: gameState
+        )
+
+        // Store newly unlocked achievements for UI display
+        newlyUnlockedAchievements = unlockedAchievements
+    }
+
+    /// Clears the newly unlocked achievements list (call after showing notifications)
+    func clearNewlyUnlockedAchievements() {
+        newlyUnlockedAchievements.removeAll()
     }
 
     // MARK: - Undo/Redo Management
