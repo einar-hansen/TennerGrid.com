@@ -361,7 +361,7 @@
 - [x] Add error shake animation for invalid moves
 - [x] Add cell selection bounce animation
 - [x] Add smooth transitions between screens
-- [ ] Add win celebration confetti or particle effect
+- [x] Add win celebration confetti or particle effect
 
 ### 10.2 Haptic Feedback
 
