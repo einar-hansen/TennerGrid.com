@@ -382,7 +382,7 @@
 ### 10.4 Dark Mode
 
 - [x] Define dark mode color palette in Assets
-- [ ] Test all screens in dark mode
+- [x] Test all screens in dark mode
 - [ ] Ensure sufficient contrast for accessibility
 - [ ] Fix any color/visibility issues
 - [ ] Test dynamic switching between light/dark
