@@ -1,17 +1,17 @@
-2026-01-24 19:07:40.469 xcodebuild[16232:26898571] [MT] IDETestOperationsObserverDebug: 176.412 elapsed -- Testing started completed.
-2026-01-24 19:07:40.469 xcodebuild[16232:26898571] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
-2026-01-24 19:07:40.469 xcodebuild[16232:26898571] [MT] IDETestOperationsObserverDebug: 176.412 sec, +176.412 sec -- end
+2026-01-24 19:37:36.666 xcodebuild[28775:27136944] [MT] IDETestOperationsObserverDebug: 176.247 elapsed -- Testing started completed.
+2026-01-24 19:37:36.666 xcodebuild[28775:27136944] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-01-24 19:37:36.666 xcodebuild[28775:27136944] [MT] IDETestOperationsObserverDebug: 176.247 sec, +176.247 sec -- end
 ** TEST FAILED **
 
 Testing started
-Test suite 'TennerGridUITests' started on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (16600)'
-Test suite 'TennerGridUITestsLaunchTests' started on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (17048)'
-Test case 'TennerGridUITests.testThemeSwitchingWhileNavigating()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (16600)' (45.033 seconds)
-Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (17048)' (6.970 seconds)
-Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (17048)' (5.938 seconds)
-Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (17048)' (6.899 seconds)
-Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (17048)' (5.965 seconds)
-Test case 'TennerGridUITests.testThemePersistence()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (16600)' (26.598 seconds)
-Test case 'TennerGridUITests.testDynamicThemeSwitching()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (16600)' (29.357 seconds)
-Test case 'TennerGridUITests.testCompleteGameFlowWithVoiceOver()' failed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (16600)' (8.968 seconds)
-Test case 'TennerGridUITests.testExample()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (16600)' (3.658 seconds)
+Test suite 'TennerGridUITests' started on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (29141)'
+Test case 'TennerGridUITests.testDynamicThemeSwitching()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (29141)' (38.425 seconds)
+Test suite 'TennerGridUITestsLaunchTests' started on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (29592)'
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (29592)' (6.971 seconds)
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (29592)' (5.032 seconds)
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (29592)' (7.966 seconds)
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 2 of iPhone 17 - TennerGridUITests-Runner (29592)' (5.152 seconds)
+Test case 'TennerGridUITests.testThemeSwitchingWhileNavigating()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (29141)' (38.086 seconds)
+Test case 'TennerGridUITests.testExample()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (29141)' (3.606 seconds)
+Test case 'TennerGridUITests.testThemePersistence()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (29141)' (26.214 seconds)
+Test case 'TennerGridUITests.testCompleteGameFlowWithVoiceOver()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (29141)' (4.798 seconds)
