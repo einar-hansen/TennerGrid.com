@@ -17,6 +17,8 @@ handle_interrupt() {
   pkill -P $$ xcodebuild 2>/dev/null || true
   # Clean up interrupt flag on exit
   rm -f "$INTERRUPT_FLAG" 2>/dev/null || true
+  # Clean up temp file
+  rm -f "$STREAM_TMPFILE" 2>/dev/null || true
   echo -e "${GREEN}[INFO]${NC} Exiting gracefully..."
   exit 130
 }
@@ -42,6 +44,13 @@ BUILD_ERROR_LOG="/tmp/ralph_build_errors.log"
 TEST_OUTPUT="test_output.txt"
 MODEL="sonnet"
 
+# jq filters for streaming output
+STREAM_TEXT='select(.type == "assistant").message.content[]? | select(.type == "text").text // empty | gsub("\n"; "\r\n") | . + "\r\n\n"'
+FINAL_RESULT='select(.type == "result").result // empty'
+
+# Temp file for capturing stream output
+STREAM_TMPFILE="/tmp/ralph_stream_$$"
+
 # Configuration
 XCODE_PROJECT="TennerGrid.xcodeproj"  # Change to your project name
 XCODE_WORKSPACE=""  # Set to "TennerGrid.xcworkspace" if using CocoaPods/SPM
@@ -64,6 +73,29 @@ log_warn() {
 
 log_error() {
   echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to run claude with streaming output
+run_claude_streaming() {
+  local prompt="$1"
+  local tmpfile="$STREAM_TMPFILE"
+
+  # Clean up any existing temp file
+  rm -f "$tmpfile"
+
+  echo "$prompt" | claude \
+    --print \
+    --output-format stream-json \
+    --model "$MODEL" \
+    --permission-mode acceptEdits \
+  | grep --line-buffered '^{' \
+  | tee "$tmpfile" \
+  | jq --unbuffered -rj "$STREAM_TEXT"
+
+  # Return the result for checking
+  if [[ -f "$tmpfile" ]]; then
+    jq -r "$FINAL_RESULT" "$tmpfile" 2>/dev/null || true
+  fi
 }
 
 # Check if tasks file exists
@@ -96,6 +128,7 @@ for i in $(seq 1 "$MAX_ITERATIONS"); do
   # Exit if we've created the completion flag
   if [[ -f "$COMPLETE_FLAG" ]]; then
     log_info "All tasks completed (found $COMPLETE_FLAG). Exiting."
+    rm -f "$STREAM_TMPFILE" 2>/dev/null || true
     exit 0
   fi
 
@@ -194,6 +227,7 @@ PROMPT
     if [[ $UNCOMPLETED_COUNT -eq 0 ]]; then
       log_info "No uncompleted tasks found. Creating completion flag."
       touch "$COMPLETE_FLAG"
+      rm -f "$STREAM_TMPFILE" 2>/dev/null || true
       exit 0
     fi
 
@@ -244,14 +278,11 @@ PROMPT
 
   check_interrupt  # Check before calling agent
 
-  # Call the agent
-  log_info "Calling Claude Code agent... Model $MODEL..."
-  # echo "$AGENT_PROMPT" | claude --print \
-  #   --no-session-persistence \
-  #   --model "$MODEL" \
-  #   --permission-mode acceptEdits
-
-  echo "$AGENT_PROMPT" | claude --model "$MODEL" --permission-mode acceptEdits
+  # Call the agent with streaming output
+  log_info "Calling Claude Code agent... Model $MODEL (streaming)..."
+  echo ""
+  run_claude_streaming "$AGENT_PROMPT"
+  echo ""
 
   check_interrupt  # Check after agent completes
 
@@ -340,12 +371,12 @@ Keep your response concise and actionable. This analysis will be used in the nex
 PROMPT
 )
 
-    # Run Claude to review test output (using print mode for quick analysis)
+    # Run Claude to review test output (using streaming for analysis)
     log_info "Test failure analysis:"
-    echo "$TEST_REVIEW_PROMPT" | claude --print --model "$MODEL" --permission-mode acceptEdits 2>&1 | tee /tmp/test_analysis.txt
-  # echo "$AGENT_PROMPT" | claude --model "$MODEL" --permission-mode acceptEdits
-
     echo ""
+    run_claude_streaming "$TEST_REVIEW_PROMPT" | tee /tmp/test_analysis.txt
+    echo ""
+
     log_warn "Test failures detected. Next iteration will prioritize fixing them."
 
     # Commit current state
@@ -413,6 +444,9 @@ PROMPT
   echo "---"
   echo ""
 done
+
+# Clean up temp file
+rm -f "$STREAM_TMPFILE" 2>/dev/null || true
 
 log_warn "Reached maximum iterations ($MAX_ITERATIONS). Exiting."
 exit 0
