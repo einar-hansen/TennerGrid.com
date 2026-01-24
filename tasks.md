@@ -253,10 +253,10 @@
 ### 6.2 User Settings Model
 
 - [x] Create `UserSettings` model with Codable conformance
-- [ ] Create `SettingsManager` service to save/load settings
+- [x] Create `SettingsManager` service to save/load settings
 - [ ] Add @AppStorage property wrappers for settings in ViewModels
 - [ ] Implement settings observers in GameViewModel
-- [ ] Write unit tests for SettingsManager
+- [x] Write unit tests for SettingsManager
 
 ---
 
