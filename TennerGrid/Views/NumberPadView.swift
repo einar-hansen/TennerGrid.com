@@ -185,6 +185,21 @@ struct NumberPadView: View {
         return selectedValue == number
     }
 
+    /// Checks if a number is in the selected cell's notes
+    /// Used to highlight numbers that were previously marked as possibilities
+    /// - Parameter number: The number to check
+    /// - Returns: True if this number is in the selected cell's notes
+    private func isInNotes(_ number: Int) -> Bool {
+        guard let selected = viewModel.selectedPosition,
+              !viewModel.notesMode  // Only highlight when in value entry mode
+        else {
+            return false
+        }
+
+        let marks = viewModel.marks(at: selected)
+        return marks.contains(number)
+    }
+
     /// Background color for a number button
     /// - Parameter number: The number
     /// - Returns: The background color
@@ -193,16 +208,20 @@ struct NumberPadView: View {
             return Color.themeButtonSecondary
         }
 
-        // Highlight if this is the currently selected cell's value
+        // Highlight if this is the currently selected cell's value (only in non-notes mode)
         // Use a filled blue background to make it stand out prominently
-        if isSelectedNumber(number) {
+        if !viewModel.notesMode && isSelectedNumber(number) {
             return Color.blue
         }
 
-        // Check if this number would be invalid
-        if !viewModel.notesMode,
-           !viewModel.canPlaceValue(number, at: selected)
-        {
+        // Highlight if this number is in the cell's notes (only in value entry mode)
+        // Use a teal/cyan background to indicate these are marked possibilities
+        if isInNotes(number) {
+            return Color.cyan.opacity(0.2)
+        }
+
+        // Check if this number would be invalid (applies in both notes and non-notes mode)
+        if !viewModel.canPlaceValue(number, at: selected) {
             return Color.red.opacity(0.1)
         }
 
@@ -217,16 +236,20 @@ struct NumberPadView: View {
             return Color.themeBorderColor
         }
 
-        // Highlight if this is the currently selected cell's value
+        // Highlight if this is the currently selected cell's value (only in non-notes mode)
         // Use a darker blue border for the selected number
-        if isSelectedNumber(number) {
+        if !viewModel.notesMode && isSelectedNumber(number) {
             return Color.blue.opacity(0.8)
         }
 
-        // Check if this number would be invalid
-        if !viewModel.notesMode,
-           !viewModel.canPlaceValue(number, at: selected)
-        {
+        // Highlight if this number is in the cell's notes (only in value entry mode)
+        // Use a teal/cyan border to indicate these are marked possibilities
+        if isInNotes(number) {
+            return Color.cyan.opacity(0.7)
+        }
+
+        // Check if this number would be invalid (applies in both notes and non-notes mode)
+        if !viewModel.canPlaceValue(number, at: selected) {
             return Color.red.opacity(0.5)
         }
 
@@ -241,16 +264,21 @@ struct NumberPadView: View {
             return .secondary
         }
 
-        // Highlight if this is the currently selected cell's value
+        // Highlight if this is the currently selected cell's value (only in non-notes mode)
         // Use white text on the filled blue background for better contrast
-        if isSelectedNumber(number) {
+        if !viewModel.notesMode && isSelectedNumber(number) {
             return .white
         }
 
+        // Highlight if this number is in the cell's notes (only in value entry mode)
+        // Use a teal/cyan text to indicate these are marked possibilities
+        if isInNotes(number) {
+            return Color.cyan.opacity(0.9)
+        }
+
         // Check if this number would be invalid (dim the text)
-        if !viewModel.notesMode,
-           !viewModel.canPlaceValue(number, at: selected)
-        {
+        // Apply this in both notes and non-notes mode
+        if !viewModel.canPlaceValue(number, at: selected) {
             return .red.opacity(0.6)
         }
 
@@ -265,29 +293,27 @@ struct NumberPadView: View {
             return false
         }
 
-        // Don't disable in notes mode
-        if viewModel.notesMode {
-            return false
-        }
-
         // Check if cell is editable
         guard viewModel.isEditable(at: selected) else {
             return true
         }
 
-        // Don't disable if cell already has this value
-        if let currentValue = viewModel.value(at: selected),
+        // Don't disable if cell already has this value (for non-notes mode)
+        if !viewModel.notesMode,
+           let currentValue = viewModel.value(at: selected),
            currentValue == number
         {
             return false
         }
 
         // Check if this placement would exceed the column's remaining sum
+        // Apply this check in both notes mode and regular mode
         if viewModel.wouldExceedColumnSum(number, at: selected) {
             return true
         }
 
         // Check if this placement would be invalid (violates game rules)
+        // Apply this check in both notes mode and regular mode
         return !viewModel.canPlaceValue(number, at: selected)
     }
 

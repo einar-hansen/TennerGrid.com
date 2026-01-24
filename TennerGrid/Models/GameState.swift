@@ -190,6 +190,21 @@ extension GameState {
         setPencilMarks(marks, at: position)
     }
 
+    /// Removes a pencil mark from a position (if it exists)
+    /// - Parameters:
+    ///   - mark: The mark to remove (0-9)
+    ///   - position: The cell position
+    mutating func removePencilMark(_ mark: Int, at position: CellPosition) {
+        guard mark >= 0, mark <= 9 else { return }
+        guard puzzle.isValidPosition(position) else { return }
+
+        var marks = marks(at: position)
+        if marks.contains(mark) {
+            marks.remove(mark)
+            setPencilMarks(marks, at: position)
+        }
+    }
+
     /// Clears a cell (value and pencil marks)
     /// - Parameter position: The cell position
     mutating func clearCell(at position: CellPosition) {

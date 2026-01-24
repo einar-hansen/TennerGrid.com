@@ -326,6 +326,9 @@ final class GameViewModel: ObservableObject {
                 // Place the number
                 gameState.setValue(value, at: position)
 
+                // Auto-update notes in affected cells (same row and neighbors)
+                updateNotesAfterValueEntry(value: value, at: position)
+
                 // Record action
                 let action = GameAction.setValue(
                     at: position,
@@ -407,6 +410,52 @@ final class GameViewModel: ObservableObject {
 
         // Auto-save after cell clear
         saveIfNeeded()
+    }
+
+    /// Updates notes in affected cells after a value is entered
+    /// Removes the entered value from notes in cells in the same row and neighbor cells
+    /// - Parameters:
+    ///   - value: The value that was entered
+    ///   - position: The position where the value was entered
+    private func updateNotesAfterValueEntry(value: Int, at position: CellPosition) {
+        var affectedPositions = Set<CellPosition>()
+
+        // Add all cells in the same row
+        for col in 0..<gameState.puzzle.columns {
+            let rowPosition = CellPosition(row: position.row, column: col)
+            if rowPosition != position {
+                affectedPositions.insert(rowPosition)
+            }
+        }
+
+        // Add all neighbor cells (including diagonals)
+        for rowOffset in -1...1 {
+            for colOffset in -1...1 {
+                // Skip the center cell (the one we just filled)
+                if rowOffset == 0 && colOffset == 0 {
+                    continue
+                }
+
+                let neighborRow = position.row + rowOffset
+                let neighborCol = position.column + colOffset
+
+                // Check bounds
+                if neighborRow >= 0 && neighborRow < gameState.puzzle.rows &&
+                   neighborCol >= 0 && neighborCol < gameState.puzzle.columns {
+                    let neighborPosition = CellPosition(row: neighborRow, column: neighborCol)
+                    affectedPositions.insert(neighborPosition)
+                }
+            }
+        }
+
+        // Remove the value from notes in all affected cells
+        for affectedPosition in affectedPositions {
+            // Only update if the cell has notes with this value
+            let marks = gameState.marks(at: affectedPosition)
+            if marks.contains(value) {
+                gameState.removePencilMark(value, at: affectedPosition)
+            }
+        }
     }
 
     // MARK: - Notes Mode
@@ -1318,6 +1367,16 @@ final class GameViewModel: ObservableObject {
         if !gameState.isPaused, !gameState.isCompleted {
             startTimer()
         }
+    }
+
+    /// Stops the timer without pausing the game state
+    /// Used when app becomes inactive (e.g., app switcher) but hasn't fully backgrounded yet
+    func pauseTimerWithoutPausingGame() {
+        // Update one last time before pausing
+        updateTimer()
+
+        // Stop the timer but don't change game state
+        stopTimer()
     }
 
     /// Disables auto-save (for testing purposes)

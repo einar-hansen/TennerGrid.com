@@ -200,29 +200,17 @@ struct GameView: View {
         .transition(.opacity)
     }
 
-    /// Placeholder for settings view (to be implemented in Phase 6)
+    /// Settings view with close button
     private var settingsPlaceholder: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Image(systemName: "gearshape")
-                    .font(.system(size: 48))
-                    .foregroundColor(.secondary)
-
-                Text("Settings")
-                    .font(.title)
-
-                Text("Coming soon...")
-                    .foregroundColor(.secondary)
-            }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
-                        showingSettings = false
+            SettingsView()
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Done") {
+                            showingSettings = false
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -318,12 +306,17 @@ private struct ScenePhaseModifier: ViewModifier {
             previousPhase = .background
         case .active:
             // App is becoming active - resume if needed
-            if previousPhase == .background {
+            if previousPhase == .background || previousPhase == .inactive {
                 viewModel.handleAppForeground()
             }
             previousPhase = .active
         case .inactive:
-            // App is inactive (e.g., during transition) - do nothing
+            // App is inactive (e.g., user pressed home or opened app switcher)
+            // Pause timer immediately to prevent time from elapsing while not actively playing
+            // Don't change game pause state - user can still resume when returning to active
+            if viewModel.isTimerRunning {
+                viewModel.pauseTimerWithoutPausingGame()
+            }
             previousPhase = .inactive
         @unknown default:
             break

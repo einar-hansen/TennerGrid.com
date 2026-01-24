@@ -14,6 +14,9 @@ struct TabBarView: View {
     /// User's theme preference from settings
     @AppStorage("themePreference") private var themePreference = ThemePreference.system.rawValue
 
+    /// Game view model for daily challenge (presented as full screen cover)
+    @State private var dailyChallengeViewModel: GameViewModel?
+
     // MARK: - Tab Enumeration
 
     /// Available tabs in the app
@@ -59,6 +62,20 @@ struct TabBarView: View {
             profileTab
         }
         .preferredColorScheme(selectedColorScheme)
+        .fullScreenCover(isPresented: Binding(
+            get: { dailyChallengeViewModel != nil },
+            set: { if !$0 { dailyChallengeViewModel = nil } }
+        )) {
+            if let viewModel = dailyChallengeViewModel {
+                GameView(viewModel: viewModel)
+                    .onQuit {
+                        dailyChallengeViewModel = nil
+                    }
+                    .onNewGame {
+                        dailyChallengeViewModel = nil
+                    }
+            }
+        }
     }
 
     // MARK: - Computed Properties
@@ -66,6 +83,17 @@ struct TabBarView: View {
     /// Converts the stored theme preference string to a ColorScheme
     private var selectedColorScheme: ColorScheme? {
         ThemePreference(rawValue: themePreference)?.colorScheme
+    }
+
+    // MARK: - Navigation Actions
+
+    /// Handles playing a daily challenge for a specific date
+    /// - Parameter date: The date for the daily challenge
+    private func handleDailyChallenge(for date: Date) {
+        guard let puzzle = puzzleManager.dailyPuzzle(for: date) else {
+            return
+        }
+        dailyChallengeViewModel = GameViewModel(puzzle: puzzle)
     }
 
     // MARK: - Tab Views
@@ -82,11 +110,16 @@ struct TabBarView: View {
 
     /// Daily challenges tab showing calendar and streak tracking
     private var dailyChallengesTab: some View {
-        DailyChallengesView()
-            .tabItem {
-                Label(Tab.dailyChallenges.title, systemImage: Tab.dailyChallenges.icon)
+        DailyChallengesView(
+            puzzleManager: puzzleManager,
+            onPlayDaily: { date in
+                handleDailyChallenge(for: date)
             }
-            .tag(Tab.dailyChallenges)
+        )
+        .tabItem {
+            Label(Tab.dailyChallenges.title, systemImage: Tab.dailyChallenges.icon)
+        }
+        .tag(Tab.dailyChallenges)
     }
 
     /// Profile/Me tab with settings, stats, and achievements

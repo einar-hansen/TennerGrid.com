@@ -79,13 +79,13 @@
 
 ### 1.6 Difficulty Configuration Update
 
-- [ ] Update difficulty thresholds to match backend API:
+- [x] Update difficulty thresholds to match backend API:
   - Easy = 55% (update from current value)
   - Medium = 45%
   - Hard = 35%
   - Extreme = 25%
 - [x] Verify backend API is already updated with these percentages
-- [ ] Test puzzle generation and validation with new thresholds
+- [x] Test puzzle generation and validation with new thresholds
 
 ---
 
@@ -114,7 +114,7 @@
 - [x] Implement completion check after each number entry
 - [x] Trigger win state when puzzle is correctly completed
 - [x] Write unit tests for timer and game flow state transitions
-- [ ] [BUG] Fix playtime timer to pause when app goes to background or homescreen
+- [x] [BUG] Fix playtime timer to pause when app goes to background or homescreen
   - Timer must pause immediately when app enters background
   - Currently timer continues running in background and only pauses when app reopens
   - Auto-pause game when user switches apps or goes to homescreen
@@ -250,7 +250,7 @@
 - [x] Display current streak and monthly stats
 - [x] Enable tap to play daily puzzle
 - [x] Test daily puzzle generation and display
-- [ ] [BUG] Fix "Start Game" button on Daily Challenge screen
+- [x] [BUG] Fix "Start Game" button on Daily Challenge screen
   - Button currently does not start the game
   - Ensure proper navigation to GameView with daily puzzle
   - Test complete flow from Daily Challenge card to game start
@@ -274,7 +274,7 @@
 - [x] Add appearance section with light/dark/auto theme selector
 - [x] Add notification section with daily reminder toggle
 - [x] Wire all settings to UserDefaults persistence
-- [ ] [BUG] Wire up settings button to work during active gameplay
+- [x] [BUG] Wire up settings button to work during active gameplay
   - Settings button in game header should open SettingsView
   - Settings button in pause menu should open SettingsView
   - Test navigation from both locations
@@ -426,17 +426,17 @@
 
 ### 10.6 Notes & Smart Input Enhancements
 
-- [ ] Auto-update notes when values are solved
+- [x] Auto-update notes when values are solved
   - When user inputs a value in a cell, scan same row and all neighbor cells
   - Remove that number from notes in all affected cells
   - Update notes display immediately
-- [ ] Hide invalid options in notes mode when "Hide Invalid Options" is enabled
+- [x] Hide invalid options in notes mode when "Hide Invalid Options" is enabled
   - Apply same validation logic used for number pad to notes display
   - Gray out or hide invalid note numbers based on column sum constraints
   - Test with "Hide Invalid Options" toggle on/off
-- [ ] Highlight existing notes when in "notes off" mode
+- [x] Highlight existing notes when in "notes off" mode
   - When a cell has existing notes and user is in value entry mode
-  - Display note numbers in a different color (e.g., blue or accent color)
+  - Display note numbers in a different color (cyan/teal) to highlight them
   - Helps users see which numbers they previously marked as possibilities
   - Clear visual distinction between empty cells and cells with notes
 
