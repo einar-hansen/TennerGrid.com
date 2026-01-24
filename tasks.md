@@ -381,7 +381,7 @@
 
 ### 10.4 Dark Mode
 
-- [ ] Define dark mode color palette in Assets
+- [x] Define dark mode color palette in Assets
 - [ ] Test all screens in dark mode
 - [ ] Ensure sufficient contrast for accessibility
 - [ ] Fix any color/visibility issues
