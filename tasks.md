@@ -385,7 +385,7 @@
 - [x] Test all screens in dark mode
 - [x] Ensure sufficient contrast for accessibility
 - [x] Fix any color/visibility issues
-- [ ] Test dynamic switching between light/dark
+- [x] Test dynamic switching between light/dark
 
 ### 10.5 Accessibility
 
