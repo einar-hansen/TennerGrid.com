@@ -1446,8 +1446,8 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertTrue(newViewModel.isTimerRunning)
         XCTAssertFalse(newViewModel.gameState.isPaused)
 
-        // Wait briefly for timer to tick
-        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        // Wait longer for timer to tick reliably - timer fires every 0.1s
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
 
         // Time should have increased
         XCTAssertGreaterThan(newViewModel.elapsedTime, timeAfterPause + 0.05)
