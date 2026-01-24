@@ -25,6 +25,9 @@ struct UserSettings: Codable, Equatable {
     /// User's preferred theme (light, dark, or system)
     var themePreference: String
 
+    /// Enable high contrast mode for better accessibility (useful for color-blind users)
+    var highContrastMode: Bool
+
     // MARK: - Notification Settings
 
     /// Enable daily reminder notifications
@@ -40,6 +43,7 @@ struct UserSettings: Codable, Equatable {
         hapticFeedback: Bool = true,
         soundEffects: Bool = true,
         themePreference: String = "system",
+        highContrastMode: Bool = false,
         dailyReminder: Bool = false
     ) {
         self.autoCheckErrors = autoCheckErrors
@@ -48,6 +52,7 @@ struct UserSettings: Codable, Equatable {
         self.hapticFeedback = hapticFeedback
         self.soundEffects = soundEffects
         self.themePreference = themePreference
+        self.highContrastMode = highContrastMode
         self.dailyReminder = dailyReminder
     }
 }
@@ -66,6 +71,7 @@ extension UserSettings {
         hapticFeedback: true,
         soundEffects: true,
         themePreference: "system",
+        highContrastMode: true,
         dailyReminder: true
     )
 
@@ -77,6 +83,7 @@ extension UserSettings {
         hapticFeedback: false,
         soundEffects: false,
         themePreference: "system",
+        highContrastMode: false,
         dailyReminder: false
     )
 }

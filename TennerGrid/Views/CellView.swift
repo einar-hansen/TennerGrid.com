@@ -13,6 +13,9 @@ struct CellView: View {
     /// Action to perform when the cell is tapped
     let onTap: () -> Void
 
+    /// High contrast mode setting for accessibility
+    @AppStorage("highContrastMode") private var highContrastMode = false
+
     // MARK: - Animation State
 
     /// Scale factor for number entry animation
@@ -31,6 +34,7 @@ struct CellView: View {
 
     private let borderWidth: CGFloat = 1
     private let selectedBorderWidth: CGFloat = 3
+    private let highContrastBorderWidth: CGFloat = 2.5
     private let cornerRadius: CGFloat = 4
 
     /// Font size scales with cell size
@@ -53,7 +57,12 @@ struct CellView: View {
 
             // Border
             RoundedRectangle(cornerRadius: cornerRadius)
-                .strokeBorder(borderColor, lineWidth: cell.isSelected ? selectedBorderWidth : borderWidth)
+                .strokeBorder(borderColor, lineWidth: effectiveBorderWidth)
+
+            // High contrast pattern overlay (adds visual patterns for better distinction)
+            if highContrastMode {
+                highContrastPatternOverlay
+            }
 
             // Content
             if let value = cell.value {
@@ -163,7 +172,75 @@ struct CellView: View {
         }
     }
 
+    // MARK: - Computed Properties
+
+    /// Effective border width based on cell state and high contrast mode
+    private var effectiveBorderWidth: CGFloat {
+        if cell.isSelected {
+            selectedBorderWidth
+        } else if highContrastMode, cell.hasError || cell.isSameNumber || cell.isNeighbor {
+            highContrastBorderWidth
+        } else {
+            borderWidth
+        }
+    }
+
     // MARK: - Subviews
+
+    /// Pattern overlay for high contrast mode (adds visual patterns to distinguish cell states)
+    @ViewBuilder
+    private var highContrastPatternOverlay: some View {
+        if cell.hasError {
+            // Diagonal stripes for errors
+            diagonalStripesPattern
+                .foregroundColor(Color.highContrastErrorBorder.opacity(0.1))
+        } else if cell.isNeighbor {
+            // Dots pattern for neighbors
+            dotsPattern
+                .foregroundColor(Color.highContrastNeighborBackground.opacity(0.3))
+        }
+    }
+
+    /// Diagonal stripes pattern for error state
+    private var diagonalStripesPattern: some View {
+        GeometryReader { geometry in
+            Path { path in
+                let stripeWidth: CGFloat = 2
+                let spacing: CGFloat = 6
+                let size = geometry.size
+
+                // Draw diagonal stripes from top-left to bottom-right
+                var x: CGFloat = -size.height
+                while x < size.width {
+                    path.move(to: CGPoint(x: x, y: 0))
+                    path.addLine(to: CGPoint(x: x + size.height, y: size.height))
+                    x += spacing
+                }
+            }
+            .stroke(lineWidth: 1.5)
+        }
+    }
+
+    /// Dots pattern for neighbor state
+    private var dotsPattern: some View {
+        GeometryReader { geometry in
+            let dotSize: CGFloat = 2
+            let spacing: CGFloat = 8
+            let columns = Int(geometry.size.width / spacing)
+            let rows = Int(geometry.size.height / spacing)
+
+            Canvas { context, size in
+                for row in 0 ..< rows {
+                    for col in 0 ..< columns {
+                        let x = CGFloat(col) * spacing + spacing / 2
+                        let y = CGFloat(row) * spacing + spacing / 2
+                        let rect = CGRect(x: x - dotSize / 2, y: y - dotSize / 2, width: dotSize, height: dotSize)
+                        context.fill(Path(ellipseIn: rect), with: .color(Color.highContrastNeighborBackground))
+                    }
+                }
+            }
+        }
+    }
 
     /// View displaying pencil marks in a 2x5 grid (matching number pad layout)
     private var pencilMarksView: some View {
@@ -212,19 +289,19 @@ struct CellView: View {
     private var backgroundColor: Color {
         if cell.hasError {
             // Error state: red tint to indicate invalid placement
-            Color.red.opacity(0.2)
+            highContrastMode ? Color.highContrastErrorBackground : Color.red.opacity(0.2)
         } else if cell.isSelected {
             // Selected state: prominent blue background
-            Color.blue.opacity(0.15)
+            highContrastMode ? Color.highContrastSelectedBackground : Color.blue.opacity(0.15)
         } else if cell.isSameNumber {
             // Same-number state: yellow/amber tint for cells with matching value
-            Color.yellow.opacity(0.12)
+            highContrastMode ? Color.highContrastSameNumberBackground : Color.yellow.opacity(0.12)
         } else if cell.isNeighbor {
             // Neighbor state: purple/indigo tint for adjacent cells (constraint helper)
-            Color.purple.opacity(0.12)
+            highContrastMode ? Color.highContrastNeighborBackground : Color.purple.opacity(0.12)
         } else if cell.isHighlighted {
             // Highlighted state: subtle blue tint for related cells (e.g., same row/column)
-            Color.blue.opacity(0.08)
+            highContrastMode ? Color.highContrastHighlightedBackground : Color.blue.opacity(0.08)
         } else if cell.isInitial {
             // Initial/pre-filled state: subtle background to distinguish from user entries
             Color.themeCellInitialBackground
@@ -238,10 +315,10 @@ struct CellView: View {
     private var borderColor: Color {
         if cell.hasError {
             // Error state: red border
-            .red
+            highContrastMode ? Color.highContrastErrorBorder : .red
         } else if cell.isSelected {
             // Selected state: blue border
-            .blue
+            highContrastMode ? Color.highContrastSelectedBorder : .blue
         } else {
             // Default state: subtle border
             Color.themeBorderColor
@@ -252,13 +329,13 @@ struct CellView: View {
     private var textColor: Color {
         if cell.hasError {
             // Error state: red text
-            .red
+            highContrastMode ? Color.highContrastErrorText : .red
         } else if cell.isInitial {
             // Initial/pre-filled: primary color (adapts to light/dark mode)
             .primary
         } else {
             // User-entered: blue to distinguish from pre-filled
-            .blue
+            highContrastMode ? Color.highContrastUserEnteredText : .blue
         }
     }
 

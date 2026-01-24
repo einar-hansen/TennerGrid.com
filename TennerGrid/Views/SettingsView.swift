@@ -15,6 +15,7 @@ struct SettingsView: View {
     // MARK: - Appearance Settings
 
     @AppStorage("themePreference") private var themePreference = ThemePreference.system.rawValue
+    @AppStorage("highContrastMode") private var highContrastMode = false
 
     // MARK: - Notification Settings
 
@@ -128,12 +129,27 @@ struct SettingsView: View {
                 }
             }
             .pickerStyle(.inline)
+
+            highContrastModeToggle
         } header: {
             Text("Appearance")
         } footer: {
-            Text("Choose your preferred app theme")
+            Text("High contrast mode uses patterns and shapes in addition to colors for better visibility")
                 .font(.caption)
         }
+    }
+
+    private var highContrastModeToggle: some View {
+        Toggle(isOn: $highContrastMode) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("High Contrast Mode")
+                    .font(.system(size: 16, weight: .medium))
+                Text("Enhanced colors and visual patterns for better accessibility")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .tint(.blue)
     }
 
     /// Notification section with daily reminder toggle
