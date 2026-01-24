@@ -854,6 +854,9 @@ final class GameViewModel: ObservableObject {
             // Mark game as complete
             gameState.complete()
 
+            // Provide success haptic feedback for puzzle completion
+            HapticManager.shared.success()
+
             // Record completion in statistics and check achievements
             recordGameCompletion()
         }
