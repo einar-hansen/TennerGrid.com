@@ -309,7 +309,7 @@
 
 ### 8.3 Achievements System
 
-- [ ] Define achievement list with 10-15 achievements
+- [x] Define achievement list with 10-15 achievements
 - [ ] Create `AchievementManager` service to check conditions
 - [ ] Implement achievement unlock logic
 - [ ] Add persistence for achievement status
