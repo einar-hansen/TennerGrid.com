@@ -103,7 +103,7 @@ struct ProfileView: View {
 
     private var howToPlayLink: some View {
         NavigationLink {
-            howToPlayPlaceholder
+            HowToPlayView()
         } label: {
             HStack(spacing: 12) {
                 sectionIcon("book.fill", color: .green)

@@ -272,11 +272,11 @@
 
 ### 7.2 How to Play View
 
-- [ ] Create `HowToPlayView` with detailed strategy guide
-- [ ] Add sections: Basic Rules, Tips & Tricks, Advanced Strategies
-- [ ] Include interactive examples (optional)
-- [ ] Add "Start Tutorial" button
-- [ ] Make accessible from Me → How to Play
+- [x] Create `HowToPlayView` with detailed strategy guide
+- [x] Add sections: Basic Rules, Tips & Tricks, Advanced Strategies
+- [x] Include interactive examples (optional)
+- [x] Add "Start Tutorial" button
+- [x] Make accessible from Me → How to Play
 
 ### 7.3 First Launch Tutorial
 
