@@ -280,7 +280,7 @@
 
 ### 7.3 First Launch Tutorial
 
-- [ ] Create `OnboardingView` with 3-5 page carousel
+- [x] Create `OnboardingView` with 3-5 page carousel
 - [ ] Page 1: Welcome and game overview
 - [ ] Page 2: Basic rules with visuals
 - [ ] Page 3: How to play (controls)
