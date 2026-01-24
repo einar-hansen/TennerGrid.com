@@ -2799,7 +2799,11 @@ final class GameViewModelTests: XCTestCase {
         SettingsManager.shared.updateSettings(initialSettings)
 
         // Wait a moment for the setting to take effect
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        let initialExpectation = XCTestExpectation(description: "Initial settings should propagate")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            initialExpectation.fulfill()
+        }
+        wait(for: [initialExpectation], timeout: 1.0)
 
         // Create an invalid placement to generate conflicts
         let position = CellPosition(row: 0, column: 1)
@@ -2817,21 +2821,13 @@ final class GameViewModelTests: XCTestCase {
         SettingsManager.shared.updateSettings(settings)
 
         // Wait for the observer to fire and process the change
-        // Combine publishers fire on the next run loop cycle
-        let expectation = XCTestExpectation(description: "Settings observer should update")
-
-        // Poll until conflicts are cleared or timeout
-        var attempts = 0
-        let maxAttempts = 50  // 5 seconds total
-        while !viewModel.conflictingPositions.isEmpty && attempts < maxAttempts {
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-            attempts += 1
+        let expectation = XCTestExpectation(description: "Settings observer should clear conflicts")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            if self.viewModel.conflictingPositions.isEmpty {
+                expectation.fulfill()
+            }
         }
-
-        if viewModel.conflictingPositions.isEmpty {
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 0.1)
+        wait(for: [expectation], timeout: 2.0)
 
         // Conflicts should be cleared
         XCTAssertTrue(viewModel.conflictingPositions.isEmpty, "Conflicts should be cleared when autoCheckErrors is off")
