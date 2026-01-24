@@ -224,10 +224,10 @@
 
 ### 5.4 Daily Challenges View
 
-- [ ] Create `DailyChallengesView` with calendar-style layout
-- [ ] Show completion status for each day
-- [ ] Display current streak and monthly stats
-- [ ] Enable tap to play daily puzzle
+- [x] Create `DailyChallengesView` with calendar-style layout
+- [x] Show completion status for each day
+- [x] Display current streak and monthly stats
+- [x] Enable tap to play daily puzzle
 - [ ] Test daily puzzle generation and display
 
 ### 5.5 Profile/Me View
