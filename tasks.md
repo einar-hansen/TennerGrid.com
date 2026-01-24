@@ -329,11 +329,11 @@
 
 ### 9.1 Local Persistence Setup
 
-- [ ] [COMPLEX] Choose persistence approach: SwiftData (iOS 17+) or Codable + FileManager
-- [ ] [COMPLEX] Create persistence schema for SavedGame, Statistics, Achievements, Settings
-- [ ] [COMPLEX] Implement migration strategy for schema updates
-- [ ] Set up proper file paths and directories
-- [ ] Write unit tests for persistence layer
+- [x] [COMPLEX] Choose persistence approach: SwiftData (iOS 17+) or Codable + FileManager
+- [x] [COMPLEX] Create persistence schema for SavedGame, Statistics, Achievements, Settings
+- [x] [COMPLEX] Implement migration strategy for schema updates
+- [x] Set up proper file paths and directories
+- [x] Write unit tests for persistence layer
 
 ### 9.2 Persistence Manager
 
