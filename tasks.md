@@ -374,10 +374,10 @@
 ### 10.3 Sound Effects
 
 - [x] Add sound assets: click, error, success, button tap
-- [ ] Create `SoundManager` service with AVFoundation
-- [ ] Implement sound playback methods
-- [ ] Respect sound toggle in settings
-- [ ] Preload sounds for better performance
+- [x] Create `SoundManager` service with AVFoundation
+- [x] Implement sound playback methods
+- [x] Respect sound toggle in settings
+- [x] Preload sounds for better performance
 
 ### 10.4 Dark Mode
 
