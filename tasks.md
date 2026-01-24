@@ -264,11 +264,11 @@
 
 ### 7.1 Rules View
 
-- [ ] Create `RulesView` with visual examples of each rule
-- [ ] Rule 1: No adjacent identical numbers (show diagram)
-- [ ] Rule 2: No duplicates in rows (show diagram)
-- [ ] Rule 3: Column sums must match target (show example)
-- [ ] Make accessible from Me → Rules
+- [x] Create `RulesView` with visual examples of each rule
+- [x] Rule 1: No adjacent identical numbers (show diagram)
+- [x] Rule 2: No duplicates in rows (show diagram)
+- [x] Rule 3: Column sums must match target (show example)
+- [x] Make accessible from Me → Rules
 
 ### 7.2 How to Play View
 
