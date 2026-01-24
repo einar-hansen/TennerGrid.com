@@ -101,13 +101,14 @@ final class TennerGridUITests: XCTestCase {
 
         // Verify game header elements
         XCTAssertTrue(app.buttons["PauseButton"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "\\d{2}:\\d{2}")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "\\d{2}:\\d{2}")).firstMatch
+            .exists)
 
         // Verify grid is visible
         XCTAssertTrue(app.otherElements["GameGrid"].exists)
 
         // Verify number pad
-        for number in 0...9 {
+        for number in 0 ... 9 {
             XCTAssertTrue(app.buttons["NumberButton_\(number)"].exists)
         }
 
@@ -140,7 +141,8 @@ final class TennerGridUITests: XCTestCase {
 
         // Go back to home
         app.buttons["PauseButton"].tap()
-        let quitButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Quit' OR label CONTAINS 'Home'")).firstMatch
+        let quitButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Quit' OR label CONTAINS 'Home'"))
+            .firstMatch
         if quitButton.exists {
             quitButton.tap()
         }
@@ -172,7 +174,7 @@ final class TennerGridUITests: XCTestCase {
 
         // Verify daily challenges view
         XCTAssertTrue(app.staticTexts["Daily Challenges"].waitForExistence(timeout: 2) ||
-                     app.navigationBars["Daily Challenges"].exists)
+            app.navigationBars["Daily Challenges"].exists)
 
         // Verify calendar or list of challenges exists
         XCTAssertTrue(app.scrollViews.firstMatch.exists || app.collectionViews.firstMatch.exists)
@@ -185,11 +187,13 @@ final class TennerGridUITests: XCTestCase {
 
         // Verify profile sections
         XCTAssertTrue(app.staticTexts["Me"].waitForExistence(timeout: 2) ||
-                     app.navigationBars["Me"].exists)
+            app.navigationBars["Me"].exists)
 
         // Verify main sections exist
         XCTAssertTrue(app.buttons.containing(NSPredicate(format: "label CONTAINS 'Statistics'")).firstMatch.exists)
-        XCTAssertTrue(app.buttons.containing(NSPredicate(format: "label CONTAINS 'Achievements' OR label CONTAINS 'Awards'")).firstMatch.exists)
+        XCTAssertTrue(app.buttons
+            .containing(NSPredicate(format: "label CONTAINS 'Achievements' OR label CONTAINS 'Awards'")).firstMatch
+            .exists)
     }
 
     @MainActor
@@ -202,10 +206,11 @@ final class TennerGridUITests: XCTestCase {
 
         // Verify statistics view
         XCTAssertTrue(app.staticTexts["Statistics"].waitForExistence(timeout: 2) ||
-                     app.navigationBars["Statistics"].exists)
+            app.navigationBars["Statistics"].exists)
 
         // Verify stats are displayed
-        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS 'Games' OR label CONTAINS 'Time'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS 'Games' OR label CONTAINS 'Time'"))
+            .firstMatch.exists)
 
         // Go back
         app.navigationBars.buttons.firstMatch.tap()
@@ -217,11 +222,16 @@ final class TennerGridUITests: XCTestCase {
         app.tabBars.buttons["Me"].tap()
 
         // Tap Achievements/Awards
-        app.buttons.containing(NSPredicate(format: "label CONTAINS 'Achievements' OR label CONTAINS 'Awards'")).firstMatch.tap()
+        app.buttons.containing(NSPredicate(format: "label CONTAINS 'Achievements' OR label CONTAINS 'Awards'"))
+            .firstMatch.tap()
 
         // Verify achievements view
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Achievement' OR label CONTAINS 'Award'")).firstMatch.waitForExistence(timeout: 2) ||
-                     app.navigationBars.matching(NSPredicate(format: "identifier CONTAINS 'Achievement' OR identifier CONTAINS 'Award'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts
+            .matching(NSPredicate(format: "label CONTAINS 'Achievement' OR label CONTAINS 'Award'")).firstMatch
+            .waitForExistence(timeout: 2) ||
+            app.navigationBars
+            .matching(NSPredicate(format: "identifier CONTAINS 'Achievement' OR identifier CONTAINS 'Award'"))
+            .firstMatch.exists)
 
         // Verify achievement cards exist
         XCTAssertTrue(app.scrollViews.firstMatch.exists || app.collectionViews.firstMatch.exists)
@@ -240,10 +250,14 @@ final class TennerGridUITests: XCTestCase {
 
         // Verify rules view
         XCTAssertTrue(app.staticTexts["Rules"].waitForExistence(timeout: 2) ||
-                     app.navigationBars["Rules"].exists)
+            app.navigationBars["Rules"].exists)
 
         // Verify rule descriptions exist
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'adjacent' OR label CONTAINS 'duplicate' OR label CONTAINS 'sum'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts
+            .matching(
+                NSPredicate(format: "label CONTAINS 'adjacent' OR label CONTAINS 'duplicate' OR label CONTAINS 'sum'")
+            )
+            .firstMatch.exists)
 
         // Go back
         app.navigationBars.buttons.firstMatch.tap()
@@ -259,7 +273,7 @@ final class TennerGridUITests: XCTestCase {
 
         // Verify how to play view
         XCTAssertTrue(app.staticTexts["How to Play"].waitForExistence(timeout: 2) ||
-                     app.navigationBars["How to Play"].exists)
+            app.navigationBars["How to Play"].exists)
 
         // Verify content exists
         XCTAssertTrue(app.scrollViews.firstMatch.exists)
