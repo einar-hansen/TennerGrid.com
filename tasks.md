@@ -297,7 +297,7 @@
 - [x] Show: total games, win rate, total time, average time
 - [x] Add by-difficulty breakdown with charts
 - [x] Show streak information with calendar view
-- [ ] Wire to StatisticsManager service
+- [x] Wire to StatisticsManager service
 
 ### 8.2 Statistics Manager
 

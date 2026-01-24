@@ -5,14 +5,18 @@ import SwiftUI
 struct StatisticsView: View {
     // MARK: - Properties
 
-    /// Sample statistics for preview/testing
-    /// In production, this would come from a StatisticsManager
-    @State private var statistics: GameStatistics
+    /// Statistics manager for real-time statistics data
+    @ObservedObject private var statisticsManager: StatisticsManager
 
     // MARK: - Initialization
 
-    init(statistics: GameStatistics = .new()) {
-        self.statistics = statistics
+    init(statisticsManager: StatisticsManager = .shared) {
+        self.statisticsManager = statisticsManager
+    }
+
+    /// Computed property for accessing current statistics
+    private var statistics: GameStatistics {
+        statisticsManager.statistics
     }
 
     // MARK: - Body
@@ -297,19 +301,19 @@ struct StatisticsView: View {
 
 #Preview("Empty Statistics") {
     NavigationStack {
-        StatisticsView(statistics: .new())
+        StatisticsView()
     }
 }
 
 #Preview("Statistics with Data") {
     NavigationStack {
-        StatisticsView(statistics: sampleStatistics())
+        StatisticsView()
     }
 }
 
 #Preview("Statistics - Dark Mode") {
     NavigationStack {
-        StatisticsView(statistics: sampleStatistics())
+        StatisticsView()
     }
     .preferredColorScheme(.dark)
 }
