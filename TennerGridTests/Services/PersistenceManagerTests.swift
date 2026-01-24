@@ -99,13 +99,26 @@ final class PersistenceManagerTests: XCTestCase {
         // 5. Game state should be restored
 
         // Step 1 & 2: Create and save game state (simulating auto-save)
-        let puzzle = TestFixtures.mediumPuzzle
+        let puzzle = TestFixtures.easyPuzzle
         var gameState = GameState(puzzle: puzzle)
 
-        // Simulate some gameplay
-        gameState.setValue(3, at: CellPosition(row: 0, column: 0))
-        gameState.setValue(7, at: CellPosition(row: 0, column: 1))
-        gameState.setValue(5, at: CellPosition(row: 1, column: 0))
+        // Find empty cells to fill (avoid pre-filled cells)
+        var testPositions: [CellPosition] = []
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
+                let pos = CellPosition(row: row, column: col)
+                if puzzle.initialGrid[row][col] == nil {
+                    testPositions.append(pos)
+                    if testPositions.count >= 3 { break }
+                }
+            }
+            if testPositions.count >= 3 { break }
+        }
+
+        // Simulate some gameplay on empty cells
+        gameState.setValue(3, at: testPositions[0])
+        gameState.setValue(7, at: testPositions[1])
+        gameState.setValue(5, at: testPositions[2])
         gameState.elapsedTime = 245.5
 
         // Save (simulating handleAppBackground)
@@ -126,25 +139,38 @@ final class PersistenceManagerTests: XCTestCase {
         } else {
             XCTFail("Elapsed time should not be nil")
         }
-        XCTAssertEqual(restoredState?.value(at: CellPosition(row: 0, column: 0)), 3)
-        XCTAssertEqual(restoredState?.value(at: CellPosition(row: 0, column: 1)), 7)
-        XCTAssertEqual(restoredState?.value(at: CellPosition(row: 1, column: 0)), 5)
+        XCTAssertEqual(restoredState?.value(at: testPositions[0]), 3)
+        XCTAssertEqual(restoredState?.value(at: testPositions[1]), 7)
+        XCTAssertEqual(restoredState?.value(at: testPositions[2]), 5)
     }
 
     func testComplexGameStatePreservationAcrossRestart() throws {
         // Create a complex game state with multiple features
-        let puzzle = TestFixtures.hardPuzzle
+        let puzzle = TestFixtures.easyPuzzle
         var gameState = GameState(puzzle: puzzle)
 
-        // Add various state elements
-        gameState.setValue(2, at: CellPosition(row: 0, column: 0))
-        gameState.setValue(8, at: CellPosition(row: 0, column: 1))
-        gameState.setValue(4, at: CellPosition(row: 1, column: 2))
+        // Find empty cells for testing
+        var emptyPositions: [CellPosition] = []
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
+                let pos = CellPosition(row: row, column: col)
+                if puzzle.initialGrid[row][col] == nil {
+                    emptyPositions.append(pos)
+                    if emptyPositions.count >= 4 { break }
+                }
+            }
+            if emptyPositions.count >= 4 { break }
+        }
 
-        // Add pencil marks
-        gameState.togglePencilMark(1, at: CellPosition(row: 2, column: 3))
-        gameState.togglePencilMark(3, at: CellPosition(row: 2, column: 3))
-        gameState.togglePencilMark(5, at: CellPosition(row: 2, column: 3))
+        // Add various state elements using empty cells
+        gameState.setValue(2, at: emptyPositions[0])
+        gameState.setValue(8, at: emptyPositions[1])
+        gameState.setValue(4, at: emptyPositions[2])
+
+        // Add pencil marks to another empty cell
+        gameState.togglePencilMark(1, at: emptyPositions[3])
+        gameState.togglePencilMark(3, at: emptyPositions[3])
+        gameState.togglePencilMark(5, at: emptyPositions[3])
 
         // Set timing
         gameState.elapsedTime = 567.8
@@ -166,12 +192,12 @@ final class PersistenceManagerTests: XCTestCase {
         }
 
         // Verify cell values
-        XCTAssertEqual(restored.value(at: CellPosition(row: 0, column: 0)), 2)
-        XCTAssertEqual(restored.value(at: CellPosition(row: 0, column: 1)), 8)
-        XCTAssertEqual(restored.value(at: CellPosition(row: 1, column: 2)), 4)
+        XCTAssertEqual(restored.value(at: emptyPositions[0]), 2)
+        XCTAssertEqual(restored.value(at: emptyPositions[1]), 8)
+        XCTAssertEqual(restored.value(at: emptyPositions[2]), 4)
 
         // Verify pencil marks
-        let pencilMarks = restored.marks(at: CellPosition(row: 2, column: 3))
+        let pencilMarks = restored.marks(at: emptyPositions[3])
         XCTAssertTrue(pencilMarks.contains(1))
         XCTAssertTrue(pencilMarks.contains(3))
         XCTAssertTrue(pencilMarks.contains(5))
@@ -399,12 +425,25 @@ final class PersistenceManagerTests: XCTestCase {
         XCTAssertFalse(persistenceManager.hasSavedGame())
 
         // === Play Session 1 ===
-        let puzzle = TestFixtures.mediumPuzzle
+        let puzzle = TestFixtures.easyPuzzle
         var gameState = GameState(puzzle: puzzle)
 
+        // Find empty cells for testing
+        var emptyPositions: [CellPosition] = []
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
+                let pos = CellPosition(row: row, column: col)
+                if puzzle.initialGrid[row][col] == nil {
+                    emptyPositions.append(pos)
+                    if emptyPositions.count >= 3 { break }
+                }
+            }
+            if emptyPositions.count >= 3 { break }
+        }
+
         // User plays for a while
-        gameState.setValue(5, at: CellPosition(row: 0, column: 0))
-        gameState.setValue(8, at: CellPosition(row: 0, column: 1))
+        gameState.setValue(5, at: emptyPositions[0])
+        gameState.setValue(8, at: emptyPositions[1])
         gameState.elapsedTime = 120.0
 
         // === App Backgrounds ===
@@ -430,12 +469,12 @@ final class PersistenceManagerTests: XCTestCase {
 
         XCTAssertEqual(restored.puzzle.id, puzzle.id)
         XCTAssertEqual(restored.elapsedTime, 120.0, accuracy: 0.1)
-        XCTAssertEqual(restored.value(at: CellPosition(row: 0, column: 0)), 5)
-        XCTAssertEqual(restored.value(at: CellPosition(row: 0, column: 1)), 8)
+        XCTAssertEqual(restored.value(at: emptyPositions[0]), 5)
+        XCTAssertEqual(restored.value(at: emptyPositions[1]), 8)
 
         // === Resume Playing ===
         var continuedState = restored
-        continuedState.setValue(3, at: CellPosition(row: 1, column: 0))
+        continuedState.setValue(3, at: emptyPositions[2])
         continuedState.elapsedTime = 180.0
 
         // === Background Again ===
@@ -449,7 +488,7 @@ final class PersistenceManagerTests: XCTestCase {
         } else {
             XCTFail("Elapsed time should not be nil")
         }
-        XCTAssertEqual(secondRestore?.value(at: CellPosition(row: 1, column: 0)), 3)
+        XCTAssertEqual(secondRestore?.value(at: emptyPositions[2]), 3)
 
         // === Complete Game ===
         // When game is completed and user starts new game, old save is deleted
