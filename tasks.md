@@ -305,7 +305,7 @@
 - [x] Add method to update streaks
 - [x] [COMPLEX] Add method to calculate averages and trends
 - [x] Persist statistics to UserDefaults or local file
-- [ ] Write unit tests for statistics calculations
+- [x] Write unit tests for statistics calculations
 
 ### 8.3 Achievements System
 
