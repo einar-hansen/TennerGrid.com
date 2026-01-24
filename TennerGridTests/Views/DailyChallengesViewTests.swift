@@ -6,36 +6,32 @@ import XCTest
 @MainActor
 final class DailyChallengesViewTests: XCTestCase {
     var puzzleManager: PuzzleManager!
+    var testSuiteName: String!
+    var testUserDefaults: UserDefaults!
     let calendar = Calendar.current
-
-    // Class-level setup runs once per test class
-    override static func setUp() {
-        super.setUp()
-        // Clear UserDefaults to ensure clean test state
-        UserDefaults.standard.removeObject(forKey: "completedDailyDates")
-        UserDefaults.standard.removeObject(forKey: "bestDailyStreak")
-    }
-
-    override static func tearDown() {
-        // Clean up UserDefaults
-        UserDefaults.standard.removeObject(forKey: "completedDailyDates")
-        UserDefaults.standard.removeObject(forKey: "bestDailyStreak")
-        super.tearDown()
-    }
 
     override func setUp() {
         super.setUp()
-        // Clear UserDefaults before each test
-        UserDefaults.standard.removeObject(forKey: "completedDailyDates")
-        UserDefaults.standard.removeObject(forKey: "bestDailyStreak")
-        puzzleManager = PuzzleManager()
+        // Use a unique suite name for each test instance to support parallel testing
+        testSuiteName = "com.tennergrid.tests.\(UUID().uuidString)"
+        testUserDefaults = UserDefaults(suiteName: testSuiteName) ?? .standard
+
+        // Clear the persistent domain first
+        testUserDefaults.removePersistentDomain(forName: testSuiteName)
+        testUserDefaults.synchronize()
+
+        // Create manager with test UserDefaults
+        puzzleManager = PuzzleManager(userDefaults: testUserDefaults)
     }
 
     override func tearDown() {
-        // Ensure cleanup after each test
-        UserDefaults.standard.removeObject(forKey: "completedDailyDates")
-        UserDefaults.standard.removeObject(forKey: "bestDailyStreak")
+        // Ensure cleanup
         puzzleManager = nil
+
+        // Clean up test UserDefaults
+        testUserDefaults?.removePersistentDomain(forName: testSuiteName)
+        testUserDefaults = nil
+        testSuiteName = nil
         super.tearDown()
     }
 
@@ -204,7 +200,7 @@ final class DailyChallengesViewTests: XCTestCase {
             dateString(for: calendar.date(byAdding: .day, value: -3, to: Date()) ?? Date()),
         ]
 
-        UserDefaults.standard.set(completedDates, forKey: "completedDailyDates")
+        testUserDefaults.set(completedDates, forKey: "completedDailyDates")
 
         // When
         let view = DailyChallengesView(puzzleManager: puzzleManager)
@@ -213,7 +209,7 @@ final class DailyChallengesViewTests: XCTestCase {
         XCTAssertNotNil(view)
 
         // Verify UserDefaults contains the data
-        let loadedDates = UserDefaults.standard.array(forKey: "completedDailyDates") as? [String]
+        let loadedDates = testUserDefaults.array(forKey: "completedDailyDates") as? [String]
         XCTAssertEqual(loadedDates?.count, 3)
     }
 
@@ -240,11 +236,11 @@ final class DailyChallengesViewTests: XCTestCase {
         ]
 
         // When
-        UserDefaults.standard.set(completedDates, forKey: "completedDailyDates")
-        UserDefaults.standard.synchronize()
+        testUserDefaults.set(completedDates, forKey: "completedDailyDates")
+        testUserDefaults.synchronize()
 
         // Then - Verify data persists
-        let loadedDates = UserDefaults.standard.array(forKey: "completedDailyDates") as? [String]
+        let loadedDates = testUserDefaults.array(forKey: "completedDailyDates") as? [String]
         XCTAssertEqual(loadedDates?.count, 2)
         XCTAssertEqual(Set(loadedDates ?? []), Set(completedDates))
     }
@@ -259,7 +255,7 @@ final class DailyChallengesViewTests: XCTestCase {
         }
 
         // When
-        UserDefaults.standard.set(completedDates, forKey: "completedDailyDates")
+        testUserDefaults.set(completedDates, forKey: "completedDailyDates")
 
         // Create view which will calculate streak on appear
         let view = DailyChallengesView(puzzleManager: puzzleManager)
@@ -272,10 +268,10 @@ final class DailyChallengesViewTests: XCTestCase {
     func testBestStreakPersistence() {
         // Given
         let bestStreak = 10
-        UserDefaults.standard.set(bestStreak, forKey: "bestDailyStreak")
+        testUserDefaults.set(bestStreak, forKey: "bestDailyStreak")
 
         // When
-        let loadedStreak = UserDefaults.standard.integer(forKey: "bestDailyStreak")
+        let loadedStreak = testUserDefaults.integer(forKey: "bestDailyStreak")
 
         // Then
         XCTAssertEqual(loadedStreak, bestStreak)
@@ -304,7 +300,7 @@ final class DailyChallengesViewTests: XCTestCase {
         }
 
         // When
-        UserDefaults.standard.set(completedDates, forKey: "completedDailyDates")
+        testUserDefaults.set(completedDates, forKey: "completedDailyDates")
 
         // Create view which will calculate monthly stats
         let view = DailyChallengesView(puzzleManager: puzzleManager)
@@ -399,11 +395,11 @@ final class DailyChallengesViewTests: XCTestCase {
         ]
 
         // When
-        UserDefaults.standard.set(testDates, forKey: "completedDailyDates")
-        UserDefaults.standard.synchronize()
+        testUserDefaults.set(testDates, forKey: "completedDailyDates")
+        testUserDefaults.synchronize()
 
         // Then
-        let loaded = UserDefaults.standard.array(forKey: "completedDailyDates") as? [String]
+        let loaded = testUserDefaults.array(forKey: "completedDailyDates") as? [String]
         XCTAssertEqual(Set(loaded ?? []), Set(testDates))
     }
 
@@ -423,12 +419,12 @@ final class DailyChallengesViewTests: XCTestCase {
         XCTAssertEqual(puzzle?.rows, 5)
 
         // Simulate completing the puzzle
-        var completedDates = UserDefaults.standard.array(forKey: "completedDailyDates") as? [String] ?? []
+        var completedDates = testUserDefaults.array(forKey: "completedDailyDates") as? [String] ?? []
         completedDates.append(todayString)
-        UserDefaults.standard.set(completedDates, forKey: "completedDailyDates")
+        testUserDefaults.set(completedDates, forKey: "completedDailyDates")
 
         // Verify completion was saved
-        let saved = UserDefaults.standard.array(forKey: "completedDailyDates") as? [String]
+        let saved = testUserDefaults.array(forKey: "completedDailyDates") as? [String]
         XCTAssertTrue(saved?.contains(todayString) ?? false)
     }
 

@@ -12,9 +12,15 @@ final class PuzzleManager: ObservableObject {
     /// List of saved games
     @Published private(set) var savedGames: [SavedGame] = []
 
+    // MARK: - Private Properties
+
+    /// UserDefaults instance to use for persistence
+    private let userDefaults: UserDefaults
+
     // MARK: - Initialization
 
-    init() {
+    init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
         // Load saved games on initialization
         loadSavedGames()
     }
@@ -150,7 +156,7 @@ final class PuzzleManager: ObservableObject {
     private func loadSavedGames() {
         // For now, we'll use UserDefaults for simple persistence
         // This can be upgraded to SwiftData or FileManager later
-        guard let data = UserDefaults.standard.data(forKey: "savedGames") else {
+        guard let data = userDefaults.data(forKey: "savedGames") else {
             savedGames = []
             return
         }
@@ -167,7 +173,7 @@ final class PuzzleManager: ObservableObject {
     private func saveSavedGamesToStorage() {
         do {
             let data = try JSONEncoder().encode(savedGames)
-            UserDefaults.standard.set(data, forKey: "savedGames")
+            userDefaults.set(data, forKey: "savedGames")
         } catch {
             print("Failed to save games: \(error)")
         }

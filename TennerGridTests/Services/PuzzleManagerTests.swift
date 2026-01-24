@@ -4,31 +4,32 @@ import XCTest
 @MainActor
 final class PuzzleManagerTests: XCTestCase {
     var puzzleManager: PuzzleManager!
-
-    // Class-level setup runs once per test class instead of per test
-    override class func setUp() {
-        super.setUp()
-        // Clear UserDefaults directly to avoid MainActor issues
-        UserDefaults.standard.removeObject(forKey: "savedGames")
-    }
-
-    override class func tearDown() {
-        // Clear UserDefaults directly
-        UserDefaults.standard.removeObject(forKey: "savedGames")
-        super.tearDown()
-    }
+    var testSuiteName: String!
+    var testUserDefaults: UserDefaults!
 
     override func setUp() {
         super.setUp()
-        // Clear before creating manager
-        UserDefaults.standard.removeObject(forKey: "savedGames")
-        puzzleManager = PuzzleManager()
+        // Use a unique suite name for each test instance to support parallel testing
+        testSuiteName = "com.tennergrid.tests.\(UUID().uuidString)"
+        testUserDefaults = UserDefaults(suiteName: testSuiteName) ?? .standard
+
+        // Clear the persistent domain first
+        testUserDefaults.removePersistentDomain(forName: testSuiteName)
+        testUserDefaults.synchronize()
+
+        // Create manager with test UserDefaults
+        puzzleManager = PuzzleManager(userDefaults: testUserDefaults)
     }
 
     override func tearDown() {
         // Ensure cleanup
         puzzleManager?.removeAllSavedGames()
         puzzleManager = nil
+
+        // Clean up test UserDefaults
+        testUserDefaults?.removePersistentDomain(forName: testSuiteName)
+        testUserDefaults = nil
+        testSuiteName = nil
         super.tearDown()
     }
 
@@ -273,10 +274,10 @@ final class PuzzleManagerTests: XCTestCase {
         XCTAssertEqual(puzzleManager.savedGames.count, 1, "Should have 1 saved game after adding")
 
         // Force UserDefaults to synchronize
-        UserDefaults.standard.synchronize()
+        testUserDefaults.synchronize()
 
         // Verify data was written to UserDefaults
-        let savedData = UserDefaults.standard.data(forKey: "savedGames")
+        let savedData = testUserDefaults.data(forKey: "savedGames")
         XCTAssertNotNil(savedData, "UserDefaults should contain saved games data")
 
         // Verify we can decode the data manually
@@ -293,7 +294,7 @@ final class PuzzleManagerTests: XCTestCase {
         // Create a new manager instance (simulating app restart)
         // This must happen on MainActor since PuzzleManager is @MainActor isolated
         let newManager = await MainActor.run {
-            PuzzleManager()
+            PuzzleManager(userDefaults: testUserDefaults)
         }
 
         // Verify the new manager loaded the saved game
@@ -302,7 +303,7 @@ final class PuzzleManagerTests: XCTestCase {
 
         // Clean up
         newManager.removeAllSavedGames()
-        UserDefaults.standard.synchronize()
+        testUserDefaults.synchronize()
     }
 
     // MARK: - Helper Methods
