@@ -307,7 +307,7 @@ struct HomeView: View {
 
                 Text("\(Int(savedGame.progressPercentage))%")
                     .font(.secondaryText)
-                .fontWeight(.semibold)
+                    .fontWeight(.semibold)
                     .foregroundColor(.primary)
             }
 
