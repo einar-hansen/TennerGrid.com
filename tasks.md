@@ -321,7 +321,7 @@
 - [x] Show locked achievements as grayed out
 - [x] Show unlocked achievements with icon and date
 - [x] Add progress bars for progressive achievements
-- [ ] Add unlock notification/animation
+- [x] Add unlock notification/animation
 
 ---
 
