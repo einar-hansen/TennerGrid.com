@@ -39,9 +39,9 @@ struct DifficultyTests {
     // MARK: - Prefilled Percentage Tests
 
     @Test func prefilledPercentages() {
-        #expect(Difficulty.easy.prefilledPercentage == 0.45)
-        #expect(Difficulty.medium.prefilledPercentage == 0.35)
-        #expect(Difficulty.hard.prefilledPercentage == 0.25)
+        #expect(Difficulty.easy.prefilledPercentage == 0.55)
+        #expect(Difficulty.medium.prefilledPercentage == 0.45)
+        #expect(Difficulty.hard.prefilledPercentage == 0.35)
     }
 
     @Test func prefilledPercentagesAreDescending() {
@@ -124,7 +124,7 @@ struct DifficultyTests {
     // MARK: - CaseIterable Tests
 
     @Test func allCasesCount() {
-        #expect(Difficulty.allCases.count == 3)
+        #expect(Difficulty.allCases.count == 4)
     }
 
     @Test func allCasesOrder() {
@@ -132,6 +132,7 @@ struct DifficultyTests {
         #expect(cases[0] == .easy)
         #expect(cases[1] == .medium)
         #expect(cases[2] == .hard)
+        #expect(cases[3] == .extreme)
     }
 
     // MARK: - Codable Tests

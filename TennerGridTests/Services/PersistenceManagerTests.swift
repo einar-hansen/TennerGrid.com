@@ -33,7 +33,7 @@ final class PersistenceManagerTests: XCTestCase {
         // Given: A game state
         let puzzle = TestFixtures.easyPuzzle
         var gameState = GameState(puzzle: puzzle)
-        gameState.setValue(5, at: CellPosition(row: 0, column: 0))
+        gameState.setValue(5, at: CellPosition(row: 0, column: 1)) // Use empty cell position
         gameState.elapsedTime = 120.0
 
         // When: We save the game
@@ -48,7 +48,7 @@ final class PersistenceManagerTests: XCTestCase {
         } else {
             XCTFail("Elapsed time should not be nil")
         }
-        XCTAssertEqual(loadedState?.value(at: CellPosition(row: 0, column: 0)), 5)
+        XCTAssertEqual(loadedState?.value(at: CellPosition(row: 0, column: 1)), 5)
     }
 
     func testLoadGameWhenNoSaveExists() throws {
@@ -217,7 +217,7 @@ final class PersistenceManagerTests: XCTestCase {
         var gameState = GameState(puzzle: puzzle)
 
         // First save - early game
-        gameState.setValue(5, at: CellPosition(row: 0, column: 0))
+        gameState.setValue(5, at: CellPosition(row: 0, column: 1)) // Use empty cell position
         gameState.elapsedTime = 30.0
         try persistenceManager.saveGame(gameState)
 
@@ -228,11 +228,11 @@ final class PersistenceManagerTests: XCTestCase {
         } else {
             XCTFail("Elapsed time should not be nil")
         }
-        XCTAssertEqual(loaded?.value(at: CellPosition(row: 0, column: 0)), 5)
+        XCTAssertEqual(loaded?.value(at: CellPosition(row: 0, column: 1)), 5)
 
         // Second save - more progress
-        gameState.setValue(8, at: CellPosition(row: 0, column: 1))
-        gameState.setValue(2, at: CellPosition(row: 1, column: 0))
+        gameState.setValue(8, at: CellPosition(row: 0, column: 2)) // Use empty cell position
+        gameState.setValue(2, at: CellPosition(row: 1, column: 0)) // This position is empty
         gameState.elapsedTime = 90.0
         try persistenceManager.saveGame(gameState)
 
@@ -490,7 +490,7 @@ final class PersistenceManagerTests: XCTestCase {
         // Given: A valid saved game
         let puzzle = TestFixtures.easyPuzzle
         var gameState = GameState(puzzle: puzzle)
-        gameState.setValue(5, at: CellPosition(row: 0, column: 0))
+        gameState.setValue(5, at: CellPosition(row: 0, column: 1)) // Use empty cell position
         gameState.elapsedTime = 120.0
         try persistenceManager.saveGame(gameState)
 
@@ -501,7 +501,7 @@ final class PersistenceManagerTests: XCTestCase {
         XCTAssertNotNil(result, "Should return game state for valid data")
         XCTAssertTrue(persistenceManager.hasSavedGame(), "Valid file should not be deleted")
         XCTAssertEqual(result?.puzzle.id, gameState.puzzle.id)
-        XCTAssertEqual(result?.value(at: CellPosition(row: 0, column: 0)), 5)
+        XCTAssertEqual(result?.value(at: CellPosition(row: 0, column: 1)), 5)
     }
 
     func testSafeLoadHandlesNonExistentFile() {

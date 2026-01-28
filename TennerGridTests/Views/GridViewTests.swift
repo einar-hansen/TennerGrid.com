@@ -15,7 +15,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertEqual(viewModel.gameState.puzzle.columns, 10, "Tenner Grid should have 10 columns")
@@ -30,7 +30,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertEqual(viewModel.gameState.puzzle.difficulty, .medium)
@@ -44,7 +44,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertEqual(viewModel.gameState.puzzle.difficulty, .hard)
@@ -60,7 +60,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertEqual(puzzle.targetSums.count, puzzle.columns, "Should have one sum per column")
@@ -82,7 +82,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertNotNil(view, "GridView should be created")
@@ -122,7 +122,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertEqual(puzzle.columns, 10, "Tenner Grid always has 10 columns")
@@ -137,7 +137,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertNotNil(view, "GridView should be created")
@@ -165,7 +165,7 @@ final class GridViewTests: XCTestCase {
         let viewModel = GameViewModel(puzzle: puzzle)
 
         // When
-        let view = GridView(viewModel: viewModel)
+        let view = GridView(viewModel: viewModel, zoomScale: .constant(1.0))
 
         // Then
         XCTAssertNotNil(view, "GridView should be created")

@@ -479,47 +479,16 @@
 
 ## Phase 12: Testing & Quality
 
-### 12.1 Unit Test Coverage
-
-- [ ] Achieve 80%+ code coverage for Models
-- [ ] [COMPLEX] Achieve 80%+ code coverage for Services (ValidationService, PuzzleGenerator, PuzzleSolver)
-- [ ] Achieve 70%+ code coverage for ViewModels
-- [ ] Fix any failing tests
-- [ ] Add tests for edge cases and error conditions
-
-### 12.2 UI Testing
-
-- [ ] Create UI test for complete game flow: launch → new game → play → win
-- [ ] Create UI test for pause/resume flow
-- [ ] Create UI test for hint system
-- [ ] Create UI test for undo/redo
-- [ ] Create UI test for daily challenge
-
-### 12.3 Performance Testing
-
-- [ ] [COMPLEX] Profile app with Instruments for memory leaks
-- [ ] Ensure 60 FPS during gameplay
-- [ ] [COMPLEX] Optimize puzzle generation to <1 second
-- [ ] Test app launch time (<2 seconds)
-- [ ] Test on older devices (iPhone SE)
-
-### 12.4 Device Testing
-
-- [ ] Test on iPhone SE (small screen)
-- [ ] Test on iPhone 15 Pro (standard size)
-- [ ] Test on iPhone 15 Pro Max (large screen)
-- [ ] Test on iPad Mini
-- [ ] Test on iPad Pro 12.9"
-
----
+Skip this phase
 
 ## Phase 13: Monetization Preparation
 
 ### 13.1 AdMob Integration Setup
 
-- [ ] [COMPLEX] Create AdMob account and register app
+- [x] [COMPLEX] Create AdMob account and register app
+  - App-ID: ca-app-pub-5084681690392665~7594806874
 - [ ] [COMPLEX] Add Google Mobile Ads SDK via Swift Package Manager
-- [ ] Configure AdMob App ID in Info.plist
+- [ ] Configure AdMob App ID in Info.plist. App-ID: ca-app-pub-5084681690392665~7594806874
 - [ ] Initialize Mobile Ads SDK on app launch
 - [ ] Test ads display in simulator (test ad units)
 

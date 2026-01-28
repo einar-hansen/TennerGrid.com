@@ -29,29 +29,29 @@ final class GameViewModelTests: XCTestCase {
         UserDefaults.standard.set(true, forKey: "hapticFeedback")
         UserDefaults.standard.set(true, forKey: "soundEffects")
 
-        // Use the static easy puzzle from TestFixtures (known to be valid)
+        // Use smallPuzzle from TestFixtures (first bundled 3-row easy puzzle)
         // This puzzle has 10 columns (required for Tenner Grid) and 3 rows
         //
         // Solution:
-        // [2, 7, 4, 1, 9, 8, 5, 3, 6, 0]
-        // [3, 9, 6, 2, 5, 4, 0, 7, 8, 1]
-        // [0, 4, 7, 1, 8, 3, 9, 2, 5, 6]
+        // [1, 4, 5, 9, 8, 2, 6, 0, 3, 7]
+        // [8, 6, 1, 3, 0, 4, 7, 9, 2, 5]
+        // [1, 2, 7, 8, 5, 9, 3, 0, 6, 4]
         //
         // Initial grid (pre-filled):
-        // [2, nil, nil, 1, nil, 8, 5, nil, 6, nil]
-        // [nil, 9, nil, 2, 5, nil, nil, 7, nil, nil]
-        // [0, 4, 7, 1, nil, nil, 9, nil, nil, 6]
+        // [nil, nil, nil, 9, 8, 2, nil, 0, 3, 7]
+        // [8, 6, 1, nil, nil, nil, nil, nil, 2, 5]
+        // [nil, 2, nil, 8, 5, nil, 3, nil, nil, 4]
         //
-        // Pre-filled positions: (0,0), (0,3), (0,5), (0,6), (0,8),
-        //                       (1,1), (1,3), (1,4), (1,7),
-        //                       (2,0), (2,1), (2,2), (2,3), (2,6), (2,9)
+        // Pre-filled positions: (0,3), (0,4), (0,5), (0,7), (0,8), (0,9),
+        //                       (1,0), (1,1), (1,2), (1,8), (1,9),
+        //                       (2,1), (2,3), (2,4), (2,6), (2,9)
         //
         // Empty positions and solution values:
-        //   Row 0: (0,1)=7, (0,2)=4, (0,4)=9, (0,7)=3, (0,9)=0
-        //   Row 1: (1,0)=3, (1,2)=6, (1,5)=4, (1,6)=0, (1,8)=8, (1,9)=1
-        //   Row 2: (2,4)=8, (2,5)=3, (2,7)=2, (2,8)=5
+        //   Row 0: (0,0)=1, (0,1)=4, (0,2)=5, (0,6)=6
+        //   Row 1: (1,3)=3, (1,4)=0, (1,5)=4, (1,6)=7, (1,7)=9
+        //   Row 2: (2,0)=1, (2,2)=7, (2,5)=9, (2,7)=0, (2,8)=6
         //
-        // Target sums: [5, 20, 17, 4, 22, 15, 14, 12, 19, 7]
+        // Target sums: [10, 12, 13, 20, 13, 15, 16, 9, 11, 16]
 
         puzzle = TestFixtures.smallPuzzle
         viewModel = GameViewModel(puzzle: puzzle)
@@ -159,13 +159,14 @@ final class GameViewModelTests: XCTestCase {
     // MARK: - Number Entry Tests
 
     func testEnterValidNumber() {
-        // For TestFixtures.easyPuzzle, (0,1) is empty with solution value 7
-        // Valid values at (0,1): 0, 3, 4, 7 (excludes row values 2,1,8,5,6 and diagonal 9)
+        // For TestFixtures.smallPuzzle (first bundled 3-row easy), (0,1) is empty with solution value 4
+        // Row 0 has pre-filled: 9,8,2,0,3,7. Neighbors at (0,1): 8,6,1
+        // Valid values at (0,1) include: 4 (solution value)
         let position = CellPosition(row: 0, column: 1)
         viewModel.selectCell(at: position)
-        viewModel.enterNumber(7)
+        viewModel.enterNumber(4)
 
-        XCTAssertEqual(viewModel.value(at: position), 7)
+        XCTAssertEqual(viewModel.value(at: position), 4)
         XCTAssertNil(viewModel.errorMessage)
         XCTAssertTrue(viewModel.conflictingPositions.isEmpty)
     }
