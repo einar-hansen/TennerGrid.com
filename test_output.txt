@@ -1,503 +1,60 @@
 /Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/TestFixtures.swift:16:50: warning: main actor-isolated conformance of 'PuzzleResponse' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
                let response = try? JSONDecoder().decode(PuzzleResponse.self, from: data)
                                                  ^
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX461_8_6expectfMf_.swift:1:56: warning: main actor-isolated conformance of 'CellPosition' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state.selectedCell,{ $0 == $1() },position,expression: .__fromBinaryOperation(.__fromSyntaxNode("state.selectedCell"),"==",.__fromSyntaxNode("position")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                                       ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:462:9: note: in expansion of macro 'expect' here
-        #expect(state.selectedCell == position)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:462:9: note: in expansion of macro 'expect' here
-        #expect(state.selectedCell == position)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX711_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state1,{ $0 == $1() },state2,expression: .__fromBinaryOperation(.__fromSyntaxNode("state1"),"==",.__fromSyntaxNode("state2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:712:9: note: in expansion of macro 'expect' here
-        #expect(state1 == state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:712:9: note: in expansion of macro 'expect' here
-        #expect(state1 == state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX720_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state1,{ $0 != $1() },state2,expression: .__fromBinaryOperation(.__fromSyntaxNode("state1"),"!=",.__fromSyntaxNode("state2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:721:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:721:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX731_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state1,{ $0 != $1() },state2,expression: .__fromBinaryOperation(.__fromSyntaxNode("state1"),"!=",.__fromSyntaxNode("state2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:732:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:732:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:744:32: warning: main actor-isolated conformance of 'GameState' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(state)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:759:32: warning: main actor-isolated conformance of 'GameState' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(original)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:760:35: warning: main actor-isolated conformance of 'GameState' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameState.self, from: data)
-                                  ^
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX761_8_6expectfMf_.swift:1:45: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(decoded,{ $0 == $1() },original,expression: .__fromBinaryOperation(.__fromSyntaxNode("decoded"),"==",.__fromSyntaxNode("original")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:762:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:762:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:779:35: warning: main actor-isolated conformance of 'GameState' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let encoded = try encoder.encode(state)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:780:35: warning: main actor-isolated conformance of 'GameState' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameState.self, from: encoded)
-                                  ^
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX783_8_6expectfMf1_.swift:1:58: warning: main actor-isolated conformance of 'CellPosition' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(decoded.selectedCell,{ $0 == $1() },state.selectedCell,expression: .__fromBinaryOperation(.__fromSyntaxNode("decoded.selectedCell"),"==",.__fromSyntaxNode("state.selectedCell")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                                         ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:784:9: note: in expansion of macro 'expect' here
-        #expect(decoded.selectedCell == state.selectedCell)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:784:9: note: in expansion of macro 'expect' here
-        #expect(decoded.selectedCell == state.selectedCell)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX461_8_6expectfMf_.swift:1:56: warning: main actor-isolated conformance of 'CellPosition' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state.selectedCell,{ $0 == $1() },position,expression: .__fromBinaryOperation(.__fromSyntaxNode("state.selectedCell"),"==",.__fromSyntaxNode("position")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                                       ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:462:9: note: in expansion of macro 'expect' here
-        #expect(state.selectedCell == position)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:462:9: note: in expansion of macro 'expect' here
-        #expect(state.selectedCell == position)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX711_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state1,{ $0 == $1() },state2,expression: .__fromBinaryOperation(.__fromSyntaxNode("state1"),"==",.__fromSyntaxNode("state2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:712:9: note: in expansion of macro 'expect' here
-        #expect(state1 == state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:712:9: note: in expansion of macro 'expect' here
-        #expect(state1 == state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX720_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state1,{ $0 != $1() },state2,expression: .__fromBinaryOperation(.__fromSyntaxNode("state1"),"!=",.__fromSyntaxNode("state2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:721:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:721:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX731_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(state1,{ $0 != $1() },state2,expression: .__fromBinaryOperation(.__fromSyntaxNode("state1"),"!=",.__fromSyntaxNode("state2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:732:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:732:9: note: in expansion of macro 'expect' here
-        #expect(state1 != state2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:744:32: warning: main actor-isolated conformance of 'GameState' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(state)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:759:32: warning: main actor-isolated conformance of 'GameState' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(original)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:760:35: warning: main actor-isolated conformance of 'GameState' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameState.self, from: data)
-                                  ^
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX761_8_6expectfMf_.swift:1:45: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(decoded,{ $0 == $1() },original,expression: .__fromBinaryOperation(.__fromSyntaxNode("decoded"),"==",.__fromSyntaxNode("original")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:762:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:762:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:779:35: warning: main actor-isolated conformance of 'GameState' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let encoded = try encoder.encode(state)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:780:35: warning: main actor-isolated conformance of 'GameState' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameState.self, from: encoded)
-                                  ^
-@__swiftmacro_15TennerGridTests0025GameStateTestsswift_jqFBgfMX783_8_6expectfMf1_.swift:1:58: warning: main actor-isolated conformance of 'CellPosition' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(decoded.selectedCell,{ $0 == $1() },state.selectedCell,expression: .__fromBinaryOperation(.__fromSyntaxNode("decoded.selectedCell"),"==",.__fromSyntaxNode("state.selectedCell")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                                         ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:784:9: note: in expansion of macro 'expect' here
-        #expect(decoded.selectedCell == state.selectedCell)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStateTests.swift:784:9: note: in expansion of macro 'expect' here
-        #expect(decoded.selectedCell == state.selectedCell)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:99:9: warning: main actor-isolated conformance of 'GameState' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        XCTAssertEqual(savedGameData.gameState, gameState)
-        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:110:32: warning: main actor-isolated conformance of 'PersistenceSchema.SavedGameData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(savedGameData)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:115:35: warning: main actor-isolated conformance of 'PersistenceSchema.SavedGameData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.SavedGameData.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:128:9: warning: main actor-isolated conformance of 'GameStatistics' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        XCTAssertEqual(statsData.statistics, statistics)
-        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:138:32: warning: main actor-isolated conformance of 'PersistenceSchema.StatisticsData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(statsData)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:143:35: warning: main actor-isolated conformance of 'PersistenceSchema.StatisticsData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.StatisticsData.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:146:9: warning: main actor-isolated conformance of 'GameStatistics' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        XCTAssertEqual(decoded.statistics, statsData.statistics)
-        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:166:32: warning: main actor-isolated conformance of 'PersistenceSchema.AchievementsData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(achievementsData)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:171:35: warning: main actor-isolated conformance of 'PersistenceSchema.AchievementsData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.AchievementsData.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:184:9: warning: main actor-isolated conformance of 'UserSettings' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        XCTAssertEqual(settingsData.settings, settings)
-        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:194:32: warning: main actor-isolated conformance of 'PersistenceSchema.SettingsData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(settingsData)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:199:35: warning: main actor-isolated conformance of 'PersistenceSchema.SettingsData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.SettingsData.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:202:9: warning: main actor-isolated conformance of 'UserSettings' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        XCTAssertEqual(decoded.settings, settingsData.settings)
-        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:227:32: warning: main actor-isolated conformance of 'PersistenceSchema.SchemaVersionData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(versionData)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:232:35: warning: main actor-isolated conformance of 'PersistenceSchema.SchemaVersionData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.SchemaVersionData.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:354:36: warning: main actor-isolated conformance of 'PersistenceSchema.SavedGameData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let jsonData = try encoder.encode(savedGameData)
-                                   ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:365:35: warning: main actor-isolated conformance of 'PersistenceSchema.SavedGameData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.SavedGameData.self, from: readData)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:384:36: warning: main actor-isolated conformance of 'PersistenceSchema.StatisticsData' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let jsonData = try encoder.encode(statsData)
-                                   ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PersistenceSchemaTests.swift:395:35: warning: main actor-isolated conformance of 'PersistenceSchema.StatisticsData' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(PersistenceSchema.StatisticsData.self, from: readData)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:387:25: warning: call to main actor-isolated initializer 'init(puzzle:startedAt:)' in a synchronous nonisolated context
-        let gameState = GameState(puzzle: puzzle)
-                        ^
-TennerGrid.GameState.init:2:21: note: calls to initializer 'init(puzzle:startedAt:)' from outside of its actor context are implicitly asynchronous
-@MainActor internal init(puzzle: TennerGrid.TennerGridPuzzle, startedAt: Date = Date())}
-                    ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:388:25: warning: call to main actor-isolated initializer 'init(puzzle:gameState:savedAt:)' in a synchronous nonisolated context
-        let savedGame = SavedGame(puzzle: puzzle, gameState: gameState)
-                        ^
-TennerGrid.SavedGame.init:2:21: note: calls to initializer 'init(puzzle:gameState:savedAt:)' from outside of its actor context are implicitly asynchronous
-@MainActor internal init(puzzle: TennerGrid.TennerGridPuzzle, gameState: TennerGrid.GameState, savedAt: Date = Date())}
-                    ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:392:32: warning: main actor-isolated conformance of 'SavedGame' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(savedGame)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:396:39: warning: main actor-isolated conformance of 'SavedGame' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decodedGame = try decoder.decode(SavedGame.self, from: data)
-                                      ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:398:43: warning: main actor-isolated property 'id' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.puzzle.id, savedGame.puzzle.id)
-                                          ^
-TennerGrid.TennerGridPuzzle.id:2:25: note: property declared here
-@MainActor internal let id: UUID}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:398:36: warning: main actor-isolated property 'puzzle' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.puzzle.id, savedGame.puzzle.id)
-                                   ^
-TennerGrid.SavedGame.puzzle:2:25: note: property declared here
-@MainActor internal let puzzle: TennerGrid.TennerGridPuzzle}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:398:64: warning: main actor-isolated property 'id' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.puzzle.id, savedGame.puzzle.id)
-                                                               ^
-TennerGrid.TennerGridPuzzle.id:2:25: note: property declared here
-@MainActor internal let id: UUID}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:398:57: warning: main actor-isolated property 'puzzle' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.puzzle.id, savedGame.puzzle.id)
-                                                        ^
-TennerGrid.SavedGame.puzzle:2:25: note: property declared here
-@MainActor internal let puzzle: TennerGrid.TennerGridPuzzle}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:399:53: warning: main actor-isolated property 'id' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.gameState.puzzle.id, savedGame.gameState.puzzle.id)
-                                                    ^
-TennerGrid.TennerGridPuzzle.id:2:25: note: property declared here
-@MainActor internal let id: UUID}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:399:46: warning: main actor-isolated property 'puzzle' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.gameState.puzzle.id, savedGame.gameState.puzzle.id)
-                                             ^
-TennerGrid.GameState.puzzle:2:25: note: property declared here
-@MainActor internal let puzzle: TennerGrid.TennerGridPuzzle}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:399:36: warning: main actor-isolated property 'gameState' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.gameState.puzzle.id, savedGame.gameState.puzzle.id)
-                                   ^
-TennerGrid.SavedGame.gameState:2:25: note: property declared here
-@MainActor internal let gameState: TennerGrid.GameState}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:399:84: warning: main actor-isolated property 'id' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.gameState.puzzle.id, savedGame.gameState.puzzle.id)
-                                                                                   ^
-TennerGrid.TennerGridPuzzle.id:2:25: note: property declared here
-@MainActor internal let id: UUID}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:399:77: warning: main actor-isolated property 'puzzle' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.gameState.puzzle.id, savedGame.gameState.puzzle.id)
-                                                                            ^
-TennerGrid.GameState.puzzle:2:25: note: property declared here
-@MainActor internal let puzzle: TennerGrid.TennerGridPuzzle}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:399:67: warning: main actor-isolated property 'gameState' can not be referenced from a nonisolated autoclosure
-        XCTAssertEqual(decodedGame.gameState.puzzle.id, savedGame.gameState.puzzle.id)
-                                                                  ^
-TennerGrid.SavedGame.gameState:2:25: note: property declared here
-@MainActor internal let gameState: TennerGrid.GameState}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:406:58: warning: call to main actor-isolated instance method 'firstPuzzle(difficulty:rows:)' in a synchronous nonisolated context
-        guard let template = BundledPuzzleService.shared.firstPuzzle(difficulty: .easy, rows: 5) else {
-                                                         ^
-TennerGrid.BundledPuzzleService.firstPuzzle:2:26: note: calls to instance method 'firstPuzzle(difficulty:rows:)' from outside of its actor context are implicitly asynchronous
-@MainActor internal func firstPuzzle(difficulty: TennerGrid.Difficulty, rows: Int = 5) -> TennerGrid.TennerGridPuzzle?}
-                         ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:406:51: warning: main actor-isolated class property 'shared' can not be referenced from a nonisolated context
-        guard let template = BundledPuzzleService.shared.firstPuzzle(difficulty: .easy, rows: 5) else {
-                                                  ^
-TennerGrid.BundledPuzzleService.shared:2:31: note: class property declared here
-@MainActor internal class let shared: TennerGrid.BundledPuzzleService}
-                              ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:410:16: warning: call to main actor-isolated initializer 'init(id:columns:rows:difficulty:targetSums:initialGrid:solution:createdAt:)' in a synchronous nonisolated context
-        return TennerGridPuzzle(
-               ^
-TennerGrid.TennerGridPuzzle.init:2:21: note: calls to initializer 'init(id:columns:rows:difficulty:targetSums:initialGrid:solution:createdAt:)' from outside of its actor context are implicitly asynchronous
-@MainActor internal init(id: UUID = UUID(), columns: Int, rows: Int, difficulty: TennerGrid.Difficulty, targetSums: [Int], initialGrid: [[Int?]], solution: [[Int]], createdAt: Date = Date())}
-                    ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:412:31: warning: main actor-isolated property 'columns' can not be referenced from a nonisolated context
-            columns: template.columns,
-                              ^
-TennerGrid.TennerGridPuzzle.columns:2:25: note: property declared here
-@MainActor internal let columns: Int}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:413:28: warning: main actor-isolated property 'rows' can not be referenced from a nonisolated context
-            rows: template.rows,
-                           ^
-TennerGrid.TennerGridPuzzle.rows:2:25: note: property declared here
-@MainActor internal let rows: Int}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:414:34: warning: main actor-isolated property 'difficulty' can not be referenced from a nonisolated context
-            difficulty: template.difficulty,
-                                 ^
-TennerGrid.TennerGridPuzzle.difficulty:2:25: note: property declared here
-@MainActor internal let difficulty: TennerGrid.Difficulty}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:415:34: warning: main actor-isolated property 'targetSums' can not be referenced from a nonisolated context
-            targetSums: template.targetSums,
-                                 ^
-TennerGrid.TennerGridPuzzle.targetSums:2:25: note: property declared here
-@MainActor internal let targetSums: [Int]}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:416:35: warning: main actor-isolated property 'initialGrid' can not be referenced from a nonisolated context
-            initialGrid: template.initialGrid,
-                                  ^
-TennerGrid.TennerGridPuzzle.initialGrid:2:25: note: property declared here
-@MainActor internal let initialGrid: [[Int?]]}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:417:32: warning: main actor-isolated property 'solution' can not be referenced from a nonisolated context
-            solution: template.solution,
-                               ^
-TennerGrid.TennerGridPuzzle.solution:2:25: note: property declared here
-@MainActor internal let solution: [[Int]]}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/PuzzleManagerTests.swift:418:33: warning: main actor-isolated property 'createdAt' can not be referenced from a nonisolated context
-            createdAt: template.createdAt
-                                ^
-TennerGrid.TennerGridPuzzle.createdAt:2:25: note: property declared here
-@MainActor internal let createdAt: Date}
-                        ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2894:21: warning: 'expectation' mutated after capture by sendable closure
-        expectation = XCTestExpectation(description: "Settings observer should update")
-                    ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2875:13: note: variable defined here
-        var expectation = XCTestExpectation(description: "Settings observer should update")
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2876:63: note: variable captured by sendable closure
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                                              ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2877:13: note: capturing use
-            expectation.fulfill()
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2875:13: note: variable defined here
-        var expectation = XCTestExpectation(description: "Settings observer should update")
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2876:63: note: variable captured by sendable closure
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                                              ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:2877:13: note: capturing use
-            expectation.fulfill()
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3052:21: warning: 'expectation' mutated after capture by sendable closure
-        expectation = XCTestExpectation(description: "Settings observer should update")
-                    ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3042:13: note: variable defined here
-        var expectation = XCTestExpectation(description: "Settings observer should update")
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3043:63: note: variable captured by sendable closure
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                                              ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3044:13: note: capturing use
-            expectation.fulfill()
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3042:13: note: variable defined here
-        var expectation = XCTestExpectation(description: "Settings observer should update")
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3043:63: note: variable captured by sendable closure
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                                              ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/ViewModels/GameViewModelTests.swift:3044:13: note: capturing use
-            expectation.fulfill()
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Views/DailyChallengesViewTests.swift:316:13: warning: initialization of immutable value 'beforeJanuary' was never used; consider replacing with assignment to '_' or removing it
-        let beforeJanuary = createDate(year: 2025, month: 12, day: 1)
-        ~~~~^~~~~~~~~~~~~
-        _
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/AchievementManagerTests.swift:136:13: warning: initialization of immutable value 'newlyUnlocked' was never used; consider replacing with assignment to '_' or removing it
-        let newlyUnlocked = sut.checkAchievements()
-        ~~~~^~~~~~~~~~~~~
-        _
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/HintServiceTests.swift:334:13: warning: main actor-isolated conformance of 'CellPosition' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-            XCTAssertEqual(pos, position)
-            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:444:32: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(stats)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:457:32: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(original)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:458:35: warning: main actor-isolated conformance of 'GameStatistics' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameStatistics.self, from: data)
-                                  ^
-@__swiftmacro_15TennerGridTests0030GameStatisticsTestsswift_eDAEifMX459_8_6expectfMf_.swift:1:45: warning: main actor-isolated conformance of 'GameStatistics' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(decoded,{ $0 == $1() },original,expression: .__fromBinaryOperation(.__fromSyntaxNode("decoded"),"==",.__fromSyntaxNode("original")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:460:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:460:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:473:35: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let encoded = try encoder.encode(stats)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:474:35: warning: main actor-isolated conformance of 'GameStatistics' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameStatistics.self, from: encoded)
-                                  ^
-@__swiftmacro_15TennerGridTests0030GameStatisticsTestsswift_eDAEifMX508_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameStatistics' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(stats1,{ $0 == $1() },stats2,expression: .__fromBinaryOperation(.__fromSyntaxNode("stats1"),"==",.__fromSyntaxNode("stats2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:509:9: note: in expansion of macro 'expect' here
-        #expect(stats1 == stats2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:509:9: note: in expansion of macro 'expect' here
-        #expect(stats1 == stats2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0032TennerGridPuzzleTestsswift_jIADjfMX463_8_6expectfMf_.swift:1:45: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(puzzle1,{ $0 != $1() },puzzle2,expression: .__fromBinaryOperation(.__fromSyntaxNode("puzzle1"),"!=",.__fromSyntaxNode("puzzle2")),comments: [.__line("// Different IDs means different puzzles")],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:464:9: note: in expansion of macro 'expect' here
-        #expect(puzzle1 != puzzle2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:464:9: note: in expansion of macro 'expect' here
-        #expect(puzzle1 != puzzle2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:444:32: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(stats)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:457:32: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(original)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:458:35: warning: main actor-isolated conformance of 'GameStatistics' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameStatistics.self, from: data)
-                                  ^
-@__swiftmacro_15TennerGridTests0030GameStatisticsTestsswift_eDAEifMX459_8_6expectfMf_.swift:1:45: warning: main actor-isolated conformance of 'GameStatistics' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(decoded,{ $0 == $1() },original,expression: .__fromBinaryOperation(.__fromSyntaxNode("decoded"),"==",.__fromSyntaxNode("original")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:460:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:460:9: note: in expansion of macro 'expect' here
-        #expect(decoded == original)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:473:35: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let encoded = try encoder.encode(stats)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:474:35: warning: main actor-isolated conformance of 'GameStatistics' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(GameStatistics.self, from: encoded)
-                                  ^
-@__swiftmacro_15TennerGridTests0030GameStatisticsTestsswift_eDAEifMX508_8_6expectfMf_.swift:1:44: warning: main actor-isolated conformance of 'GameStatistics' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(stats1,{ $0 == $1() },stats2,expression: .__fromBinaryOperation(.__fromSyntaxNode("stats1"),"==",.__fromSyntaxNode("stats2")),comments: [],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                           ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:509:9: note: in expansion of macro 'expect' here
-        #expect(stats1 == stats2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/GameStatisticsTests.swift:509:9: note: in expansion of macro 'expect' here
-        #expect(stats1 == stats2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-@__swiftmacro_15TennerGridTests0032TennerGridPuzzleTestsswift_jIADjfMX463_8_6expectfMf_.swift:1:45: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Equatable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-Testing.__checkBinaryOperation(puzzle1,{ $0 != $1() },puzzle2,expression: .__fromBinaryOperation(.__fromSyntaxNode("puzzle1"),"!=",.__fromSyntaxNode("puzzle2")),comments: [.__line("// Different IDs means different puzzles")],isRequired: false,sourceLocation: Testing.SourceLocation.__here()).__expected()
-                                            ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:464:9: note: in expansion of macro 'expect' here
-        #expect(puzzle1 != puzzle2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:464:9: note: in expansion of macro 'expect' here
-        #expect(puzzle1 != puzzle2)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:508:32: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(puzzle)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:523:32: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(puzzle)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:524:35: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(TennerGridPuzzle.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:538:32: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let data = try encoder.encode(original)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Models/TennerGridPuzzleTests.swift:539:35: warning: main actor-isolated conformance of 'TennerGridPuzzle' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-        let decoded = try decoder.decode(TennerGridPuzzle.self, from: data)
-                                  ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/TestFixtures.swift:16:50: warning: main actor-isolated conformance of 'PuzzleResponse' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-               let response = try? JSONDecoder().decode(PuzzleResponse.self, from: data)
-                                                 ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/StatisticsManagerTests.swift:704:36: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-            let data = try encoder.encode(statistics)
-                                   ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/StatisticsManagerTests.swift:719:32: warning: main actor-isolated conformance of 'GameStatistics' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-            return try decoder.decode(GameStatistics.self, from: data)
-                               ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/StatisticsManagerTests.swift:848:36: warning: main actor-isolated conformance of 'GameStatistics' to 'Encodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-            let data = try encoder.encode(statistics)
-                                   ^
-/Users/einar/Sites/utvikler-einar-hansen/TennerGrid/TennerGridTests/Services/StatisticsManagerTests.swift:863:32: warning: main actor-isolated conformance of 'GameStatistics' to 'Decodable' cannot be used in nonisolated context; this is an error in the Swift 6 language mode
-            return try decoder.decode(GameStatistics.self, from: data)
-                               ^
+2026-01-29 00:04:57.639 xcodebuild[30267:31549150]  iOSSimulator: 7D1C8176-DC1D-450F-B726-5BE53C6B3F14: Failed to launch app with identifier: com.tennergrid.TennerGridUITests.xctrunner and options: {
+    "activate_suspended" = 1;
+    arguments =     (
+    );
+    environment =     {
+        "APP_DISTRIBUTOR_ID_OVERRIDE" = "com.apple.AppStore";
+        "CA_ASSERT_MAIN_THREAD_TRANSACTIONS" = 0;
+        "CA_DEBUG_TRANSACTIONS" = 0;
+        "DYLD_FRAMEWORK_PATH" = "/Users/einar/Library/Developer/Xcode/DerivedData/TennerGrid-aimlkqfbjtqasngddjpdfhoorkje/Build/Products/Debug-iphonesimulator:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks";
+        "DYLD_INSERT_LIBRARIES" = "/usr/lib/libRPAC.dylib:/Library/Developer/CoreSimulator/Volumes/iOS_23C54/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.2.simruntime/Contents/Resources/RuntimeRoot/usr/lib/libMainThreadChecker.dylib:/usr/lib/libRPAC.dylib";
+        "DYLD_LIBRARY_PATH" = "/Users/einar/Library/Developer/Xcode/DerivedData/TennerGrid-aimlkqfbjtqasngddjpdfhoorkje/Build/Products/Debug-iphonesimulator:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib";
+        "LLVM_PROFILE_FILE" = "/var/folders/wq/g_h3kyfd3yn7ht6jvt7lnrgh0000gn/T/com.tennergrid.TennerGridUITests.xctrunner/7FA59644-D79D-4EE3-B94F-DA640DC756ED-30267-000011D0F976A839/1DD43F0B-51C7-48EA-9D24-6C1CC9DE85D9-%p%c.profraw";
+        NSApplicationQuitWithoutSuddenTermination = YES;
+        NSUnbufferedIO = YES;
+        "OS_ACTIVITY_DT_MODE" = YES;
+        "PERFC_ENABLE_EXTENDED_DIAGNOSTIC_FORMAT" = 1;
+        "PERFC_ENABLE_PROFILE_MODE" = 1;
+        "PERFC_RESET_INSERT_LIBRARIES" = 1;
+        "PERFC_SUPPRESS_SYSTEM_REPORTS" = 1;
+        "RUN_DESTINATION_DEVICE_NAME" = "Clone 2 of iPhone 17";
+        "RUN_DESTINATION_DEVICE_PLATFORM_IDENTIFIER" = "com.apple.platform.iphonesimulator";
+        "RUN_DESTINATION_DEVICE_UDID" = "7D1C8176-DC1D-450F-B726-5BE53C6B3F14";
+        "SQLITE_ENABLE_THREAD_ASSERTIONS" = 1;
+        TERM = dumb;
+        "XCODE_SCHEME_NAME" = TennerGrid;
+        "XCODE_TEST_PLAN_NAME" = TennerGrid;
+        XCTestBundleInjectPath = "/usr/lib/libRPAC.dylib:/Library/Developer/CoreSimulator/Volumes/iOS_23C54/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.2.simruntime/Contents/Resources/RuntimeRoot/usr/lib/libMainThreadChecker.dylib:/usr/lib/libRPAC.dylib";
+        XCTestBundlePath = "PlugIns/TennerGridUITests.xctest";
+        XCTestConfigurationFilePath = "";
+        XCTestSessionIdentifier = "E973ECF9-6FBC-4F4A-8819-06F737629C16";
+        "__XCODE_BUILT_PRODUCTS_DIR_PATHS" = "/Users/einar/Library/Developer/Xcode/DerivedData/TennerGrid-aimlkqfbjtqasngddjpdfhoorkje/Build/Products/Debug-iphonesimulator";
+        "__XPC_DYLD_FRAMEWORK_PATH" = "/Users/einar/Library/Developer/Xcode/DerivedData/TennerGrid-aimlkqfbjtqasngddjpdfhoorkje/Build/Products/Debug-iphonesimulator";
+        "__XPC_DYLD_LIBRARY_PATH" = "/Users/einar/Library/Developer/Xcode/DerivedData/TennerGrid-aimlkqfbjtqasngddjpdfhoorkje/Build/Products/Debug-iphonesimulator";
+        "__XPC_LLVM_PROFILE_FILE" = "/var/folders/wq/g_h3kyfd3yn7ht6jvt7lnrgh0000gn/T/com.tennergrid.TennerGridUITests.xctrunner/7FA59644-D79D-4EE3-B94F-DA640DC756ED-30267-000011D0F976A839/1DD43F0B-51C7-48EA-9D24-6C1CC9DE85D9-%p%c.profraw";
+    };
+    stderr = "/dev/ttys011";
+    stdout = "/dev/ttys011";
+    "terminate_running_process" = 1;
+    "wait_for_debugger" = 1;
+} (error = Error Domain=FBSOpenApplicationServiceErrorDomain Code=1 "Simulator device failed to launch com.tennergrid.TennerGridUITests.xctrunner." UserInfo={NSLocalizedDescription=Simulator device failed to launch com.tennergrid.TennerGridUITests.xctrunner., NSUnderlyingError=0x84f53fea0 {Error Domain=FBSOpenApplicationServiceErrorDomain Code=1 "The request to open "com.tennergrid.TennerGridUITests.xctrunner" failed." UserInfo={BSErrorCodeDescription=RequestDenied, NSLocalizedDescription=The request to open "com.tennergrid.TennerGridUITests.xctrunner" failed., NSUnderlyingError=0x84f53fe10 {Error Domain=FBProcessExit Code=64 "The process failed to launch." UserInfo={NSUnderlyingError=0x84f53fd80 {Error Domain=RBSRequestErrorDomain Code=5 "Launch failed." UserInfo=0x851681b00 (not displayed)}, BSErrorCodeDescription=launch-failed, NSLocalizedFailureReason=The process failed to launch.}}, FBSOpenApplicationRequestID=0xb449, NSLocalizedFailureReason=The request was denied by service delegate (SBMainWorkspace).}}, NSLocalizedFailureReason=The request was denied by service delegate (SBMainWorkspace)., FBSOpenApplicationRequestID=0xb449, SimCallingSelector=launchApplicationWithID:options:pid:error:, BSErrorCodeDescription=RequestDenied})
+2026-01-29 00:05:08.020 xcodebuild[30267:31548302] [MT] IDETestOperationsObserverDebug: 182.899 elapsed -- Testing started completed.
+2026-01-29 00:05:08.020 xcodebuild[30267:31548302] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-01-29 00:05:08.020 xcodebuild[30267:31548302] [MT] IDETestOperationsObserverDebug: 182.899 sec, +182.899 sec -- end
+** TEST FAILED **
+
+Testing started
+Test suite 'TennerGridUITests' started on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (30691)'
+Test case 'TennerGridUITests.testExample()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (30691)' (2.720 seconds)
+Test case 'TennerGridUITests.testThemePersistence()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (30691)' (26.079 seconds)
+Test case 'TennerGridUITests.testCompleteGameFlowWithVoiceOver()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (30691)' (15.584 seconds)
+Test suite 'TennerGridUITestsLaunchTests' started on 'Clone 3 of iPhone 17 - TennerGridUITests-Runner (31320)'
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 3 of iPhone 17 - TennerGridUITests-Runner (31320)' (3.957 seconds)
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 3 of iPhone 17 - TennerGridUITests-Runner (31320)' (5.817 seconds)
+Test case 'TennerGridUITests.testThemeSwitchingWhileNavigating()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (30691)' (38.403 seconds)
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 3 of iPhone 17 - TennerGridUITests-Runner (31320)' (5.206 seconds)
+Test case 'TennerGridUITestsLaunchTests.testLaunch()' passed on 'Clone 3 of iPhone 17 - TennerGridUITests-Runner (31320)' (5.809 seconds)
+Test case 'TennerGridUITests.testDynamicThemeSwitching()' passed on 'Clone 1 of iPhone 17 - TennerGridUITests-Runner (30691)' (29.440 seconds)
