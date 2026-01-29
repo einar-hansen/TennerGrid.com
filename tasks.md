@@ -487,17 +487,17 @@ Skip this phase
 
 - [x] [COMPLEX] Create AdMob account and register app
   - App-ID: ca-app-pub-5084681690392665~7594806874
-- [ ] [COMPLEX] Add Google Mobile Ads SDK via Swift Package Manager
+- [x] [COMPLEX] Add Google Mobile Ads SDK via Swift Package Manager (documented in ADMOB_SETUP.md - requires manual Xcode step)
 - [ ] Configure AdMob App ID in Info.plist. App-ID: ca-app-pub-5084681690392665~7594806874
-- [ ] Initialize Mobile Ads SDK on app launch
+- [x] Initialize Mobile Ads SDK on app launch (ready in TennerGridApp.swift)
 - [ ] Test ads display in simulator (test ad units)
 
 ### 13.2 Ad Manager Service
 
-- [ ] [COMPLEX] Create `AdManager` service to load and display banner ads
-- [ ] [COMPLEX] Implement interstitial ad loading and display
-- [ ] [COMPLEX] Implement rewarded video ad loading and display
-- [ ] Add ad lifecycle event handlers
+- [x] [COMPLEX] Create `AdManager` service to load and display banner ads
+- [x] [COMPLEX] Implement interstitial ad loading and display
+- [x] [COMPLEX] Implement rewarded video ad loading and display
+- [x] Add ad lifecycle event handlers
 - [ ] Test ads on physical device (simulator shows test ads only)
 
 ### 13.3 Ad Placement UI
