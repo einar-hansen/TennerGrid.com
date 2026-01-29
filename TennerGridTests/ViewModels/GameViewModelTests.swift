@@ -1302,9 +1302,10 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.redoCount, 0)
     }
 
-    func testComplexActionSequenceWithPartialUndoRedo() throws {
-        throw XCTSkip("TODO: Update test for new puzzle data")
-        // Valid values at (0,1): 4, 5, 6 - pencil marks can be any number
+    func testComplexActionSequenceWithPartialUndoRedo() {
+        // Position (0,1): empty, solution=4
+        // Row 0 pre-filled: 9,8,2,0,3,7 | Diagonals: (1,0)=8, (1,1)=6, (1,2)=1
+        // Valid values at (0,1): 4, 5 - pencil marks can be any number
         let position = CellPosition(row: 0, column: 1)
         viewModel.selectCell(at: position)
 
@@ -1352,15 +1353,14 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.undoCount, 0)
     }
 
-    func testActionSequencePreservesGameState() throws {
-        throw XCTSkip("TODO: Update test for new puzzle data")
+    func testActionSequencePreservesGameState() {
         // Find two empty cells in the 10x3 TestFixtures.smallPuzzle
         let position1 = CellPosition(row: 0, column: 1) // nil in initial grid, solution=4
         let position2 = CellPosition(row: 0, column: 2) // nil in initial grid, solution=5
 
         // Create a specific game state with values that don't conflict
-        // Position (0,1) - Row 0 has pre-filled: 9,8,2,0,3,7 - Diagonals: (1,0)=8, (1,2)=1
-        // Valid at (0,1): 4, 5, 6
+        // Position (0,1) - Row 0 has pre-filled: 9,8,2,0,3,7 - Diagonals: (1,0)=8, (1,1)=6, (1,2)=1
+        // Valid at (0,1): 4, 5
         viewModel.selectCell(at: position1)
         viewModel.enterNumber(4) // Valid and correct solution
 
@@ -2598,8 +2598,7 @@ final class GameViewModelTests: XCTestCase {
     // MARK: - Settings Observer Tests
 
     /// Tests that autoCheckErrors setting observer updates conflicts
-    func testSettingsObserver_AutoCheckErrors_EnablesConflictDisplay() throws {
-        throw XCTSkip("TODO: Fix settings observer test timeout")
+    func testSettingsObserver_AutoCheckErrors_EnablesConflictDisplay() {
         // Ensure autoCheckErrors starts as true
         var initialSettings = SettingsManager.shared.settings
         initialSettings.autoCheckErrors = true
@@ -2616,7 +2615,7 @@ final class GameViewModelTests: XCTestCase {
         let position = CellPosition(row: 0, column: 1)
         viewModel.selectCell(at: position)
 
-        // Try to enter 2 (conflicts with pre-filled 2 at (0,0))
+        // Try to enter 2 (conflicts with pre-filled 2 at (0,5) in same row)
         viewModel.enterNumber(2)
 
         // Should have conflicts
