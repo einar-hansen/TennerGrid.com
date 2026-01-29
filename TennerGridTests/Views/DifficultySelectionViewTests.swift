@@ -49,10 +49,11 @@ final class DifficultySelectionViewTests: XCTestCase {
         let expectedDifficulties = Difficulty.allCases
 
         // Then
-        XCTAssertEqual(expectedDifficulties.count, 3, "Should have 3 difficulty levels")
+        XCTAssertEqual(expectedDifficulties.count, 4, "Should have 4 difficulty levels")
         XCTAssertTrue(expectedDifficulties.contains(.easy), "Should include Easy")
         XCTAssertTrue(expectedDifficulties.contains(.medium), "Should include Medium")
         XCTAssertTrue(expectedDifficulties.contains(.hard), "Should include Hard")
+        XCTAssertTrue(expectedDifficulties.contains(.extreme), "Should include Extreme")
     }
 
     /// Test difficulty properties for Easy level
@@ -63,7 +64,7 @@ final class DifficultySelectionViewTests: XCTestCase {
         // Then
         XCTAssertEqual(difficulty.displayName, "Easy")
         XCTAssertEqual(difficulty.color, .green)
-        XCTAssertEqual(difficulty.prefilledPercentage, 0.45)
+        XCTAssertEqual(difficulty.prefilledPercentage, 0.55)
         XCTAssertEqual(difficulty.estimatedMinutes, 5)
         XCTAssertEqual(difficulty.points, 10)
         XCTAssertEqual(difficulty.minRows, 3)
@@ -79,7 +80,7 @@ final class DifficultySelectionViewTests: XCTestCase {
         // Then
         XCTAssertEqual(difficulty.displayName, "Medium")
         XCTAssertEqual(difficulty.color, .blue)
-        XCTAssertEqual(difficulty.prefilledPercentage, 0.35)
+        XCTAssertEqual(difficulty.prefilledPercentage, 0.45)
         XCTAssertEqual(difficulty.estimatedMinutes, 10)
         XCTAssertEqual(difficulty.points, 25)
         XCTAssertEqual(difficulty.minRows, 4)
@@ -95,7 +96,7 @@ final class DifficultySelectionViewTests: XCTestCase {
         // Then
         XCTAssertEqual(difficulty.displayName, "Hard")
         XCTAssertEqual(difficulty.color, .orange)
-        XCTAssertEqual(difficulty.prefilledPercentage, 0.25)
+        XCTAssertEqual(difficulty.prefilledPercentage, 0.35)
         XCTAssertEqual(difficulty.estimatedMinutes, 20)
         XCTAssertEqual(difficulty.points, 50)
         XCTAssertEqual(difficulty.minRows, 5)
@@ -305,10 +306,12 @@ final class DifficultySelectionViewTests: XCTestCase {
         let easy = Difficulty.easy
         let medium = Difficulty.medium
         let hard = Difficulty.hard
+        let extreme = Difficulty.extreme
 
         // Then
         XCTAssertLessThan(easy.points, medium.points, "Medium should have more points than Easy")
         XCTAssertLessThan(medium.points, hard.points, "Hard should have more points than Medium")
+        XCTAssertLessThan(hard.points, extreme.points, "Extreme should have more points than Hard")
     }
 
     /// Test that estimated time increases with difficulty
@@ -317,10 +320,12 @@ final class DifficultySelectionViewTests: XCTestCase {
         let easy = Difficulty.easy
         let medium = Difficulty.medium
         let hard = Difficulty.hard
+        let extreme = Difficulty.extreme
 
         // Then
         XCTAssertLessThan(easy.estimatedMinutes, medium.estimatedMinutes, "Medium should take longer than Easy")
         XCTAssertLessThan(medium.estimatedMinutes, hard.estimatedMinutes, "Hard should take longer than Medium")
+        XCTAssertLessThan(hard.estimatedMinutes, extreme.estimatedMinutes, "Extreme should take longer than Hard")
     }
 
     /// Test that prefilled percentage decreases with difficulty
@@ -329,6 +334,7 @@ final class DifficultySelectionViewTests: XCTestCase {
         let easy = Difficulty.easy
         let medium = Difficulty.medium
         let hard = Difficulty.hard
+        let extreme = Difficulty.extreme
 
         // Then
         XCTAssertGreaterThan(
@@ -340,6 +346,11 @@ final class DifficultySelectionViewTests: XCTestCase {
             medium.prefilledPercentage,
             hard.prefilledPercentage,
             "Medium should have more pre-filled cells than Hard"
+        )
+        XCTAssertGreaterThan(
+            hard.prefilledPercentage,
+            extreme.prefilledPercentage,
+            "Hard should have more pre-filled cells than Extreme"
         )
     }
 

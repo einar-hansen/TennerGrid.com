@@ -243,7 +243,8 @@ final class PersistenceManagerTests: XCTestCase {
         } else {
             XCTFail("Elapsed time should not be nil")
         }
-        XCTAssertEqual(loaded?.value(at: CellPosition(row: 0, column: 1)), 8)
+        XCTAssertEqual(loaded?.value(at: CellPosition(row: 0, column: 1)), 5)
+        XCTAssertEqual(loaded?.value(at: CellPosition(row: 0, column: 2)), 8)
         XCTAssertEqual(loaded?.value(at: CellPosition(row: 1, column: 0)), 2)
 
         // Third save - near completion

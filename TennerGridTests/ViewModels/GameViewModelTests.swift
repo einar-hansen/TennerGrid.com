@@ -80,6 +80,23 @@ final class GameViewModelTests: XCTestCase {
         super.tearDown()
     }
 
+    // MARK: - Helper Functions
+
+    /// Dynamically finds all empty cells and their solution values for the current puzzle
+    private func findAllEmptyCells() -> [(CellPosition, Int)] {
+        var cellsToFill: [(CellPosition, Int)] = []
+        for row in 0 ..< viewModel.gameState.puzzle.rows {
+            for col in 0 ..< viewModel.gameState.puzzle.columns {
+                let position = CellPosition(row: row, column: col)
+                if !viewModel.gameState.puzzle.isPrefilled(at: position) {
+                    let solutionValue = viewModel.gameState.puzzle.solutionValue(at: position) ?? 0
+                    cellsToFill.append((position, solutionValue))
+                }
+            }
+        }
+        return cellsToFill
+    }
+
     // MARK: - Initialization Tests
 
     func testInitialization() {
@@ -525,28 +542,8 @@ final class GameViewModelTests: XCTestCase {
     // MARK: - Game Completion Tests
 
     func testGameCompletionDetection() {
-        // Fill in the puzzle correctly using all empty cells
-        // Empty cells and their solution values for the TestFixtures.easyPuzzle:
-        let emptyCellsAndValues: [(CellPosition, Int)] = [
-            // Row 0: (0,1)=7, (0,2)=4, (0,4)=9, (0,7)=3, (0,9)=0
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            // Row 1: (1,0)=3, (1,2)=6, (1,5)=4, (1,6)=0, (1,8)=8, (1,9)=1
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            // Row 2: (2,4)=8, (2,5)=3, (2,7)=2, (2,8)=5
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let emptyCellsAndValues = findAllEmptyCells()
 
         for (position, value) in emptyCellsAndValues {
             viewModel.selectCell(at: position)
@@ -1534,25 +1531,8 @@ final class GameViewModelTests: XCTestCase {
     }
 
     func testTimerStopsOnCompletion() async {
-        // All empty cells and their solution values for the 10x3 puzzle
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Fill all cells except the last one
         for (position, value) in allEmptyCells.dropLast() {
@@ -1594,25 +1574,8 @@ final class GameViewModelTests: XCTestCase {
     }
 
     func testStartTimerAfterCompletion() async {
-        // Complete the game first using all empty cells
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         for (position, value) in allEmptyCells {
             viewModel.selectCell(at: position)
@@ -1969,25 +1932,8 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.gameState.emptyCellCount, 15, "Should have 15 empty cells")
         XCTAssertEqual(initialProgress, 0.0, accuracy: 0.001, "Initial progress should be 0%")
 
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Fill first cell and verify progress increases
         let firstCell = allEmptyCells[0]
@@ -2023,25 +1969,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow with undo/redo during gameplay
     func testCompleteGameFlow_WithUndoRedo() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Fill first two cells
         viewModel.selectCell(at: allEmptyCells[0].0)
@@ -2085,25 +2014,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow with notes/pencil marks
     func testCompleteGameFlow_WithNotes() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Add pencil marks before entering values
         let firstCell = allEmptyCells[0]
@@ -2140,25 +2052,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow with pause/resume
     func testCompleteGameFlow_WithPauseResume() async {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Start playing - fill first cell
         viewModel.selectCell(at: allEmptyCells[0].0)
@@ -2194,25 +2089,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow with error handling
     func testCompleteGameFlow_WithErrors() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Try to enter invalid values
         viewModel.selectCell(at: CellPosition(row: 0, column: 1))
@@ -2242,25 +2120,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow with hints
     func testCompleteGameFlow_WithHints() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Request a hint
         let initialHintsUsed = viewModel.gameState.hintsUsed
@@ -2321,25 +2182,9 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests that game state is consistent throughout the flow
     func testCompleteGameFlow_StateConsistency() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let cellsToFill: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let cellsToFill = findAllEmptyCells()
+        XCTAssertGreaterThan(cellsToFill.count, 0, "Should have at least one empty cell")
 
         // Verify state at each step of the flow
         var previousProgress = viewModel.gameState.progress
@@ -2389,25 +2234,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests that actions cannot be performed after game completion
     func testCompleteGameFlow_ActionsBlockedAfterCompletion() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let cellsToFill: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let cellsToFill = findAllEmptyCells()
 
         // Complete the puzzle first
         for (position, value) in cellsToFill {
@@ -2430,25 +2258,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow with cell clearing
     func testCompleteGameFlow_WithCellClearing() {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         let firstCell = allEmptyCells[0]
 
@@ -2495,25 +2306,8 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.columnSum(for: 2), 7) // (2,2)=7
         XCTAssertEqual(viewModel.columnSum(for: 3), 4) // 1+2+1=4 (all pre-filled!)
 
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let allEmptyCells: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let allEmptyCells = findAllEmptyCells()
 
         // Fill the puzzle
         for (position, value) in allEmptyCells {
@@ -2539,25 +2333,8 @@ final class GameViewModelTests: XCTestCase {
 
     /// Tests game flow tracks elapsed time correctly
     func testCompleteGameFlow_TimeTracking() async {
-        // All empty cells and their solution values
-        // Empty cells and solution values for TestFixtures.easyPuzzle
-        let cellsToFill: [(CellPosition, Int)] = [
-            (CellPosition(row: 0, column: 1), 7),
-            (CellPosition(row: 0, column: 2), 4),
-            (CellPosition(row: 0, column: 4), 9),
-            (CellPosition(row: 0, column: 7), 3),
-            (CellPosition(row: 0, column: 9), 0),
-            (CellPosition(row: 1, column: 0), 3),
-            (CellPosition(row: 1, column: 2), 6),
-            (CellPosition(row: 1, column: 5), 4),
-            (CellPosition(row: 1, column: 6), 0),
-            (CellPosition(row: 1, column: 8), 8),
-            (CellPosition(row: 1, column: 9), 1),
-            (CellPosition(row: 2, column: 4), 8),
-            (CellPosition(row: 2, column: 5), 3),
-            (CellPosition(row: 2, column: 7), 2),
-            (CellPosition(row: 2, column: 8), 5),
-        ]
+        // Dynamically find all empty cells and their solution values
+        let cellsToFill = findAllEmptyCells()
 
         // Let some time pass before starting to fill - use generous sleep for reliability
         try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds

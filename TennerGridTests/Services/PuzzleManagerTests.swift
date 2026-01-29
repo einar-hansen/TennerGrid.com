@@ -354,8 +354,12 @@ final class SavedGameTests: XCTestCase {
         let puzzle = createTestPuzzle()
         var gameState = GameState(puzzle: puzzle)
 
-        // Fill one cell
-        gameState.setValue(1, at: CellPosition(row: 0, column: 0))
+        // Find an empty cell and fill it
+        let emptyCell = findEmptyCell(in: puzzle)
+        XCTAssertNotNil(emptyCell, "Should have at least one empty cell")
+        if let position = emptyCell {
+            gameState.setValue(1, at: position)
+        }
 
         let savedGame = SavedGame(puzzle: puzzle, gameState: gameState)
         let expectedProgress = (1.0 / Double(puzzle.emptyCellCount)) * 100
@@ -371,8 +375,12 @@ final class SavedGameTests: XCTestCase {
         var savedGame = SavedGame(puzzle: puzzle, gameState: gameState)
         XCTAssertFalse(savedGame.canResume)
 
-        // Fill one cell - can resume
-        gameState.setValue(1, at: CellPosition(row: 0, column: 0))
+        // Find an empty cell and fill it - can resume
+        let emptyCell = findEmptyCell(in: puzzle)
+        XCTAssertNotNil(emptyCell, "Should have at least one empty cell")
+        if let position = emptyCell {
+            gameState.setValue(1, at: position)
+        }
         savedGame = SavedGame(puzzle: puzzle, gameState: gameState)
         XCTAssertTrue(savedGame.canResume)
 
@@ -417,5 +425,17 @@ final class SavedGameTests: XCTestCase {
             solution: template.solution,
             createdAt: template.createdAt
         )
+    }
+
+    private nonisolated func findEmptyCell(in puzzle: TennerGridPuzzle) -> CellPosition? {
+        for row in 0 ..< puzzle.rows {
+            for col in 0 ..< puzzle.columns {
+                let position = CellPosition(row: row, column: col)
+                if !puzzle.isPrefilled(at: position) {
+                    return position
+                }
+            }
+        }
+        return nil
     }
 }
