@@ -501,7 +501,7 @@ struct AchievementTests {
         achievement.unlock()
 
         #expect(achievement.formattedUnlockDate != nil)
-        #expect(try !(#require(achievement.formattedUnlockDate?.isEmpty)))
+        #expect(try !#require(achievement.formattedUnlockDate?.isEmpty))
     }
 
     // MARK: - Predefined Achievements Tests
