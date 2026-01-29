@@ -488,7 +488,7 @@ Skip this phase
 - [x] [COMPLEX] Create AdMob account and register app
   - App-ID: ca-app-pub-5084681690392665~7594806874
 - [x] [COMPLEX] Add Google Mobile Ads SDK via Swift Package Manager (documented in ADMOB_SETUP.md - requires manual Xcode step)
-- [ ] Configure AdMob App ID in Info.plist. App-ID: ca-app-pub-5084681690392665~7594806874
+- [x] Configure AdMob App ID in Info.plist. App-ID: ca-app-pub-5084681690392665~7594806874
 - [x] Initialize Mobile Ads SDK on app launch (ready in TennerGridApp.swift)
 - [ ] Test ads display in simulator (test ad units)
 
